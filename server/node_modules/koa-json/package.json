@@ -1,0 +1,27 @@
+{
+  "name": "koa-json",
+  "version": "2.0.2",
+  "repository": "koajs/json",
+  "description": "pretty (non-compressed) json response middleware",
+  "keywords": [
+    "koa",
+    "json"
+  ],
+  "dependencies": {
+    "koa-is-json": "1",
+    "streaming-json-stringify": "3"
+  },
+  "devDependencies": {
+    "istanbul": "0",
+    "mocha": "2",
+    "koa": "2",
+    "supertest": "1"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --reporter spec",
+    "test-cov": "NODE_ENV=test istanbul cover ./node_modules/.bin/_mocha",
+    "test-travis": "NODE_ENV=test istanbul cover ./node_modules/.bin/_mocha --report lcovonly"
+  },
+  "files": ["index.js"]
+}
