@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "busboy": "^0.3.1",
     "debug": "^2.6.3",
     "koa": "^2.2.0",
     "koa-bodyparser": "^3.2.0",
