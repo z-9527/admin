@@ -3,6 +3,7 @@ import './App.css';
 import { Button, Upload, Icon,message } from 'antd'
 import ColorPicker from '@/components/ColorPicker/index'
 import { Link, Route } from 'react-router-dom'
+import {get} from './utils/ajax'
 
 class A extends React.Component {
   render() {
@@ -29,10 +30,9 @@ class App extends React.Component {
       '@primary-color': color
     })
   }
-  test = () => {
-    fetch('http://localhost:8888/json').then(res => res.json()).then(res => {
-      console.log(res)
-    })
+  test = async () => {
+    const res = await get('/json')
+    console.log(123,res)
   }
   render() {
     console.log(`${process.env.REACT_APP_BASE_URL}/upload`)

@@ -31,7 +31,7 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-app.use(cors()); //前端调试时解决跨域，上线不用跨域
+app.use(cors({credentials: true})); //前端调试时解决跨域，上线不用跨域
 
 // routes
 app.use(index.routes(), index.allowedMethods())
