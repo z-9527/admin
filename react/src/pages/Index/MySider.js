@@ -1,6 +1,6 @@
 import React from 'react'
 import { Menu, Icon } from 'antd'
-import tabs from '../routes'
+import tabs from '../tabs'
 
 const menu = [
     {
