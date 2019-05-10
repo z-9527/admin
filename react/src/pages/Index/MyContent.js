@@ -38,13 +38,14 @@ class MyContent extends React.Component {
                 {
                     panes.length ? (
                         <Tabs
+                            tabBarStyle={{ background: '#f0f2f5', marginBottom: 0 }}
                             onEdit={this.onEdit}
                             onChange={this.onChange}
                             activeKey={activeMenu}
                             type="editable-card"
                             hideAdd>
                             {
-                                panes.map(item => (<TabPane key={item.key} tab={item.name}>
+                                panes.map(item => (<TabPane key={item.key} tab={item.name} style={{ padding: 24 }}>
                                     {item.content}
                                 </TabPane>))
                             }
@@ -59,7 +60,9 @@ class MyContent extends React.Component {
 
 const styles = {
     container: {
-        position: 'relative'
+        position: 'relative',
+        height: '100%',
+        backgroundColor: '#fff'
     },
     bg: {
         position: 'absolute',

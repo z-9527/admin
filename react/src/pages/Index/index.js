@@ -38,8 +38,8 @@ class Index extends React.Component {
                             activeMenu={activeMenu}
                             onChangeState={this._setState} />
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
-                        React-Admin ©{new Date().getFullYear()} Created by 137596665@qq.com <a target='_blank' href='https://github.com/zhangZhiHao1996/react-admin-master'><Icon type="github" /></a>
+                    <Footer style={{ textAlign: 'center', background: '#fff' }}>
+                        React-Admin ©{new Date().getFullYear()} Created by 137596665@qq.com <a target='_blank' href='https://github.com/zhangZhiHao1996/admin' rel="noopener noreferrer"><Icon type="github" /></a>
                     </Footer>
                 </Layout>
             </Layout>

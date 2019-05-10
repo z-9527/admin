@@ -2,8 +2,6 @@ import React from 'react'
 import { Menu, Icon } from 'antd'
 import tabs from '../routes'
 
-const { SubMenu } = Menu
-
 const menu = [
     {
         name: '菜单一',
