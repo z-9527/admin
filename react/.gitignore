@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+#忽略vscode的配置
+jsconfig.json 
+
 # testing
 /coverage
 
