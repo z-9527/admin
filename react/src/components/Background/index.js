@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { TweenLite, Circ } from "gsap/all";
 import { throttle } from '@/utils/util'
+import Loading from '@/components/Loading'
 
 class Background extends React.Component {
     static propTypes = {
@@ -19,12 +20,41 @@ class Background extends React.Component {
         this.canvas = null
         this.ctx = null
         this.target = {}   //当前鼠标在屏幕的位置
+
+        this.state = {
+            loading: false          //背景图太大，所以加一个loading
+        }
     }
     componentDidMount() {
-        this.initPage()
+        this.setState({
+            loading: true
+        })
+        //当图片载入完成后再显示背景
+        this.loadImageAsync(this.props.url).then(() => {
+            this.setState({
+                loading: false
+            })
+        }).then(() => {
+            this.initPage()
+        })
     }
     componentWillUnmount() {
         this.destory()
+    }
+    /**
+     * 登录背景图太大，所以加了一个loading效果
+     */
+    loadImageAsync = (url) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = function () {
+                resolve(url);
+            };
+            image.onerror = function () {
+                console.log('图片载入错误')
+            };
+            image.src = url;
+        })
     }
     /**
      * 创建背景粒子
@@ -171,16 +201,25 @@ class Background extends React.Component {
 
     render() {
         const { url } = this.props
+        const { loading } = this.state
         return (
             <div>
-                <div style={{ ...styles.backgroundBox, backgroundImage: `url(${url})` }}>
-                    <canvas
-                        ref={el => this.canvas = el}
-                        style={styles.canvasStyle}
-                        width={this.width}
-                        height={this.height}></canvas>
-                    {this.props.children}
-                </div>
+                {
+                    loading ? (
+                        <div style={styles.backgroundBox}>
+                            <Loading />
+                        </div>
+                    ) : (
+                            <div style={{ ...styles.backgroundBox, backgroundImage: `url(${url})` }}>
+                                <canvas
+                                    ref={el => this.canvas = el}
+                                    style={styles.canvasStyle}
+                                    width={this.width}
+                                    height={this.height} />
+                                {this.props.children}
+                            </div>
+                        )
+                }
             </div>
         )
     }
