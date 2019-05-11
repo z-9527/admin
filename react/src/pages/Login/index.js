@@ -1,11 +1,25 @@
 import React from 'react'
 import Background from '@/components/Background'
+import './style.less'
+import LoginForm from './LoginForm'
+import RegisterForm from './RegisterForm'
 
 class Login extends React.Component {
+    state = {
+        show: 'login'    //当前展示的是登录框还是注册框
+    }
     render() {
+        const { show } = this.state
         return (
             <Background>
-                <h2 style={{ color: 'red' }}>登录页</h2>
+                <div className="login-container">
+                    <div className={`box ${show === 'login' ? 'active' : ''}`}>
+                        <LoginForm />
+                    </div>
+                    <div className={`box ${show === 'register' ? 'active' : ''}`}>
+                        <RegisterForm />
+                    </div>
+                </div>
             </Background>
         )
     }
