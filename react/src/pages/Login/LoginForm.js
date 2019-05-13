@@ -55,7 +55,7 @@ class LoginForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
-                        style={{ marginBottom: 10 }}
+                        style={{ marginBottom: 20 }}
                         wrapperCol={{ span: 20, pull: focusItem === 2 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 2 ? 1 : 0 }}
                         label={<span className='iconfont icon-securityCode-b' style={{ opacity: focusItem === 2 ? 1 : 0.6 }} />}

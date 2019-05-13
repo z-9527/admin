@@ -13,7 +13,7 @@ class RegisterForm extends React.Component {
         const { focusItem } = this.state
         return (
             <div>
-                <h3 className="title">管理员登录</h3>
+                <h3 className="title">管理员注册</h3>
                 <Form>
                     <Form.Item
                         style={{ marginBottom: 10 }}
@@ -51,7 +51,7 @@ class RegisterForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
-                        style={{ marginBottom: 10 }}
+                        style={{ marginBottom: 20 }}
                         wrapperCol={{ span: 20, pull: focusItem === 2 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 2 ? 1 : 0 }}
                         label={<span className='iconfont icon-suo1' style={{ opacity: focusItem === 2 ? 1 : 0.6 }} />}
