@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import './index.css'
 import {Switch,Route} from 'react-router-dom'
 import Index from './pages/Index'
 import Login from './pages/Login'
