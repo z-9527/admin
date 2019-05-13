@@ -1,15 +1,53 @@
 import React from 'react'
 // import './style.less'   //没有设置模块化所以这里可以不用引，index中已经引入了
 import { Form, Input, Row, Col } from 'antd'
+import { randomNum } from '@/utils/util'
 
 
 class LoginForm extends React.Component {
     state = {
-        focusItem: -1   //当前焦点聚焦在哪一项上
+        focusItem: -1,   //当前焦点聚焦在哪一项上
+        code: ''  //验证码
+    }
+    componentDidMount() {
+        this._createCode()
     }
 
     onRegister = () => {
         this.props.toggleShow()
+    }
+    /**
+     * 生成验证码
+     */
+    _createCode = () => {
+        const ctx = this.canvas.getContext('2d')
+        const chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+        let code = ''
+        ctx.clearRect(0, 0, 80, 39)
+        for (let i = 0; i < 4; i++) {
+            const char = chars[randomNum(0, 57)]
+            code += char
+            ctx.font = randomNum(20, 25) + 'px SimHei'  //设置字体随机大小
+            ctx.fillStyle = '#D3D7F7'
+            ctx.textBaseline = 'middle'
+            ctx.shadowOffsetX = randomNum(-3, 3)
+            ctx.shadowOffsetY = randomNum(-3, 3)
+            ctx.shadowBlur = randomNum(-3, 3)
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
+            let x = 80 / 5 * (i + 1)
+            let y = 39 / 2
+            let deg = randomNum(-25, 25)
+            /**设置旋转角度和坐标原点**/
+            ctx.translate(x, y)
+            ctx.rotate(deg * Math.PI / 180)
+            ctx.fillText(char, 0, 0)
+            /**恢复旋转角度和坐标原点**/
+            ctx.rotate(-deg * Math.PI / 180)
+            ctx.translate(-x, -y)
+        }
+        this.setState({
+            code
+        })
     }
 
     render() {
@@ -74,7 +112,7 @@ class LoginForm extends React.Component {
                                 )}
                             </Col>
                             <Col span={9}>
-                                验证码
+                                <canvas onClick={this._createCode} width="80" height='39' ref={el => this.canvas = el} />
                             </Col>
                         </Row>
                     </Form.Item>
