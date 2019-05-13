@@ -23,7 +23,7 @@ class LoginForm extends React.Component {
         const ctx = this.canvas.getContext('2d')
         const chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
         let code = ''
-        ctx.clearRect(0, 0, 80, 39)
+        ctx.clearRect(0, 0, 80, 40)
         for (let i = 0; i < 4; i++) {
             const char = chars[randomNum(0, 57)]
             code += char
@@ -35,7 +35,7 @@ class LoginForm extends React.Component {
             ctx.shadowBlur = randomNum(-3, 3)
             ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
             let x = 80 / 5 * (i + 1)
-            let y = 39 / 2
+            let y = 40 / 2
             let deg = randomNum(-25, 25)
             /**设置旋转角度和坐标原点**/
             ctx.translate(x, y)
@@ -112,7 +112,7 @@ class LoginForm extends React.Component {
                                 )}
                             </Col>
                             <Col span={9}>
-                                <canvas onClick={this._createCode} width="80" height='39' ref={el => this.canvas = el} />
+                                <canvas onClick={this._createCode} width="80" height='40' ref={el => this.canvas = el} />
                             </Col>
                         </Row>
                     </Form.Item>

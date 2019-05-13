@@ -51,7 +51,7 @@ class RegisterForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
-                        style={{ marginBottom: 20 }}
+                        style={{ marginBottom: 35 }}
                         wrapperCol={{ span: 20, pull: focusItem === 2 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 2 ? 1 : 0 }}
                         label={<span className='iconfont icon-suo1' style={{ opacity: focusItem === 2 ? 1 : 0.6 }} />}
