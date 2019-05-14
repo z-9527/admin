@@ -25,7 +25,6 @@ class Typing extends React.Component {
         setTimeout(() => {
             this._play(this.chain)
         }, this.props.delay)
-        console.log(this.props.children)
     }
     /**
      * children转换为符合打印的数组
@@ -103,10 +102,16 @@ class Typing extends React.Component {
      * @param {object} info 
      */
     _createDom(info) {
-        let dom = null
-        dom = document.createElement(info.type)
-        if (info.className) {
-            dom.setAttribute('class', info.className)
+        info = { ...info }
+        let dom = document.createElement(info.type)
+
+        delete info.children
+
+        for (let [key, value] of Object.entries(info)) {
+            if (key === 'className') {
+                key = 'class'
+            }
+            dom.setAttribute(key, value)
         }
         if (info.style) {
             let cssText = ''
@@ -115,12 +120,14 @@ class Typing extends React.Component {
             }
             dom.style.cssText = cssText
         }
+
         return dom
     }
 
     render() {
+        const { className = '', style = {} } = this.props
         return (
-            <div ref={el => this.wrapper = el}>
+            <div ref={el => this.wrapper = el} className={className} style={style}>
 
             </div>
         )

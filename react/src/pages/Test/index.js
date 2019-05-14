@@ -13,11 +13,11 @@ class Test extends React.Component {
         return (
             <Card>
                 <div onClick={this.test}>fdasfa</div>
-                <Typing>
+                <Typing style={{minHeight:500}}>
                     fdsafadsf   
                     打印带有标签的段落
                     <p>我是段落</p>
-                    {/* <a href="https://segmentfault.com/a/1190000018891454#articleHeader2">fdsaf</a> */}
+                    <a href="https://segmentfault.com/a/1190000018891454#articleHeader2" target="_blank">fdsaf</a>
                     {null}
                     {this.state.name}
                     <ul className="tttt" style={{color:'red'}} onClick={this.test}>
