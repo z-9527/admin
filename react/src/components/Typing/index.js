@@ -102,7 +102,7 @@ class Typing extends React.Component {
      * @param {object} info 
      */
     _createDom(info) {
-        info = { ...info }
+        info = { ...info }   //因为要删除info的属相，所以这里深拷贝对象，避免影响外面
         let dom = document.createElement(info.type)
 
         delete info.children
