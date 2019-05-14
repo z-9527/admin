@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-//如何将react节点转换为dom，比如拥有className、style、onClick的react元素，我们生成的dom如何保留这些
+// 如何将react节点转换为dom，比如拥有className、style、onClick的react元素，我们生成的dom如何保留这些。
+// 本来想直接用React.createElement来代替document.createElement。但是ReactDOM.render()方法插入的位置节点必须是dom所以此方法不行
 
 class Typing extends React.Component {
     static propTypes = {
