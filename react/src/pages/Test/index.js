@@ -12,10 +12,12 @@ class Test extends React.Component {
     render() {
         return (
             <Card>
+                <div onClick={this.test}>fdasfa</div>
                 <Typing>
                     fdsafadsf   
                     打印带有标签的段落
                     <p>我是段落</p>
+                    {/* <a href="https://segmentfault.com/a/1190000018891454#articleHeader2">fdsaf</a> */}
                     {null}
                     {this.state.name}
                     <ul className="tttt" style={{color:'red'}} onClick={this.test}>

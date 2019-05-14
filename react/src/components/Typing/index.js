@@ -103,9 +103,18 @@ class Typing extends React.Component {
      * @param {object} info 
      */
     _createDom(info) {
-        console.log(666, info)
         let dom = null
         dom = document.createElement(info.type)
+        if (info.className) {
+            dom.setAttribute('class', info.className)
+        }
+        if (info.style) {
+            let cssText = ''
+            for (let [key, value] of Object.entries(info.style)) {
+                cssText += `${key}:${value};`
+            }
+            dom.style.cssText = cssText
+        }
         return dom
     }
 

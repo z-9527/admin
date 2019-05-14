@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Row, Col } from 'antd'
+import { Form, Input } from 'antd'
 
 class RegisterForm extends React.Component {
     state = {
