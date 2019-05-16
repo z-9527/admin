@@ -1,4 +1,4 @@
-@primary-color: #1890ff;
+@primary-color: #13C2C2;
 // This file will contain all varibales, our custom varibales and
 //those from Ant Design which we want to override.
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
@@ -2130,6 +2130,8 @@ this.tinycolor = tinycolor;
 @drawer-body-padding: 24px;
 
 
+
+
 html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -2221,11 +2223,11 @@ html {
   color: #52c41a;
 }
 .ant-alert-info {
-  background-color: color(~`colorPalette("@{primary-color}", 1)`);
-  border: 1px solid color(~`colorPalette("@{primary-color}", 3)`);
+  background-color: #e6f7ff;
+  border: 1px solid #91d5ff;
 }
 .ant-alert-info .ant-alert-icon {
-  color: @primary-color;
+  color: #1890ff;
 }
 .ant-alert-warning {
   background-color: #fffbe6;
@@ -2361,10 +2363,10 @@ html {
   background-color: #52c41a;
 }
 .ant-badge-status-processing {
-  background-color: @primary-color;
+  background-color: #1890ff;
 }
 .ant-badge-status-processing::after {
-  border: 1px solid @primary-color;
+  border: 1px solid #1890ff;
   border-radius: 50%;
 }
 .ant-badge-status-default {
@@ -2407,7 +2409,7 @@ html {
   background: #52c41a;
 }
 .ant-badge-status-blue {
-  background: @primary-color;
+  background: #1890ff;
 }
 .ant-badge-status-geekblue {
   background: #2f54eb;
@@ -3695,7 +3697,7 @@ html {
 .ant-cascader-picker:focus .ant-cascader-input {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-cascader-picker-show-search.ant-cascader-picker-focused {
   color: rgba(0, 0, 0, 0.25);
@@ -3895,7 +3897,7 @@ html {
 .ant-calendar-picker:focus .ant-calendar-picker-input:not(.ant-input-disabled) {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-calendar-picker-clear {
   color: rgba(0, 0, 0, 0.25);
@@ -3987,7 +3989,7 @@ html {
   color: rgba(0, 0, 0, 0.25);
 }
 .ant-calendar-selected-day .ant-calendar-date {
-  background: #d1e9ff;
+  background: #d0f3f3;
 }
 .ant-calendar-selected-date .ant-calendar-date,
 .ant-calendar-selected-start-date .ant-calendar-date,
@@ -4259,7 +4261,7 @@ html {
 .ant-calendar-range .ant-calendar-time-picker-input:focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-calendar-range .ant-calendar-input-disabled,
 .ant-calendar-range .ant-calendar-time-picker-input-disabled {
@@ -4930,7 +4932,7 @@ form .ant-upload {
 .has-error .ant-transfer-list-search:not([disabled]):focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .is-validating.has-feedback .ant-form-item-children-icon {
   color: @primary-color;
@@ -4958,7 +4960,7 @@ form .ant-upload {
 .ant-input-number:focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-input-number-disabled {
   color: rgba(0, 0, 0, 0.25);
@@ -4998,7 +5000,7 @@ form .ant-upload {
 .ant-input-number-focused {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-input-number-disabled {
   color: rgba(0, 0, 0, 0.25);
@@ -5057,7 +5059,7 @@ form .ant-upload {
 .ant-input:focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-input-disabled {
   color: rgba(0, 0, 0, 0.25);
@@ -5349,7 +5351,7 @@ form .ant-upload {
 .ant-mention-wrapper .ant-mention-editor:focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-mention-wrapper .ant-mention-editor-disabled {
   color: rgba(0, 0, 0, 0.25);
@@ -5370,7 +5372,7 @@ form .ant-upload {
 .ant-mention-wrapper.ant-mention-active:not(.disabled) .ant-mention-editor {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-mention-wrapper.disabled .ant-mention-editor {
   color: rgba(0, 0, 0, 0.25);
@@ -5745,7 +5747,7 @@ form .ant-upload {
 }
 .ant-message-info .anticon,
 .ant-message-loading .anticon {
-  color: @primary-color;
+  color: #1890ff;
 }
 .ant-modal {
   color: rgba(0, 0, 0, 0.65);
@@ -5797,7 +5799,7 @@ form .ant-upload {
   color: #faad14;
 }
 .ant-modal-confirm-info .ant-modal-confirm-body > .anticon {
-  color: @primary-color;
+  color: #1890ff;
 }
 .ant-modal-confirm-success .ant-modal-confirm-body > .anticon {
   color: #52c41a;
@@ -5820,7 +5822,7 @@ form .ant-upload {
   color: #52c41a;
 }
 .anticon.ant-notification-notice-icon-info {
-  color: @primary-color;
+  color: #1890ff;
 }
 .anticon.ant-notification-notice-icon-warning {
   color: #faad14;
@@ -5960,7 +5962,7 @@ form .ant-upload {
 .ant-pagination-options-quick-jumper input:focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-pagination-options-quick-jumper input-disabled {
   color: rgba(0, 0, 0, 0.25);
@@ -6075,7 +6077,7 @@ form .ant-upload {
 }
 .ant-progress-success-bg,
 .ant-progress-bg {
-  background-color: @primary-color;
+  background-color: #1890ff;
 }
 .ant-progress-success-bg {
   background-color: #52c41a;
@@ -6126,7 +6128,7 @@ form .ant-upload {
   border-color: @primary-color;
 }
 .ant-radio-input:focus + .ant-radio-inner {
-  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(19, 194, 194, 0.08);
 }
 .ant-radio-checked::after {
   border: 1px solid @primary-color;
@@ -6282,7 +6284,7 @@ form .ant-upload {
 .ant-select-selection:active {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-select-selection__clear {
   color: rgba(0, 0, 0, 0.25);
@@ -6338,7 +6340,7 @@ form .ant-upload {
 .ant-select-open .ant-select-selection {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-select-combobox .ant-select-search__field {
   box-shadow: none;
@@ -6440,8 +6442,8 @@ form .ant-upload {
   box-shadow: 0;
 }
 .ant-slider-handle:focus {
-  border-color: #46a6ff;
-  box-shadow: 0 0 0 5px rgba(24, 144, 255, 0.2);
+  border-color: #42cece;
+  box-shadow: 0 0 0 5px rgba(19, 194, 194, 0.2);
 }
 .ant-slider-handle.ant-tooltip-open {
   border-color: @primary-color;
@@ -6470,7 +6472,7 @@ form .ant-upload {
   border-radius: 50%;
 }
 .ant-slider-dot-active {
-  border-color: #8cc8ff;
+  border-color: #89e1e1;
 }
 .ant-slider-disabled .ant-slider-track {
   background-color: rgba(0, 0, 0, 0.25) !important;
@@ -6683,7 +6685,7 @@ form .ant-upload {
   color: @primary-color;
 }
 .ant-switch:focus {
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-switch:focus:hover {
   box-shadow: none;
@@ -7255,8 +7257,8 @@ tr.ant-table-expanded-row:hover {
 }
 .ant-tag-cyan {
   color: #13c2c2;
-  background: #e6fffb;
-  border-color: #87e8de;
+  background: color(~`colorPalette("@{primary-color}", 1)`);
+  border-color: color(~`colorPalette("@{primary-color}", 3)`);
 }
 .ant-tag-cyan-inverse {
   color: #fff;
@@ -7284,14 +7286,14 @@ tr.ant-table-expanded-row:hover {
   border-color: #52c41a;
 }
 .ant-tag-blue {
-  color: @primary-color;
-  background: color(~`colorPalette("@{primary-color}", 1)`);
-  border-color: color(~`colorPalette("@{primary-color}", 3)`);
+  color: #1890ff;
+  background: #e6f7ff;
+  border-color: #91d5ff;
 }
 .ant-tag-blue-inverse {
   color: #fff;
-  background: @primary-color;
-  border-color: @primary-color;
+  background: #1890ff;
+  border-color: #1890ff;
 }
 .ant-tag-geekblue {
   color: #2f54eb;
@@ -7393,7 +7395,7 @@ li.ant-time-picker-panel-select-option-disabled:hover {
 .ant-time-picker-input:focus {
   border-color: color(~`colorPalette("@{primary-color}", 5)`);
   border-right-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(19, 194, 194, 0.2);
 }
 .ant-time-picker-input-disabled {
   color: rgba(0, 0, 0, 0.25);

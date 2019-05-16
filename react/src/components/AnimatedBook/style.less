@@ -1,0 +1,218 @@
+.book-container {
+    background-color: #ecf0f1;
+    width: 1000px;
+    height: 500px;
+    padding: 100px;
+    padding-left: 150px;
+
+    .book {
+        position: relative;
+        width: 160px;
+        height: 220px;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+
+        &:hover {
+            .hardcover_front {
+                transform: rotateY(-145deg) translateZ(0);
+                z-index: 0;
+            }
+
+            .page {
+                &>li:nth-child(1) {
+                    transform: rotateY(-30deg);
+                    transition-duration: 1.5s;
+                }
+
+                &>li:nth-child(2) {
+                    transform: rotateY(-35deg);
+                    transition-duration: 1.8s;
+                }
+
+                &>li:nth-child(3) {
+                    transform: rotateY(-118deg);
+                    transition-duration: 1.6s;
+                }
+
+                &>li:nth-child(4) {
+                    transform: rotateY(-130deg);
+                    transition-duration: 1.4s;
+                }
+
+                &>li:nth-child(5) {
+                    transform: rotateY(-140deg);
+                    transition-duration: 1.2s;
+                }
+            }
+
+        }
+
+        //公共样式
+        li::before,
+        li::after {
+            content: "";
+        }
+        ul{
+            margin-bottom: 0;
+        }
+
+        .hardcover_front,
+        .hardcover_back,
+        .book_spine,
+        .hardcover_front>li,
+        .hardcover_back>li,
+        .book_spine>li,
+        .page>li {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .hardcover_front>li:first-child:after,
+        .hardcover_front>li:first-child:before,
+        .hardcover_front>li:last-child:after,
+        .hardcover_front>li:last-child:before,
+        .hardcover_back>li:first-child:after,
+        .hardcover_back>li:first-child:before,
+        .hardcover_back>li:last-child:after,
+        .hardcover_back>li:last-child:before,
+        .book_spine>li:first-child:after,
+        .book_spine>li:first-child:before,
+        .book_spine>li:last-child:after,
+        .book_spine>li:last-child:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    // 封面
+    .hardcover_front {
+        transition: all 0.8s ease;
+        transform-origin: 0% 100%;
+        transform: rotateY(-34deg) translateZ(8px);
+        z-index: 100;
+
+        &>li:first-child {
+            transform: translateZ(2px);
+            background-color: #eee;
+
+            &::before,
+            &::after {
+                width: 3px;
+                height: 100%;
+                background: #999;
+            }
+
+            &::before {
+                transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+            }
+
+            &::after {
+                transform: rotateY(90deg) translateZ(158px) translateX(2px);
+            }
+        }
+
+        &>li:last-child {
+            transform: rotateY(180deg) translateZ(2px);
+            background: #fffbec;
+
+            &::before {
+                box-shadow: 0px 0px 30px 5px #333;
+                transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(-2px) translateY(-78px);
+                width: 4px;
+                height: 160px;
+            }
+        }
+    }
+
+    // 书页
+    .page {
+        width: 100%;
+        height: 98%;
+        top: 1%;
+        left: 3%;
+        z-index: 10;
+
+        &>li {
+            transform-origin: left center;
+            transition-property: transform;
+            transition-timing-function: ease;
+            border-radius: 0px 5px 5px 0px;
+            background: -webkit-linear-gradient(left, #e1ddd8 0%, #fffbf6 100%);
+            box-shadow: inset 0px -1px 2px rgba(50, 50, 50, 0.1), inset -1px 0px 1px rgba(150, 150, 150, 0.2);
+        }
+
+        &>li:nth-child(1) {
+            transition-duration: 0.6s;
+            transform: rotateY(-28deg);
+        }
+
+        &>li:nth-child(2) {
+            transition-duration: 0.6s;
+            transform: rotateY(-30deg);
+        }
+
+        &>li:nth-child(3) {
+            transition-duration: 0.4s;
+            transform: rotateY(-32deg);
+        }
+
+        &>li:nth-child(4) {
+            transition-duration: 0.5s;
+            transform: rotateY(-34deg);
+        }
+
+        &>li:nth-child(5) {
+            transition-duration: 0.6s;
+            transform: rotateY(-36deg);
+        }
+
+    }
+
+    // 背面
+    .hardcover_back {
+        transform-origin: 0% 100%;
+        transform: rotateY(-20deg) translateZ(-8px);
+
+        li:first-child {
+            transform: translateZ(2px);
+            background: #fffbec;
+
+            &::before,
+            &::after {
+                width: 4px;
+                height: 100%;
+                background: #999;
+            }
+
+            &::before {
+                transform: rotateY(90deg) translateZ(-2px) translateX(2px);
+            }
+
+            &::after {
+                transform: rotateY(90deg) translateZ(158px) translateX(2px);
+            }
+        }
+
+        li:last-child {
+            transform: translateZ(-2px);
+            background: #fffbec;
+
+            &::before,
+            &::after {
+                width: 4px;
+                height: 160px; //书的宽度
+                background: #999;
+            }
+
+            &::before {
+                transform: rotateX(90deg) rotateZ(90deg) translateZ(-140px) translateX(2px) translateY(-78px);
+                box-shadow: 10px -1px 80px 20px #666;
+            }
+        }
+    }
+}

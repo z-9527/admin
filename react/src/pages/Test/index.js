@@ -1,6 +1,8 @@
 import React from 'react'
 import { Card } from 'antd'
 import Typing from '@/components/Typing'
+import AnimatedBook from '@/components/AnimatedBook'
+
 
 class Test extends React.Component {
     state = {
@@ -12,7 +14,7 @@ class Test extends React.Component {
     render() {
         return (
             <Card>
-                <div onClick={this.test}>fdasfa</div>
+                {/* <div onClick={this.test}>fdasfa</div>
                 <Typing style={{minHeight:500}}>
                     fdsafadsf   
                     打印带有标签的段落
@@ -25,7 +27,8 @@ class Test extends React.Component {
                         <li>列表2</li>
                         <li>列表3</li>
                     </ul>
-                </Typing>
+                </Typing> */}
+                <AnimatedBook/>
             </Card>
         )
     }
