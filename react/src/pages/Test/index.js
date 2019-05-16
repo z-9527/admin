@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card } from 'antd'
+import { Card, Divider } from 'antd'
 import Typing from '@/components/Typing'
 import AnimatedBook from '@/components/AnimatedBook'
 
@@ -28,7 +28,7 @@ class Test extends React.Component {
                         <li>列表3</li>
                     </ul>
                 </Typing> */}
-                <AnimatedBook/>
+                <AnimatedBook cover={'封面'} content={"内容"}/>
             </Card>
         )
     }
