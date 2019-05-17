@@ -2,6 +2,7 @@ import React from 'react'
 import { Card, Divider } from 'antd'
 import Typing from '@/components/Typing'
 import AnimatedBook from '@/components/AnimatedBook'
+import './style.less'
 
 
 class Test extends React.Component {
@@ -14,6 +15,7 @@ class Test extends React.Component {
     render() {
         return (
             <Card>
+                <div className="test">fdsafasdf</div>
                 {/* <div onClick={this.test}>fdasfa</div>
                 <Typing style={{minHeight:500}}>
                     fdsafadsf   

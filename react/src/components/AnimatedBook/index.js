@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 class AnimatedBooks extends React.Component {
     static propTypes = {
-        content: PropTypes.element,      //内容
-        cover: PropTypes.element,      //封面
+        content: PropTypes.any,      //内容
+        cover: PropTypes.any,      //封面
     }
     static defaultProps = {
         content: '',
