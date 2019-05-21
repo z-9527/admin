@@ -50,7 +50,7 @@
             opacity: .6;
         }
 
-        .myInput {
+        .myInput.ant-input {
             background-color: transparent;
             color: #61BFFF;
             outline: none;
@@ -113,6 +113,14 @@
 
         .ant-col-pull-1 {
             right: 4.16666667%; //为什么这里又写一遍？因为上面的优先级会覆盖antd，所以这里在写一遍提高优先级
+        }
+
+        .ant-form-explain {
+            position: absolute;
+            z-index: 99;
+            left: 110%;
+            top: 0;
+            height: 41px;
         }
 
         /*更改谷歌浏览器input背景*/

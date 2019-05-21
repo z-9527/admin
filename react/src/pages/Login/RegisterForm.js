@@ -1,30 +1,38 @@
 import React from 'react'
 import { Form, Input } from 'antd'
+import Promptbox from '@/components/PromptBox/index'
 
 class RegisterForm extends React.Component {
     state = {
         focusItem: -1   //当前焦点聚焦在哪一项上
     }
-    backLogin = ()=>{
+    backLogin = () => {
+        this.props.form.resetFields()
         this.props.toggleShow()
     }
     render() {
-        const { getFieldDecorator } = this.props.form
+        const { getFieldDecorator, getFieldValue, getFieldError } = this.props.form
         const { focusItem } = this.state
         return (
             <div>
                 <h3 className="title">管理员注册</h3>
-                <Form>
+                <Form hideRequiredMark>
                     <Form.Item
+                        help={<Promptbox info={getFieldError('registerUsername') && getFieldError('registerUsername')[0]} />}
                         style={{ marginBottom: 10 }}
                         wrapperCol={{ span: 20, pull: focusItem === 0 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 0 ? 1 : 0 }}
                         label={<span className='iconfont icon-User' style={{ opacity: focusItem === 0 ? 1 : 0.6 }} />}
                         colon={false}>
-                        {getFieldDecorator('username', {
-
+                        {getFieldDecorator('registerUsername', {
+                            validateFirst: true,
+                            rules: [
+                                { required: true, message: '用户名不能为空' },
+                                { pattern: '^[^ ]+$', message: '不能输入空格' },
+                            ]
                         })(
                             <Input
+                                maxLength={16}
                                 className="myInput"
                                 onFocus={() => this.setState({ focusItem: 0 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
@@ -33,15 +41,22 @@ class RegisterForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
+                        help={<Promptbox info={getFieldError('registerPassword') && getFieldError('registerPassword')[0]} />}
                         style={{ marginBottom: 10 }}
                         wrapperCol={{ span: 20, pull: focusItem === 1 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 1 ? 1 : 0 }}
                         label={<span className='iconfont icon-suo1' style={{ opacity: focusItem === 1 ? 1 : 0.6 }} />}
                         colon={false}>
-                        {getFieldDecorator('password', {
+                        {getFieldDecorator('registerPassword', {
+                            validateFirst: true,
+                            rules: [
+                                { required: true, message: '密码不能为空' },
+                                { pattern: '^[^ ]+$', message: '密码不能有空格' }
+                            ]
 
                         })(
                             <Input
+                                maxLength={16}
                                 className="myInput"
                                 type="password"
                                 onFocus={() => this.setState({ focusItem: 1 })}
@@ -51,12 +66,24 @@ class RegisterForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
+                        help={<Promptbox info={getFieldError('confirmPassword') && getFieldError('confirmPassword')[0]} />}
                         style={{ marginBottom: 35 }}
                         wrapperCol={{ span: 20, pull: focusItem === 2 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 2 ? 1 : 0 }}
                         label={<span className='iconfont icon-suo1' style={{ opacity: focusItem === 2 ? 1 : 0.6 }} />}
                         colon={false}>
                         {getFieldDecorator('confirmPassword', {
+                            rules: [
+                                { required: true, message: '请确认密码' },
+                                {
+                                    validator: (rule, value, callback) => {
+                                        if (value && value !== getFieldValue('registerPassword')) {
+                                            callback('两次输入不一致！')
+                                        }
+                                        callback()
+                                    }
+                                },
+                            ]
 
                         })(
                             <Input
@@ -69,7 +96,7 @@ class RegisterForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item>
-                    <div className="btn-box">
+                        <div className="btn-box">
                             <div className="loginBtn">注册</div>
                             <div className="registerBtn" onClick={this.backLogin}>返回登录</div>
                         </div>

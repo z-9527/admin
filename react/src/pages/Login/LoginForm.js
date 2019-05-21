@@ -2,6 +2,7 @@ import React from 'react'
 // import './style.less'   //没有设置模块化所以这里可以不用引，index中已经引入了
 import { Form, Input, Row, Col } from 'antd'
 import { randomNum } from '@/utils/util'
+import Promptbox from '@/components/PromptBox/index'
 
 
 class LoginForm extends React.Component {
@@ -14,6 +15,7 @@ class LoginForm extends React.Component {
     }
 
     onRegister = () => {
+        this.props.form.resetFields()
         this.props.toggleShow()
     }
     /**
@@ -51,20 +53,21 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form
-        const { focusItem } = this.state
+        const { getFieldDecorator, getFieldError } = this.props.form
+        const { focusItem, code } = this.state
         return (
             <div>
                 <h3 className="title">管理员登录</h3>
-                <Form>
+                <Form hideRequiredMark>
                     <Form.Item
+                        help={<Promptbox info={getFieldError('username') && getFieldError('username')[0]} />}
                         style={{ marginBottom: 10 }}
                         wrapperCol={{ span: 20, pull: focusItem === 0 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 0 ? 1 : 0 }}
                         label={<span className='iconfont icon-User' style={{ opacity: focusItem === 0 ? 1 : 0.6 }} />}
                         colon={false}>
                         {getFieldDecorator('username', {
-
+                            rules: [{ required: true, message: '请输入用户名' }]
                         })(
                             <Input
                                 className="myInput"
@@ -75,13 +78,14 @@ class LoginForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
+                        help={<Promptbox info={getFieldError('password') && getFieldError('password')[0]} />}
                         style={{ marginBottom: 10 }}
                         wrapperCol={{ span: 20, pull: focusItem === 1 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 1 ? 1 : 0 }}
                         label={<span className='iconfont icon-suo1' style={{ opacity: focusItem === 1 ? 1 : 0.6 }} />}
                         colon={false}>
                         {getFieldDecorator('password', {
-
+                            rules: [{ required: true, message: '请输入密码' }]
                         })(
                             <Input
                                 className="myInput"
@@ -93,6 +97,7 @@ class LoginForm extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item
+                        help={<Promptbox info={getFieldError('captcha') && getFieldError('captcha')[0]} />}
                         style={{ marginBottom: 20 }}
                         wrapperCol={{ span: 20, pull: focusItem === 2 ? 1 : 0 }}
                         labelCol={{ span: 3, pull: focusItem === 2 ? 1 : 0 }}
@@ -101,7 +106,18 @@ class LoginForm extends React.Component {
                         <Row gutter={8}>
                             <Col span={15}>
                                 {getFieldDecorator('captcha', {
-
+                                    validateFirst: true,
+                                    rules: [
+                                        { required: true, message: '请输入验证码' },
+                                        {
+                                            validator: (rule, value, callback) => {
+                                                if (value.length >= 4 && code.toUpperCase() !== value.toUpperCase()) {
+                                                    callback('验证码错误')
+                                                }
+                                                callback()
+                                            }
+                                        }
+                                    ]
                                 })(
                                     <Input
                                         className="myInput"
