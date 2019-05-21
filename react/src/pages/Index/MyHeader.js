@@ -84,7 +84,7 @@ class MyHeader extends React.Component {
                         </Menu>
                     </div>
                 </div>
-                <EditInfoModal ref={e => this.EditInfoModal = e} />
+                <EditInfoModal wrappedComponentRef={(e) => this.EditInfoModal = e} />
             </div>
         )
     }

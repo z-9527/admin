@@ -8,12 +8,18 @@ router.get('/', async (ctx, next) => {
 
 //上传接口
 router.post('/upload', async (ctx, next) => {
-  const serverFilePath = path.join( __dirname, '../public/upload-files' )
-  const result = await uploadFile( ctx, {
-    fileType: 'myUpload', // common or album
-    path: serverFilePath
-  })
-  ctx.body = result
+  const serverFilePath = path.join(__dirname, '../public/upload-files')
+  try {
+    const result = await uploadFile(ctx, {
+      fileType: 'myUpload', // common or album
+      path: serverFilePath,
+      isImg: !!ctx.query.isImg
+    })
+    ctx.body = result
+  } catch (error) {
+    ctx.body = error
+    ctx.status = 500
+  }
 })
 
 router.get('/json', async (ctx, next) => {
