@@ -3,6 +3,7 @@ import screenfull from 'screenfull'
 import { Icon, message, Menu, Avatar } from 'antd'
 import ColorPicker from '@/components/ColorPicker/index'
 import EditInfoModal from './EditInfoModal'
+import EditPasswordModal from './EditPasswordModal'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -53,6 +54,10 @@ class MyHeader extends React.Component {
     openEditInfoModal = () => {
         this.EditInfoModal.toggleVisible(true)
     }
+    openEditPasswordModal = () => {
+        console.log(111)
+        this.EditPasswordModal.toggleVisible(true)
+    }
 
     render() {
         const { isFullscreen, color } = this.state
@@ -73,7 +78,7 @@ class MyHeader extends React.Component {
                             <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />&nbsp;<span>张致豪</span></div>}>
                                 <MenuItemGroup title="用户中心">
                                     <Menu.Item key={1} onClick={this.openEditInfoModal}><Icon type="user" />编辑个人信息</Menu.Item>
-                                    <Menu.Item key={77}><Icon type="edit" />修改密码</Menu.Item>
+                                    <Menu.Item key={77} onClick={this.openEditPasswordModal}><Icon type="edit" />修改密码</Menu.Item>
                                     <Menu.Item key={2}><Icon type="logout" />退出登录</Menu.Item>
                                 </MenuItemGroup>
                                 <MenuItemGroup title="设置中心">
@@ -85,6 +90,7 @@ class MyHeader extends React.Component {
                     </div>
                 </div>
                 <EditInfoModal wrappedComponentRef={(e) => this.EditInfoModal = e} />
+                <EditPasswordModal wrappedComponentRef={(e) => this.EditPasswordModal = e} />
             </div>
         )
     }
