@@ -25,7 +25,7 @@ class EditInfoModal extends React.Component {
         })
     }
     render() {
-        const { visible } = this.state
+        const { visible, uploading } = this.state
         const { getFieldDecorator, getFieldValue } = this.props.form
 
         let avatar = getFieldValue('avatar')
@@ -74,7 +74,7 @@ class EditInfoModal extends React.Component {
                             getValueFromEvent: (info) => info.file.response,     //将上传的结果作为表单项的值（用normalize报错了，所以用的这个）
                         })(
                             <Upload {...uploadProps} style={styles.avatarUploader}>
-                                {avatar ? <img src={avatar} alt="avatar" style={styles.avatar} /> : <Icon style={styles.icon} type={'plus'} />}
+                                {avatar ? <img src={avatar} alt="avatar" style={styles.avatar} /> : <Icon style={styles.icon} type={uploading ? 'loading' : 'plus'} />}
                             </Upload>
                         )}
                     </Form.Item>
@@ -109,6 +109,7 @@ class EditInfoModal extends React.Component {
                     </Form.Item>
                     <Form.Item label={'性别'} {...formItemLayout}>
                         {getFieldDecorator('gender', {
+                            initialValue: '男',
                             rules: [{ required: true, message: '请选择性别' }],
                         })(
                             <RadioGroup>
