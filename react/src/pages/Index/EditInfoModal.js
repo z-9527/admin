@@ -1,5 +1,7 @@
 import React from 'react'
-import { Modal, Form, Upload, Icon, message } from 'antd'
+import { Modal, Form, Upload, Icon, message, Input, Radio, DatePicker, Alert } from 'antd'
+
+const RadioGroup = Radio.Group;
 
 class EditInfoModal extends React.Component {
     state = {
@@ -7,10 +9,15 @@ class EditInfoModal extends React.Component {
         uploading: false
     }
     handleCancel = () => {
+        this.props.form.resetFields()
         this.toggleVisible(false)
     }
     handleOk = () => {
-        this.handleCancel()
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                this.handleCancel()
+            }
+        });
     }
     toggleVisible = (visible) => {
         this.setState({
@@ -32,7 +39,7 @@ class EditInfoModal extends React.Component {
         const uploadProps = {
             name: "avatar",
             listType: "picture-card",
-            action: 'http://localhost:8888/upload?isImg=1',
+            action: `${process.env.REACT_APP_BASE_URL}/upload?isImg=1`,
             showUploadList: false,
             accept: "image/*",
             onChange: (info) => {
@@ -71,9 +78,49 @@ class EditInfoModal extends React.Component {
                             </Upload>
                         )}
                     </Form.Item>
+                    <Form.Item label={'姓名'} {...formItemLayout}>
+                        {getFieldDecorator('name', {
+                            rules: [{ required: true, message: '请输入姓名' }],
+                        })(
+                            <Input placeholder="请输入姓名" />
+                        )}
+                    </Form.Item>
+                    <Form.Item label={'出生年月日'} {...formItemLayout}>
+                        {getFieldDecorator('birth', {
+                            rules: [{ required: true, message: '请选择出生年月日' }],
+                        })(
+                            <DatePicker />
+                        )}
+                    </Form.Item>
+                    <Form.Item label={'电话'} {...formItemLayout}>
+                        {getFieldDecorator('phone', {
+                            rules: [{ required: true, message: '请输入电话号码' }, { pattern: /^[0-9]*$/, message: '请输入正确的电话号码' }],
+                        })(
+                            <Input placeholder="请输入电话号码" />
+                        )}
+                    </Form.Item>
+                    <Form.Item label={'所在地'} {...formItemLayout}>
+                        {getFieldDecorator('area', {
+                            validateFirst: true,
+                            rules: [{ required: true, message: '请输入目前所在地' }],
+                        })(
+                            <Input placeholder="请输入目前所在地" />
+                        )}
+                    </Form.Item>
+                    <Form.Item label={'性别'} {...formItemLayout}>
+                        {getFieldDecorator('gender', {
+                            rules: [{ required: true, message: '请选择性别' }],
+                        })(
+                            <RadioGroup>
+                                <Radio value={'男'}>男</Radio>
+                                <Radio value={'女'}>女</Radio>
+                            </RadioGroup>
+                        )}
+                    </Form.Item>
+                    <Form.Item>
+                        <Alert message={"注：此信息仅为项目模拟数据，无其他用途"} type="info" />
+                    </Form.Item>
                 </Form>
-
-
             </Modal>
         )
     }
@@ -81,9 +128,9 @@ class EditInfoModal extends React.Component {
 
 const styles = {
     avatarUploader: {
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: 150,
         height: 150,
         backgroundColor: '#fff'

@@ -12,7 +12,7 @@ class MyHeader extends React.Component {
     constructor(props) {
         super(props);
         const userTheme = JSON.parse(localStorage.getItem('user-theme'))
-        let color = '#1890ff'
+        let color = '#13C2C2'
         if (userTheme) {
             window.less.modifyVars(userTheme)
             color = userTheme['@primary-color']
@@ -48,7 +48,7 @@ class MyHeader extends React.Component {
         })
     }
     resetColor = () => {
-        this.changeColor('#1890ff')
+        this.changeColor('#13C2C2')
     }
     openEditInfoModal = () => {
         this.EditInfoModal.toggleVisible(true)
