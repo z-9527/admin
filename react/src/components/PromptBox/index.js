@@ -41,7 +41,7 @@ class PromptBox extends React.Component {
         return 30 + this.props.info.length * 15
     }
     render() {
-        const { className = '', style = {}, info } = this.props
+        const { className = '', style = {} } = this.props
         return (
             <div className={className} style={style}>
                 <canvas height='41' width={this._calcWidth()} ref={el => this.canvas = el} />

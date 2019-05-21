@@ -1,7 +1,8 @@
 import React from 'react'
 import screenfull from 'screenfull'
-import { Icon, message, Menu,Avatar } from 'antd'
+import { Icon, message, Menu, Avatar } from 'antd'
 import ColorPicker from '@/components/ColorPicker/index'
+import EditInfoModal from './EditInfoModal'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -49,6 +50,9 @@ class MyHeader extends React.Component {
     resetColor = () => {
         this.changeColor('#1890ff')
     }
+    openEditInfoModal = () => {
+        this.EditInfoModal.toggleVisible(true)
+    }
 
     render() {
         const { isFullscreen, color } = this.state
@@ -66,9 +70,9 @@ class MyHeader extends React.Component {
                     </div>
                     <div style={styles.headerItem}>
                         <Menu mode="horizontal" selectable={false}>
-                            <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>&nbsp;<span>张致豪</span></div>}>
+                            <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />&nbsp;<span>张致豪</span></div>}>
                                 <MenuItemGroup title="用户中心">
-                                    <Menu.Item key={1}><Icon type="user" />完善个人信息</Menu.Item>
+                                    <Menu.Item key={1} onClick={this.openEditInfoModal}><Icon type="user" />编辑个人信息</Menu.Item>
                                     <Menu.Item key={77}><Icon type="edit" />修改密码</Menu.Item>
                                     <Menu.Item key={2}><Icon type="logout" />退出登录</Menu.Item>
                                 </MenuItemGroup>
@@ -80,6 +84,7 @@ class MyHeader extends React.Component {
                         </Menu>
                     </div>
                 </div>
+                <EditInfoModal ref={e => this.EditInfoModal = e} />
             </div>
         )
     }
@@ -97,8 +102,8 @@ const styles = {
         alignItems: 'center',
         padding: '0 20px'
     },
-    avatarBox:{
-        display:'flex',
+    avatarBox: {
+        display: 'flex',
         alignItems: 'center',
     }
 }
