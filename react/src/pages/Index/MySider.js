@@ -24,6 +24,7 @@ const menu = [
     {
         name: 'antd',
         icon: 'ant-design',
+        key:'antd',
         children:[
             {
                 name: '按钮',
