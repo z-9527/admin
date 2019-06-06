@@ -20,6 +20,17 @@ const menu = [
         name: '菜单二',
         icon: 'plus',
         key: 'menu2'
+    },
+    {
+        name: 'antd',
+        icon: 'ant-design',
+        children:[
+            {
+                name: '按钮',
+                icon: '',
+                key: 'ButtonDemo',   
+            }
+        ]
     }
 ]
 
@@ -30,7 +41,7 @@ class MySider extends React.Component {
             return menu.map(item => {
                 if (!item.children || !item.children.length) {
                     return (
-                        <Menu.Item key={item.key}>
+                        <Menu.Item key={item.key || item.name}>
                             <div onClick={() => this.addPane(item)}>{item.icon && <Icon type={item.icon} />}<span>{item.name}</span></div>
                         </Menu.Item>
                     )

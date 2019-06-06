@@ -12,7 +12,7 @@ class Typing extends React.Component {
     }
     static defaultProps = {
         delay: 0,
-        frequency: 120,
+        frequency: 30,
         done: () => { }
     }
 
