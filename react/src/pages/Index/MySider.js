@@ -30,7 +30,12 @@ const menu = [
                 name: '按钮',
                 icon: '',
                 key: 'ButtonDemo',   
-            }
+            },
+            {
+                name: '图标',
+                icon: '',
+                key: 'IconDemo',   
+            },
         ]
     }
 ]

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Card, Row, Col, Menu, Dropdown,Icon } from 'antd'
+import { Button, Card, Row, Col, Menu, Dropdown, Icon } from 'antd'
 import Typing from '../../components/Typing/index'
 
 
 class ButtonDemo extends Component {
     state = {}
     render() {
-
         const menu = (
             <Menu>
                 <Menu.Item key="1">1st item</Menu.Item>
@@ -16,9 +15,9 @@ class ButtonDemo extends Component {
         );
         return (
             <div>
-                <Card bordered={false} hoverable style={{ marginBottom: 24 }}>
-                    <h3>何时使用</h3>
-                    <Typing>
+                <Card bordered={false} hoverable style={{ marginBottom: 24 }} bodyStyle={{ minHeight: 130 }}>
+                    <Typing className="markdown">
+                        <h3>何时使用</h3>
                         标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。
                     </Typing>
                 </Card>
