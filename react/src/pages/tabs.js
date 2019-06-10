@@ -4,12 +4,14 @@ import asyncComponent from '../utils/asyncComponent'
 const Test = asyncComponent(() => import('./Test/index'));
 const ButtonDemo = asyncComponent(() => import('./ButtonDemo/index'));
 const IconDemo = asyncComponent(() => import('./IconDemo/index'));
+const Users = asyncComponent(() => import('./Users/index'));
 
 
 const tabs = {
     submenu: <Test />,
     ButtonDemo: <ButtonDemo />,
-    IconDemo: <IconDemo />
+    IconDemo: <IconDemo />,
+    Users: <Users />
 }
 
 export default tabs

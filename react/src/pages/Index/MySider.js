@@ -17,9 +17,9 @@ const menu = [
 
     },
     {
-        name: '菜单二',
-        icon: 'plus',
-        key: 'menu2'
+        name: '用户管理',
+        icon: 'user',
+        key: 'Users'
     },
     {
         name: 'antd',
