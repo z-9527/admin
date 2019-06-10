@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Input } from 'antd'
 import Promptbox from '@/components/PromptBox/index'
+import { debounce } from '@/utils/util'
 
 class RegisterForm extends React.Component {
     state = {
@@ -10,6 +11,31 @@ class RegisterForm extends React.Component {
         this.props.form.resetFields()
         this.props.toggleShow()
     }
+    onRegister = () => {
+        this.props.form.validateFields((errors, values) => {
+            if (!errors) {
+                console.log(values)
+            }
+        });
+    }
+    /**
+     * @description: 检查用户名是否重复，这里用了函数防抖（函数防抖的典型应用），防抖函数要注意this和事件对象
+     * @param {type} 事件对象
+     * @return: 
+     */
+    checkName = debounce(async (e) => {
+        const value = e.target.value
+        if(value){
+            // const res = 
+            this.props.form.setFields({
+                registerUsername:{
+                    value,
+                    errors:[new Error('用户名已存在')]
+                }
+            })
+            console.log(value)
+        }
+    })
     render() {
         const { getFieldDecorator, getFieldValue, getFieldError } = this.props.form
         const { focusItem } = this.state
@@ -36,6 +62,8 @@ class RegisterForm extends React.Component {
                                 className="myInput"
                                 onFocus={() => this.setState({ focusItem: 0 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
+                                onPressEnter={this.onRegister}
+                                onChange={this.checkName}
                                 placeholder="用户名"
                             />
                         )}
@@ -61,6 +89,7 @@ class RegisterForm extends React.Component {
                                 type="password"
                                 onFocus={() => this.setState({ focusItem: 1 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
+                                onPressEnter={this.onRegister}
                                 placeholder="密码"
                             />
                         )}
@@ -91,13 +120,14 @@ class RegisterForm extends React.Component {
                                 type="password"
                                 onFocus={() => this.setState({ focusItem: 2 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
+                                onPressEnter={this.onRegister}
                                 placeholder="确认密码"
                             />
                         )}
                     </Form.Item>
                     <Form.Item>
                         <div className="btn-box">
-                            <div className="loginBtn">注册</div>
+                            <div className="loginBtn" onClick={this.onRegister}>注册</div>
                             <div className="registerBtn" onClick={this.backLogin}>返回登录</div>
                         </div>
                     </Form.Item>

@@ -14,9 +14,28 @@ class LoginForm extends React.Component {
         this._createCode()
     }
 
-    onRegister = () => {
+    goRegister = () => {
         this.props.form.resetFields()
         this.props.toggleShow()
+    }
+    onLogin = ()=>{
+        this.props.form.validateFields((errors, values) => {
+            if (!errors) {
+                console.log(values)
+                this.props.form.setFields({
+                    password:{
+                        value:values.password,
+                        errors:[new Error('密码不正确')]
+                    }
+                })
+                this.props.form.setFields({
+                    username:{
+                        value:values.username,
+                        errors:[new Error('用户名不存在')]
+                    }
+                })
+            }
+        });
     }
     /**
      * 生成验证码
@@ -73,6 +92,7 @@ class LoginForm extends React.Component {
                                 className="myInput"
                                 onFocus={() => this.setState({ focusItem: 0 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
+                                onPressEnter={this.onLogin}
                                 placeholder="用户名"
                             />
                         )}
@@ -92,6 +112,7 @@ class LoginForm extends React.Component {
                                 type="password"
                                 onFocus={() => this.setState({ focusItem: 1 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
+                                onPressEnter={this.onLogin}
                                 placeholder="密码"
                             />
                         )}
@@ -123,6 +144,7 @@ class LoginForm extends React.Component {
                                         className="myInput"
                                         onFocus={() => this.setState({ focusItem: 2 })}
                                         onBlur={() => this.setState({ focusItem: -1 })}
+                                        onPressEnter={this.onLogin}
                                         placeholder="验证码"
                                     />
                                 )}
@@ -134,8 +156,8 @@ class LoginForm extends React.Component {
                     </Form.Item>
                     <Form.Item>
                         <div className="btn-box">
-                            <div className="loginBtn">登录</div>
-                            <div className="registerBtn" onClick={this.onRegister}>注册</div>
+                            <div className="loginBtn" onClick={this.onLogin}>登录</div>
+                            <div className="registerBtn" onClick={this.goRegister}>注册</div>
                         </div>
                     </Form.Item>
                 </Form>
