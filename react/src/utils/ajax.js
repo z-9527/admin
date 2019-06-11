@@ -9,8 +9,13 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || ''
  * @param param
  * @returns {*}
  */
-function handleURL (url, param) {
-    let completeUrl = BASE_URL + url
+function handleURL(url, param) {
+    let completeUrl = ''
+    if (url.match(/^(https?:\/\/)([0-9a-z.]+)(:[0-9]+)?([/0-9a-z.]+)?(\?[0-9a-z&=]+)?(#[0-9-a-z]+)?/i)) {
+        completeUrl = url
+    } else {
+        completeUrl = BASE_URL + url
+    }
     if (param) {
         if (completeUrl.indexOf('?') === -1) {
             completeUrl = `${completeUrl}?${ObjToURLString(param)}`
@@ -27,7 +32,7 @@ function handleURL (url, param) {
  * @returns {string}
  * @constructor
  */
-function ObjToURLString (param) {
+function ObjToURLString(param) {
     let str = ''
     if (Object.prototype.toString.call(param) === '[object Object]') {
         const list = Object.entries(param).map(item => {
@@ -38,7 +43,7 @@ function ObjToURLString (param) {
     return str
 }
 
-export async function get (url, param) {
+export async function get(url, param) {
     const completeUrl = handleURL(url, param)
     const response = await fetch(completeUrl, {
         credentials: 'include',
@@ -54,8 +59,13 @@ export async function get (url, param) {
     }
 }
 
-export async function post (url, parma) {
-    const completeUrl = BASE_URL + url
+export async function post(url, parma) {
+    let completeUrl = ''
+    if (url.match(/^(https?:\/\/)([0-9a-z.]+)(:[0-9]+)?([/0-9a-z.]+)?(\?[0-9a-z&=]+)?(#[0-9-a-z]+)?/i)) {
+        completeUrl = url
+    } else {
+        completeUrl = BASE_URL + url
+    }
     const response = await fetch(completeUrl, {
         credentials: 'include',
         method: 'POST',
@@ -63,7 +73,7 @@ export async function post (url, parma) {
             withCredentials: true
         },
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(parma),
     })
