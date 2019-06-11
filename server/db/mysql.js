@@ -1,8 +1,6 @@
 const mysql = require('mysql')
 const { MYSQL_CONF } = require('../config/db')
 
-console.log(process.env.NODE_ENV,555)
-
 // 创建链接对象
 const con = mysql.createConnection(MYSQL_CONF)
 

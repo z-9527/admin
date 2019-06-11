@@ -9,7 +9,7 @@ const cors = require('koa2-cors');
 const historyApiFallback = require('koa-history-api-fallback')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
+const user = require('./routes/user')
 
 // error handler
 onerror(app)
@@ -35,7 +35,7 @@ app.use(cors({credentials: true})); //前端调试时解决跨域，上线不用
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(user.routes(), user.allowedMethods())
 
 //一定要写在路由后面，写在前面就不会返回接口内容，而是直接返回首页了
 app.use(historyApiFallback()); // 在这个地方加入。一定要加在静态文件的serve之前，否则会失效。
