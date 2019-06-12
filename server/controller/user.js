@@ -11,7 +11,7 @@ const axios = require('axios')
 const register = async function (username, password, registrationAddress, registrationTime) {
     if (!username || !password) {
         return {
-            sussess: false,
+            success: false,
             message: '请输入账号或密码',
             status: 400
         }
@@ -19,7 +19,7 @@ const register = async function (username, password, registrationAddress, regist
     const checkNameResult = await checkName(username)
     if (checkNameResult.num) {
         return {
-            sussess: false,
+            success: false,
             message: '用户名已存在',
         }
     }
@@ -30,14 +30,13 @@ const register = async function (username, password, registrationAddress, regist
     if (res.affectedRows) {
         return {
             message: '注册成功',
-            sussess: true,
-            id: res.insertId,
-            data: checkNameResult
+            success: true,
+            id: res.insertId
         }
     } else {
         return {
             message: '注册失败',
-            sussess: false
+            success: false
         }
     }
 }
@@ -50,7 +49,7 @@ const checkName = async function (username) {
     const sql = `select * from users where username='${username}'`
     const res = await exec(sql)
     return {
-        sussess: true,
+        success: true,
         num: res.length
     }
 }
@@ -67,12 +66,12 @@ const getIpInfo = async function () {
     })
     if (res.data) {
         return {
-            sussess: true,
+            success: true,
             data: res.data.data
         }
     } else {
         return {
-            sussess: false,
+            success: false,
             message: '获取ip地址失败'
         }
     }

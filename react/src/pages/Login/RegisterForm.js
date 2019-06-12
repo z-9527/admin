@@ -3,6 +3,8 @@ import { Form, Input, message } from 'antd'
 import Promptbox from '@/components/PromptBox/index'
 import { debounce } from '@/utils/util'
 import { get, post } from '@/utils/ajax'
+import CryptoJS from 'crypto-js'
+import { secretkey } from '../../config/secret'
 
 class RegisterForm extends React.Component {
     state = {
@@ -22,17 +24,19 @@ class RegisterForm extends React.Component {
     onRegister = async (values) => {
         const address = await get('/user/getIpInfo')
         let registrationAddress = ''
-        if(address.sussess){
+        if (address.success) {
             registrationAddress = `${address.data.ip} (${address.data.city})`
         }
+        //加密密码
+        const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(values.registerPassword), secretkey).toString();
         const res = await post('/user/register', {
             username: values.registerUsername,
-            password: values.registerPassword,
+            password: ciphertext,
             registrationAddress: registrationAddress,
             registrationTime: Date.now()
         })
-        if (res.sussess) {
-            message.sussess('注册成功')
+        if (res.success) {
+            message.success('注册成功')
         } else {
             message.error(res.message)
         }
