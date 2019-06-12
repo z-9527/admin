@@ -20,12 +20,15 @@ class RegisterForm extends React.Component {
         });
     }
     onRegister = async (values) => {
-        const address = await get('http://ip.taobao.com/service/getIpInfo.php?ip=myip')
-        console.log(123,address)
+        const address = await get('/user/getIpInfo')
+        let registrationAddress = ''
+        if(address.sussess){
+            registrationAddress = `${address.data.ip} (${address.data.city})`
+        }
         const res = await post('/user/register', {
             username: values.registerUsername,
             password: values.registerPassword,
-            registrationAddress: '',
+            registrationAddress: registrationAddress,
             registrationTime: Date.now()
         })
         if (res.sussess) {

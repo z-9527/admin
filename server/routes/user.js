@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { register, checkName } = require('../controller/user')
+const { register, checkName, getIpInfo } = require('../controller/user')
 
 router.prefix('/user')
 
@@ -15,8 +15,9 @@ router.get('/checkName', async function (ctx, next) {
   ctx.body = res
 })
 
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
+router.get('/getIpInfo', async function (ctx, next) {
+  const res = await getIpInfo()
+  ctx.body = res
 })
 
 module.exports = router

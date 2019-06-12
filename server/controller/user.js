@@ -1,4 +1,5 @@
 const { exec } = require('../db/mysql')
+const axios = require('axios')
 
 /**
  * 注册用户
@@ -54,7 +55,31 @@ const checkName = async function (username) {
     }
 }
 
+/**
+ * 淘宝ip地址有跨越，利用后端代理请求
+ */
+const getIpInfo = async function () {
+    const res = await axios.get('http://ip.taobao.com/service/getIpInfo.php?ip=myip', {
+        headers: {
+            referer: 'http://ip.taobao.com/ipSearch.html',
+            host: 'ip.taobao.com'
+        },
+    })
+    if (res.data) {
+        return {
+            sussess: true,
+            data: res.data.data
+        }
+    } else {
+        return {
+            sussess: false,
+            message: '获取ip地址失败'
+        }
+    }
+}
+
 module.exports = {
     register,
-    checkName
+    checkName,
+    getIpInfo
 }
