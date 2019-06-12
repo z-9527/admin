@@ -25,7 +25,7 @@ class RegisterForm extends React.Component {
         const address = await get('/user/getIpInfo')
         let registrationAddress = ''
         if (address.success) {
-            registrationAddress = `${address.data.ip} (${address.data.city})`
+            registrationAddress = JSON.stringify(address.data)
         }
         //加密密码
         const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(values.registerPassword), secretkey).toString();
@@ -38,7 +38,7 @@ class RegisterForm extends React.Component {
         if (res.success) {
             message.success('注册成功')
         } else {
-            message.error(res.message)
+            message.error(res.message || '注册失败')
         }
     }
 
