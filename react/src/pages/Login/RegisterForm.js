@@ -26,6 +26,9 @@ class RegisterForm extends React.Component {
         let registrationAddress = ''
         if (address.success) {
             registrationAddress = JSON.stringify(address.data)
+        } else {
+            message.error('获取用户ip地址失败，请重新注册')
+            return 
         }
         //加密密码
         const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(values.registerPassword), secretkey).toString();
