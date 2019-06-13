@@ -1,6 +1,6 @@
-const front_secretkey = 'front_666666'
-const backend_secretkey = 'backend_666666'
+const FRONT_SECRETKEY = 'front_666666'
+const BACKEND_SECRETKEY = 'backend_666666'
 module.exports = {
-    front_secretkey,
-    backend_secretkey
+    FRONT_SECRETKEY,
+    BACKEND_SECRETKEY
 }

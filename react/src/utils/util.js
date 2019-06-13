@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js'
-import { secretkey } from '../config/secret'
+import { SECRETKEY } from '../config/secret'
 
 /**
  * 防抖函数
@@ -57,7 +57,7 @@ export function randomNum(min, max) {
  * @param {*} str 
  */
 export function encrypt(str){
-    return CryptoJS.AES.encrypt(JSON.stringify(str), secretkey).toString();
+    return CryptoJS.AES.encrypt(JSON.stringify(str), SECRETKEY).toString();
 }
 
 /**
@@ -65,6 +65,6 @@ export function encrypt(str){
  * @param {*} str 
  */
 export function decrypt(str){
-    const bytes  = CryptoJS.AES.decrypt(str, secretkey);
+    const bytes  = CryptoJS.AES.decrypt(str, SECRETKEY);
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 }

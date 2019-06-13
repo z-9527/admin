@@ -1,13 +1,13 @@
 const CryptoJS = require('crypto-js')
 const crypto = require('crypto') //这是node自带的
-const {backend_secretkey,front_secretkey} = require('../config/secret')
+const {FRONT_SECRETKEY,BACKEND_SECRETKEY} = require('../config/secret')
 
 /**
  * 前端加密函数，加密同一个字符串生成的都不相同,加密/解密秘钥必须和前端的相同
  * @param {*} str 
  */
  function encrypt(str){
-    return CryptoJS.AES.encrypt(JSON.stringify(str), front_secretkey).toString();
+    return CryptoJS.AES.encrypt(JSON.stringify(str), FRONT_SECRETKEY).toString();
 }
 
 /**
@@ -15,7 +15,7 @@ const {backend_secretkey,front_secretkey} = require('../config/secret')
  * @param {*} str 
  */
  function decrypt(str){
-    const bytes  = CryptoJS.AES.decrypt(str, front_secretkey);
+    const bytes  = CryptoJS.AES.decrypt(str, FRONT_SECRETKEY);
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 }
 
@@ -33,7 +33,7 @@ function md5(content) {
  * @param {*} password 
  */
 function genPassword(password) {
-    const str = `password=${password}&key=${backend_secretkey}`
+    const str = `password=${password}&key=${BACKEND_SECRETKEY}`
     return md5(str)
 }
 

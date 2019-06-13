@@ -16,4 +16,4 @@
 
 // console.log(decryptedData); // [{id: 1}, {id: 2}]
 
-export const secretkey = 'front_666666'
+export const SECRETKEY = 'front_666666'
