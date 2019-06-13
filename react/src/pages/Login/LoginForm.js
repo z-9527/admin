@@ -3,6 +3,8 @@ import React from 'react'
 import { Form, Input, Row, Col } from 'antd'
 import { randomNum } from '@/utils/util'
 import Promptbox from '@/components/PromptBox/index'
+import { post } from '@/utils/ajax'
+import { encrypt } from '../../utils/util'
 
 
 class LoginForm extends React.Component {
@@ -18,21 +20,27 @@ class LoginForm extends React.Component {
         this.props.form.resetFields()
         this.props.toggleShow()
     }
-    onLogin = ()=>{
+    onLogin = () => {
         this.props.form.validateFields((errors, values) => {
             if (!errors) {
-                console.log(values)
-                this.props.form.setFields({
-                    password:{
-                        value:values.password,
-                        errors:[new Error('密码不正确')]
-                    }
-                })
-                this.props.form.setFields({
-                    username:{
-                        value:values.username,
-                        errors:[new Error('用户名不存在')]
-                    }
+                // 表单登录时，若验证码长度小于4则不会验证，所以我们这里要手动验证一次
+                if (this.state.code.toUpperCase() !== values.captcha.toUpperCase()) {
+                    this.props.form.setFields({
+                        captcha: {
+                            value: values.captcha,
+                            errors: [new Error('验证码错误')]
+                        }
+                    })
+                    return
+                }
+                //加密密码
+                const ciphertext = encrypt(values.password)
+                post('/user/login', {
+                    username: values.username,
+                    password: ciphertext
+                }).then(res => {
+                    // 密码错误时更换验证码
+                    console.log(123, res)
                 })
             }
         });
@@ -86,7 +94,11 @@ class LoginForm extends React.Component {
                         label={<span className='iconfont icon-User' style={{ opacity: focusItem === 0 ? 1 : 0.6 }} />}
                         colon={false}>
                         {getFieldDecorator('username', {
-                            rules: [{ required: true, message: '请输入用户名' }]
+                            validateFirst: true,
+                            rules: [
+                                { required: true, message: '请输入用户名' },
+                                { pattern: '^[^ ]+$', message: '不能输入空格' }
+                            ]
                         })(
                             <Input
                                 className="myInput"

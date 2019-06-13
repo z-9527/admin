@@ -1,5 +1,6 @@
 const { exec } = require('../db/mysql')
 const axios = require('axios')
+const {decrypt,genPassword} = require('../utils/util')
 
 /**
  * 注册用户
@@ -23,8 +24,12 @@ const register = async function (username, password, registrationAddress, regist
             message: '用户名已存在',
         }
     }
+    //先解密前端加密的密码
+    const originalText = decrypt(password)
+    //然后再用另一种方式加密密码
+    const ciphertext = genPassword(originalText)
     const sql = `insert into users (username, password, registrationAddress, registrationTime) values
-        ('${username}', '${password}', '${registrationAddress}', ${registrationTime})
+        ('${username}', '${ciphertext}', '${registrationAddress}', ${registrationTime})
     `
     const res = await exec(sql)
     if (res.affectedRows) {
@@ -76,9 +81,43 @@ const getIpInfo = async function () {
         }
     }
 }
+/**
+ * 登陆
+ * @param {*} username 
+ * @param {*} password 
+ */
+const login = async function (username, password) {
+    const checkNameResult = await checkName(username)
+    if (!checkNameResult.num) {
+        return {
+            success: false,
+            message: '用户名不存在'
+        }
+    }
+     //先解密前端加密的密码
+     const originalText = decrypt(password)
+     //然后再用另一种方式加密密码
+     const ciphertext = genPassword(originalText)
+    const sql = `select * from users where username='${username}' and password='${ciphertext}'`
+    const res = await exec(sql)
+    if (!res.length) {
+        return {
+            message: '密码错误',
+            success: false,
+            status: 401
+        }
+    }
+    //去掉密码
+    delete res[0].password
+    return {
+        data: res[0],
+        success: true
+    }
+}
 
 module.exports = {
     register,
     checkName,
-    getIpInfo
+    getIpInfo,
+    login
 }

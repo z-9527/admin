@@ -1,11 +1,24 @@
 const router = require('koa-router')()
-const { register, checkName, getIpInfo } = require('../controller/user')
+const { register, checkName, getIpInfo, login } = require('../controller/user')
 
 router.prefix('/user')
 
 router.post('/register', async function (ctx, next) {
   const { username, password, registrationAddress, registrationTime } = ctx.request.body
   const res = await register(username, password, registrationAddress, registrationTime)
+  ctx.body = res
+})
+
+router.post('/login', async function (ctx, next) {
+  const { username, password } = ctx.request.body
+  if (!username || !password) {
+    ctx.body = {
+      message: '请输入账号或密码'
+    }
+    ctx.status = 400
+    return
+  }
+  const res = await login(username, password)
   ctx.body = res
 })
 

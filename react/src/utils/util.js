@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js'
+import { secretkey } from '../config/secret'
 
 /**
  * 防抖函数
@@ -48,4 +50,21 @@ export function throttle(func, interval = 100) {
  */
 export function randomNum(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+/**
+ * 加密函数，加密同一个字符串生成的都不相同
+ * @param {*} str 
+ */
+export function encrypt(str){
+    return CryptoJS.AES.encrypt(JSON.stringify(str), secretkey).toString();
+}
+
+/**
+ * 解密函数
+ * @param {*} str 
+ */
+export function decrypt(str){
+    const bytes  = CryptoJS.AES.decrypt(str, secretkey);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 }

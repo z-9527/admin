@@ -1,10 +1,8 @@
 import React from 'react'
 import { Form, Input, message } from 'antd'
 import Promptbox from '@/components/PromptBox/index'
-import { debounce } from '@/utils/util'
+import { debounce, encrypt } from '@/utils/util'
 import { get, post } from '@/utils/ajax'
-import CryptoJS from 'crypto-js'
-import { secretkey } from '../../config/secret'
 
 class RegisterForm extends React.Component {
     state = {
@@ -28,10 +26,10 @@ class RegisterForm extends React.Component {
             registrationAddress = JSON.stringify(address.data)
         } else {
             message.error('获取用户ip地址失败，请重新注册')
-            return 
+            return
         }
         //加密密码
-        const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(values.registerPassword), secretkey).toString();
+        const ciphertext = encrypt(values.registerPassword)
         const res = await post('/user/register', {
             username: values.registerUsername,
             password: ciphertext,
