@@ -18,6 +18,7 @@
     "koa-convert": "^1.2.0",
     "koa-history-api-fallback": "^0.2.0",
     "koa-json": "^2.0.2",
+    "koa-jwt": "^3.5.1",
     "koa-logger": "^2.0.1",
     "koa-onerror": "^1.2.1",
     "koa-router": "^7.1.1",

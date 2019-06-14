@@ -1,6 +1,9 @@
 const { exec } = require('../db/mysql')
 const axios = require('axios')
-const {decrypt,genPassword} = require('../utils/util')
+const { decrypt, genPassword } = require('../utils/util')
+const jwt = require('jsonwebtoken');
+const { TOKEN_SECRETKEY } = require('../config/secret')
+
 
 /**
  * 注册用户
@@ -94,10 +97,10 @@ const login = async function (username, password) {
             message: '用户名不存在'
         }
     }
-     //先解密前端加密的密码
-     const originalText = decrypt(password)
-     //然后再用另一种方式加密密码
-     const ciphertext = genPassword(originalText)
+    //先解密前端加密的密码
+    const originalText = decrypt(password)
+    //然后再用另一种方式加密密码
+    const ciphertext = genPassword(originalText)
     const sql = `select * from users where username='${username}' and password='${ciphertext}'`
     const res = await exec(sql)
     if (!res.length) {
@@ -110,7 +113,10 @@ const login = async function (username, password) {
     //去掉密码
     delete res[0].password
     return {
-        data: res[0],
+        data: {
+            ...res[0],
+            token: jwt.sign({ username }, TOKEN_SECRETKEY)
+        },
         success: true
     }
 }
