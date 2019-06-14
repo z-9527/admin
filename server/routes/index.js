@@ -23,6 +23,7 @@ router.post('/upload', async (ctx, next) => {
 })
 
 router.get('/json', async (ctx, next) => {
+  console.log(ctx.cookies.get('token'))
   ctx.body = {
     title: 'koa2 json'
   }
