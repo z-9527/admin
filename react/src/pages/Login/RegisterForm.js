@@ -26,10 +26,8 @@ class RegisterForm extends React.Component {
             username: values.registerUsername,
             password: ciphertext,
         })
-        if (res.success) {
+        if (res.status === 0) {
             message.success('注册成功')
-        } else {
-            message.error(res.message || '注册失败')
         }
     }
 
@@ -42,7 +40,7 @@ class RegisterForm extends React.Component {
     checkName = debounce(async (value) => {
         if (value) {
             const res = await get(`/user/checkName?username=${value}`)
-            if (res.num) {
+            if (res.status === 0 && res.data.num) {
                 this.props.form.setFields({
                     registerUsername: {
                         value,

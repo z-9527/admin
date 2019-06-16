@@ -3,6 +3,7 @@ const axios = require('axios')
 const { decrypt, genPassword } = require('../utils/util')
 const jwt = require('jsonwebtoken');
 const { TOKEN_SECRETKEY } = require('../config/secret')
+const { SuccessModel, ErrorModel } = require('../model/resModel')
 
 
 /**
@@ -12,25 +13,24 @@ const { TOKEN_SECRETKEY } = require('../config/secret')
  */
 const register = async function (username, password) {
     if (!username || !password) {
-        return {
-            success: false,
+        return new ErrorModel({
             message: '请输入账号或密码',
-            status: 400
-        }
+            httpCode: 400
+        })
     }
     const checkNameResult = await checkName(username)
-    if (checkNameResult.num) {
-        return {
-            success: false,
+    if (checkNameResult.data.num) {
+        return new ErrorModel({
             message: '用户名已存在',
-        }
+            httpCode: 401
+        })
     }
     const ip = await getIpInfo()
-    if(!ip.success){
-        return {
-            success:false,
-            message:'获取IP地址失败'
-        }
+    if (ip.status !== 0) {
+        return new ErrorModel({
+            message: '获取IP地址失败',
+            httpCode: 500
+        })
     }
     const registrationAddress = JSON.stringify(ip.data)
     //先解密前端加密的密码
@@ -42,16 +42,15 @@ const register = async function (username, password) {
     `
     const res = await exec(sql)
     if (res.affectedRows) {
-        return {
-            message: '注册成功',
-            success: true,
-            id: res.insertId
-        }
+        return new SuccessModel({
+            data: { userId: res.insertId },
+            message: '注册成功'
+        })
     } else {
-        return {
+        return new ErrorModel({
             message: '注册失败',
-            success: false
-        }
+            httpCode: 500
+        })
     }
 }
 
@@ -62,10 +61,9 @@ const register = async function (username, password) {
 const checkName = async function (username) {
     const sql = `select * from users where username='${username}'`
     const res = await exec(sql)
-    return {
-        success: true,
-        num: res.length
-    }
+    return new SuccessModel({
+        data: { num: res.length }
+    })
 }
 
 /**
@@ -73,16 +71,15 @@ const checkName = async function (username) {
  */
 const getIpInfo = async function () {
     const res = await axios.get('https://apis.map.qq.com/ws/location/v1/ip?key=MH2BZ-4WTK3-2D63K-YZRHP-HM537-HHBD3')
-    if (res.data.status === 0 ) {
-        return {
-            success: true,
+    if (res.data.status === 0) {
+        return new SuccessModel({
             data: res.data.result
-        }
+        })
     } else {
-        return {
-            success: false,
-            message: '获取ip地址失败'
-        }
+        return new ErrorModel({
+            message: '获取ip地址失败',
+            httpCode: 500
+        })
     }
 }
 /**
@@ -92,11 +89,11 @@ const getIpInfo = async function () {
  */
 const login = async function (username, password) {
     const checkNameResult = await checkName(username)
-    if (!checkNameResult.num) {
-        return {
-            success: false,
-            message: '用户名不存在'
-        }
+    if (!checkNameResult.data.num) {
+        return new ErrorModel({
+            message: '用户名不存在',
+            httpCode: 401
+        })
     }
     //先解密前端加密的密码
     const originalText = decrypt(password)
@@ -105,34 +102,31 @@ const login = async function (username, password) {
     const sql = `select * from users where username='${username}' and password='${ciphertext}'`
     const res = await exec(sql)
     if (!res.length) {
-        return {
+        return ErrorModel({
             message: '密码错误',
-            success: false,
-            status: 401
-        }
+            httpCode: 401
+        })
     }
     const ip = await getIpInfo()
-    if(!ip.success){
-        return {
-            success:false,
-            message:'获取IP地址失败'
-        }
+    if (ip.status !== 0) {
+        return new ErrorModel({
+            message: '获取IP地址失败',
+            httpCode: 500
+        })
     }
     const lastLoginAddress = JSON.stringify(ip.data)
     const sql2 = `update users set lastLoginAddress='${lastLoginAddress}',lastLoginTime='${Date.now()}' where username='${username}'`
     const res2 = await exec(sql2)
-    console.log(5555,res2)
 
-    
     //去掉密码
     delete res[0].password
-    return {
+    return new SuccessModel({
+        message: '登陆成功',
         data: {
-            ...res[0],
+            ...res2[0],
             token: jwt.sign({ username }, TOKEN_SECRETKEY)
-        },
-        success: true
-    }
+        }
+    })
 }
 
 module.exports = {

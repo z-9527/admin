@@ -5,8 +5,8 @@ import { randomNum } from '@/utils/util'
 import Promptbox from '@/components/PromptBox/index'
 import { post, get } from '@/utils/ajax'
 import { encrypt } from '@/utils/util'
-import {authenticateSuccess} from '@/utils/session'
-import {withRouter} from 'react-router-dom'
+import { authenticateSuccess } from '@/utils/session'
+import { withRouter } from 'react-router-dom'
 
 
 class LoginForm extends React.Component {
@@ -42,7 +42,7 @@ class LoginForm extends React.Component {
             return
         }
         const res = await get(`/user/checkName?username=${values.username}`)
-        if (!res.num) {
+        if (res.status === 0 && !res.data.num) {
             this.props.form.setFields({
                 username: {
                     value: values.username,
@@ -59,16 +59,10 @@ class LoginForm extends React.Component {
             username: values.username,
             password: ciphertext
         })
-        if (!res2.success) {
-            this.props.form.setFields({
-                password: {
-                    value: values.password,
-                    errors: [new Error('密码错误')]
-                }
-            })
+        if (res2.status !== 0) {
             this._createCode()
             this.props.form.resetFields('captcha')
-            return 
+            return
         }
         authenticateSuccess(res2.data.token)
         this.props.history.push('/')
