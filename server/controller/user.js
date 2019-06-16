@@ -22,7 +22,7 @@ const register = async function (username, password) {
     if (checkNameResult.data.num) {
         return new ErrorModel({
             message: '用户名已存在',
-            httpCode: 401
+            httpCode: 400
         })
     }
     const ip = await getIpInfo()
@@ -92,7 +92,7 @@ const login = async function (username, password) {
     if (!checkNameResult.data.num) {
         return new ErrorModel({
             message: '用户名不存在',
-            httpCode: 401
+            httpCode: 400
         })
     }
     //先解密前端加密的密码
@@ -104,7 +104,7 @@ const login = async function (username, password) {
     if (!res.length) {
         return ErrorModel({
             message: '密码错误',
-            httpCode: 401
+            httpCode: 400
         })
     }
     const ip = await getIpInfo()

@@ -1,5 +1,6 @@
 import 'whatwg-fetch'
 import { message } from 'antd'
+import {logout} from '../utils/session'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || ''
 
@@ -54,6 +55,7 @@ export async function get(url, param) {
     if (response.ok) {
         return response.json()
     } else {
+        console.log(666,response)
         message.error(`网络错误（${response.statusText}）`)
         return response
     }
@@ -80,7 +82,13 @@ export async function post(url, parma) {
     if (response.ok) {
         return response.json()
     } else {
+        console.log(789,response)
         message.error(`网络错误（${response.statusText}）`)
-        return response
+        return response.json()
     }
+}
+
+export const json = {
+    get,
+    post
 }

@@ -3,34 +3,37 @@ const { register, checkName, getIpInfo, login } = require('../controller/user')
 
 router.prefix('/user')
 
+function handleRes(ctx, next, res) {
+  if (res.status === 0) {
+    ctx.body = res
+  } else {
+    ctx.status = res.httpCode
+    ctx.body = res
+    // ctx.message = res.message
+  }
+}
+
 router.post('/register', async function (ctx, next) {
   const { username, password } = ctx.request.body
   const res = await register(username, password)
-  ctx.body = res
+  handleRes(ctx, next, res)
 })
 
 router.post('/login', async function (ctx, next) {
   const { username, password } = ctx.request.body
-  if (!username || !password) {
-    ctx.body = {
-      message: '请输入账号或密码'
-    }
-    ctx.status = 400
-    return
-  }
   const res = await login(username, password)
-  ctx.body = res
+  handleRes(ctx, next, res)
 })
 
 router.get('/checkName', async function (ctx, next) {
   const { username } = ctx.query
   const res = await checkName(username)
-  ctx.body = res
+  handleRes(ctx, next, res)
 })
 
 router.get('/getIpInfo', async function (ctx, next) {
   const res = await getIpInfo()
-  ctx.body = res
+  handleRes(ctx, next, res)
 })
 
 module.exports = router
