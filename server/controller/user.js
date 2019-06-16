@@ -102,7 +102,7 @@ const login = async function (username, password) {
     const sql = `select * from users where username='${username}' and password='${ciphertext}'`
     const res = await exec(sql)
     if (!res.length) {
-        return ErrorModel({
+        return new ErrorModel({
             message: '密码错误',
             httpCode: 400
         })

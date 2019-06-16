@@ -7,8 +7,9 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const cors = require('koa2-cors');
 const historyApiFallback = require('koa-history-api-fallback')
-const jwt = require('koa-jwt')
 const { TOKEN_SECRETKEY } = require('./config/secret')
+const jwt = require('koa-jwt')
+const errorHandle = require('./middlewares/errorHandle')
 
 const index = require('./routes/index')
 const user = require('./routes/user')
@@ -33,11 +34,14 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
+app.use(errorHandle)
+
 app.use(cors({ credentials: true })); //前端调试时解决跨域，上线不用跨域
 
 //验证token登陆,unless是不需要验证的路由，每一项是匹配路由的正则
 const unPath = [/^\/public/,/checkName/,/register/,/getIpInfo/,/login/]
 app.use(jwt({ secret: TOKEN_SECRETKEY ,cookie:'sessionId'}).unless({ path: unPath }));
+
 
 // routes
 app.use(index.routes(), index.allowedMethods())

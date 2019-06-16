@@ -9,7 +9,7 @@ function handleRes(ctx, next, res) {
   } else {
     ctx.status = res.httpCode
     ctx.body = res
-    // ctx.message = res.message
+    // ctx.message = res.message   //本来想直接设置fetch的statusText，但是加了这句话请求就出错
   }
 }
 

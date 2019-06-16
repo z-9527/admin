@@ -1,6 +1,8 @@
 import 'whatwg-fetch'
 import { message } from 'antd'
-import {logout} from '../utils/session'
+import { logout } from '../utils/session'
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || ''
 
@@ -52,13 +54,16 @@ export async function get(url, param) {
             withCredentials: true       //跨域
         },
     })
-    if (response.ok) {
-        return response.json()
-    } else {
-        console.log(666,response)
-        message.error(`网络错误（${response.statusText}）`)
-        return response
+    const reslut = await response.json()
+    if (!response.ok) {
+        if(response.status === 401){
+            logout()
+            history.push('/login')
+        }
+        message.error(reslut.message || '网络错误')
     }
+    return reslut
+   
 }
 
 export async function post(url, parma) {
@@ -79,13 +84,15 @@ export async function post(url, parma) {
         },
         body: JSON.stringify(parma),
     })
-    if (response.ok) {
-        return response.json()
-    } else {
-        console.log(789,response)
-        message.error(`网络错误（${response.statusText}）`)
-        return response.json()
+    const reslut = await response.json()
+    if (!response.ok) {
+        if(response.status === 401){
+            logout()
+            history.push('/login')
+        }
+        message.error(reslut.message || '网络错误')
     }
+    return reslut
 }
 
 export const json = {
