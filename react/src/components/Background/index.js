@@ -35,7 +35,7 @@ class Background extends React.Component {
                 loading: false
             })
         }).then(() => {
-            this.initPage()
+            this.canvas && this.initPage()
         })
     }
     componentWillUnmount() {

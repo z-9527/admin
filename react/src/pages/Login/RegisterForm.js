@@ -20,21 +20,11 @@ class RegisterForm extends React.Component {
         });
     }
     onRegister = async (values) => {
-        const address = await get('/user/getIpInfo')
-        let registrationAddress = ''
-        if (address.success) {
-            registrationAddress = JSON.stringify(address.data)
-        } else {
-            message.error('获取用户ip地址失败，请重新注册')
-            return
-        }
         //加密密码
         const ciphertext = encrypt(values.registerPassword)
         const res = await post('/user/register', {
             username: values.registerUsername,
             password: ciphertext,
-            registrationAddress: registrationAddress,
-            registrationTime: Date.now()
         })
         if (res.success) {
             message.success('注册成功')
@@ -45,6 +35,7 @@ class RegisterForm extends React.Component {
 
     /**
      * @description: 检查用户名是否重复，这里用了函数防抖（函数防抖的典型应用），防抖函数要注意this和事件对象
+     * 也可以在input的失去焦点的时候验证，这时候不用函数防抖
      * @param {type} 事件对象
      * @return: 
      */

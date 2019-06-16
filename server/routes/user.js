@@ -4,8 +4,8 @@ const { register, checkName, getIpInfo, login } = require('../controller/user')
 router.prefix('/user')
 
 router.post('/register', async function (ctx, next) {
-  const { username, password, registrationAddress, registrationTime } = ctx.request.body
-  const res = await register(username, password, registrationAddress, registrationTime)
+  const { username, password } = ctx.request.body
+  const res = await register(username, password)
   ctx.body = res
 })
 

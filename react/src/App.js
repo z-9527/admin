@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import './index.css'
 import {Switch,Route} from 'react-router-dom'
+import PrivateRoute from './components/PrivateRoute'
 import Index from './pages/Index'
 import Login from './pages/Login'
 
@@ -10,8 +11,7 @@ class App extends React.Component{
     return (
       <Switch>
         <Route path='/login' component={Login}/>
-        {/* <PrivateRoute path='/' component={Index}/> */}
-        <Route path='/' component={Index}/>
+        <PrivateRoute path='/' component={Index}/>
       </Switch>
     )
   }

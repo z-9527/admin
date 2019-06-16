@@ -37,7 +37,7 @@ app.use(cors({ credentials: true })); //前端调试时解决跨域，上线不�
 
 //验证token登陆,unless是不需要验证的路由，每一项是匹配路由的正则
 const unPath = [/^\/public/,/checkName/,/register/,/getIpInfo/,/login/]
-app.use(jwt({ secret: TOKEN_SECRETKEY ,cookie:'token'}).unless({ path: unPath }));
+app.use(jwt({ secret: TOKEN_SECRETKEY ,cookie:'sessionId'}).unless({ path: unPath }));
 
 // routes
 app.use(index.routes(), index.allowedMethods())

@@ -9,10 +9,8 @@ const { TOKEN_SECRETKEY } = require('../config/secret')
  * 注册用户
  * @param {*} username 
  * @param {*} password 
- * @param {*} registrationAddress 
- * @param {*} registrationTime 
  */
-const register = async function (username, password, registrationAddress, registrationTime) {
+const register = async function (username, password) {
     if (!username || !password) {
         return {
             success: false,
@@ -27,12 +25,20 @@ const register = async function (username, password, registrationAddress, regist
             message: '用户名已存在',
         }
     }
+    const ip = await getIpInfo()
+    if(!ip.success){
+        return {
+            success:false,
+            message:'获取IP地址失败'
+        }
+    }
+    const registrationAddress = JSON.stringify(ip.data)
     //先解密前端加密的密码
     const originalText = decrypt(password)
     //然后再用另一种方式加密密码
     const ciphertext = genPassword(originalText)
     const sql = `insert into users (username, password, registrationAddress, registrationTime) values
-        ('${username}', '${ciphertext}', '${registrationAddress}', ${registrationTime})
+        ('${username}', '${ciphertext}', '${registrationAddress}', ${Date.now()})
     `
     const res = await exec(sql)
     if (res.affectedRows) {
@@ -66,16 +72,11 @@ const checkName = async function (username) {
  * 淘宝ip地址有跨越，利用后端代理请求
  */
 const getIpInfo = async function () {
-    const res = await axios.get('http://ip.taobao.com/service/getIpInfo.php?ip=myip', {
-        headers: {
-            referer: 'http://ip.taobao.com/ipSearch.html',
-            host: 'ip.taobao.com'
-        },
-    })
-    if (res.data) {
+    const res = await axios.get('https://apis.map.qq.com/ws/location/v1/ip?key=MH2BZ-4WTK3-2D63K-YZRHP-HM537-HHBD3')
+    if (res.data.status === 0 ) {
         return {
             success: true,
-            data: res.data.data
+            data: res.data.result
         }
     } else {
         return {
@@ -110,6 +111,19 @@ const login = async function (username, password) {
             status: 401
         }
     }
+    const ip = await getIpInfo()
+    if(!ip.success){
+        return {
+            success:false,
+            message:'获取IP地址失败'
+        }
+    }
+    const lastLoginAddress = JSON.stringify(ip.data)
+    const sql2 = `update users set lastLoginAddress='${lastLoginAddress}',lastLoginTime='${Date.now()}' where username='${username}'`
+    const res2 = await exec(sql2)
+    console.log(5555,res2)
+
+    
     //去掉密码
     delete res[0].password
     return {

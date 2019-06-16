@@ -3,8 +3,10 @@ import React from 'react'
 import { Form, Input, Row, Col } from 'antd'
 import { randomNum } from '@/utils/util'
 import Promptbox from '@/components/PromptBox/index'
-import { post } from '@/utils/ajax'
-import { encrypt } from '../../utils/util'
+import { post, get } from '@/utils/ajax'
+import { encrypt } from '@/utils/util'
+import {authenticateSuccess} from '@/utils/session'
+import {withRouter} from 'react-router-dom'
 
 
 class LoginForm extends React.Component {
@@ -19,31 +21,56 @@ class LoginForm extends React.Component {
     goRegister = () => {
         this.props.form.resetFields()
         this.props.toggleShow()
+        this._createCode()
     }
-    onLogin = () => {
+    onSubmit = () => {
         this.props.form.validateFields((errors, values) => {
             if (!errors) {
-                // 表单登录时，若验证码长度小于4则不会验证，所以我们这里要手动验证一次
-                if (this.state.code.toUpperCase() !== values.captcha.toUpperCase()) {
-                    this.props.form.setFields({
-                        captcha: {
-                            value: values.captcha,
-                            errors: [new Error('验证码错误')]
-                        }
-                    })
-                    return
-                }
-                //加密密码
-                const ciphertext = encrypt(values.password)
-                post('/user/login', {
-                    username: values.username,
-                    password: ciphertext
-                }).then(res => {
-                    // 密码错误时更换验证码
-                    console.log(123, res)
-                })
+                this.onLogin(values)
             }
         });
+    }
+    onLogin = async (values) => {
+        // 表单登录时，若验证码长度小于4则不会验证，所以我们这里要手动验证一次
+        if (this.state.code.toUpperCase() !== values.captcha.toUpperCase()) {
+            this.props.form.setFields({
+                captcha: {
+                    value: values.captcha,
+                    errors: [new Error('验证码错误')]
+                }
+            })
+            return
+        }
+        const res = await get(`/user/checkName?username=${values.username}`)
+        if (!res.num) {
+            this.props.form.setFields({
+                username: {
+                    value: values.username,
+                    errors: [new Error('用户名不存在')]
+                }
+            })
+            this._createCode()
+            this.props.form.resetFields('captcha')
+            return
+        }
+        //加密密码
+        const ciphertext = encrypt(values.password)
+        const res2 = await post('/user/login', {
+            username: values.username,
+            password: ciphertext
+        })
+        if (!res2.success) {
+            this.props.form.setFields({
+                password: {
+                    value: values.password,
+                    errors: [new Error('密码错误')]
+                }
+            })
+            this._createCode()
+            this.props.form.resetFields('captcha')
+        }
+        authenticateSuccess(res2.data.token)
+        this.props.history.push('/')
     }
     /**
      * 生成验证码
@@ -104,7 +131,7 @@ class LoginForm extends React.Component {
                                 className="myInput"
                                 onFocus={() => this.setState({ focusItem: 0 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
-                                onPressEnter={this.onLogin}
+                                onPressEnter={this.onSubmit}
                                 placeholder="用户名"
                             />
                         )}
@@ -124,7 +151,7 @@ class LoginForm extends React.Component {
                                 type="password"
                                 onFocus={() => this.setState({ focusItem: 1 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
-                                onPressEnter={this.onLogin}
+                                onPressEnter={this.onSubmit}
                                 placeholder="密码"
                             />
                         )}
@@ -156,7 +183,7 @@ class LoginForm extends React.Component {
                                         className="myInput"
                                         onFocus={() => this.setState({ focusItem: 2 })}
                                         onBlur={() => this.setState({ focusItem: -1 })}
-                                        onPressEnter={this.onLogin}
+                                        onPressEnter={this.onSubmit}
                                         placeholder="验证码"
                                     />
                                 )}
@@ -168,7 +195,7 @@ class LoginForm extends React.Component {
                     </Form.Item>
                     <Form.Item>
                         <div className="btn-box">
-                            <div className="loginBtn" onClick={this.onLogin}>登录</div>
+                            <div className="loginBtn" onClick={this.onSubmit}>登录</div>
                             <div className="registerBtn" onClick={this.goRegister}>注册</div>
                         </div>
                     </Form.Item>
@@ -180,4 +207,6 @@ class LoginForm extends React.Component {
     }
 }
 
-export default Form.create()(LoginForm)
+// 如果用修饰器语法就不用下面这种写法了，直接在组件上@
+
+export default withRouter(Form.create()(LoginForm))
