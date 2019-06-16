@@ -77,7 +77,7 @@ class RegisterForm extends React.Component {
                             <Input
                                 maxLength={16}
                                 className="myInput"
-                                readOnly  //禁用表单自动填充
+                                autoComplete="new-password"  //禁用表单自动填充(不管用？)
                                 onFocus={() => this.setState({ focusItem: 0 })}
                                 onBlur={() => this.setState({ focusItem: -1 })}
                                 onPressEnter={this.onSubmit}
