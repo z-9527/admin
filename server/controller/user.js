@@ -129,9 +129,28 @@ const login = async function (username, password) {
     })
 }
 
+/**
+ * 获取用户列表
+ * @param {*} params 
+ */
+const getUsers = async (params) => {
+    const { current = 0, pageSize = 10 } = params
+    const sql = `select * from users order by registrationTime desc limit ${current * pageSize},${pageSize}`
+    const res = await exec(sql)
+    console.log(typeof current)
+    return new SuccessModel({
+        data: {
+            list: res,
+            current:parseInt(current),
+            pageSize:parseInt(pageSize),
+        }
+    })
+}
+
 module.exports = {
     register,
     checkName,
     getIpInfo,
-    login
+    login,
+    getUsers
 }

@@ -28,3 +28,7 @@
 .markdown h3 {
     font-size: 18px
 }
+
+.primary-color{
+	color: var(--primaryColor);
+}
