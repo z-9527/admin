@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, Input, Form } from 'antd'
 
+@Form.create()
 class EditPasswordModal extends React.Component {
     state = {
         visible: false
@@ -86,4 +87,4 @@ class EditPasswordModal extends React.Component {
     }
 }
 
-export default Form.create()(EditPasswordModal)
+export default EditPasswordModal

@@ -28,5 +28,8 @@ module.exports = function override(config, env) {
         '@': resolve('src')
     }
 
+    //启用ES7的修改器语法（babel 7）
+    config = injectBabelPlugin(['@babel/plugin-proposal-decorators', { "legacy": true }], config)
+
     return config;
 }

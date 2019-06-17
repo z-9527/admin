@@ -3,7 +3,7 @@ import { Table, Card, Form,Input,Button,DatePicker, message } from 'antd'
 
 const { RangePicker } = DatePicker;
 
-
+@Form.create()
 class Users extends Component {
     state = {}
     onReset = ()=>{
@@ -93,4 +93,4 @@ class Users extends Component {
     }
 }
 
-export default Form.create()(Users);
+export default Users

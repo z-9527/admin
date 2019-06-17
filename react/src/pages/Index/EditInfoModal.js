@@ -3,6 +3,7 @@ import { Modal, Form, Upload, Icon, message, Input, Radio, DatePicker, Alert } f
 
 const RadioGroup = Radio.Group;
 
+@Form.create()
 class EditInfoModal extends React.Component {
     state = {
         visible: false,
@@ -147,4 +148,4 @@ const styles = {
 }
 
 
-export default Form.create()(EditInfoModal)
+export default EditInfoModal

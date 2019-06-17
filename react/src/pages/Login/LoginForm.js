@@ -9,6 +9,7 @@ import { authenticateSuccess } from '@/utils/session'
 import { withRouter } from 'react-router-dom'
 
 
+@withRouter @Form.create()
 class LoginForm extends React.Component {
     state = {
         focusItem: -1,   //当前焦点聚焦在哪一项上
@@ -202,6 +203,5 @@ class LoginForm extends React.Component {
     }
 }
 
-// 如果用修饰器语法就不用下面这种写法了，直接在组件上@
 
-export default withRouter(Form.create()(LoginForm))
+export default LoginForm

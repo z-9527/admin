@@ -4,6 +4,7 @@ import Promptbox from '@/components/PromptBox/index'
 import { debounce, encrypt } from '@/utils/util'
 import { get, post } from '@/utils/ajax'
 
+@Form.create()
 class RegisterForm extends React.Component {
     state = {
         focusItem: -1   //当前焦点聚焦在哪一项上
@@ -155,4 +156,4 @@ class RegisterForm extends React.Component {
     }
 }
 
-export default Form.create()(RegisterForm)
+export default RegisterForm

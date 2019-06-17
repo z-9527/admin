@@ -6,6 +6,7 @@ import RegisterForm from './RegisterForm'
 import { isAuthenticated, logout } from '../../utils/session'
 import { withRouter } from 'react-router-dom'
 
+@withRouter
 class Login extends React.Component {
     state = {
         show: 'login'    //当前展示的是登录框还是注册框
@@ -42,4 +43,4 @@ class Login extends React.Component {
     }
 }
 
-export default withRouter(Login)
+export default Login

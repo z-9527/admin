@@ -10,6 +10,7 @@ import {withRouter} from 'react-router-dom'
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
+@withRouter
 class MyHeader extends React.Component {
 
     constructor(props) {
@@ -119,4 +120,4 @@ const styles = {
     }
 }
 
-export default withRouter(MyHeader)
+export default MyHeader
