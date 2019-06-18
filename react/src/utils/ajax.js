@@ -1,15 +1,7 @@
 import 'whatwg-fetch'
 import { message } from 'antd'
 import { logout } from '../utils/session'
-import { createBrowserHistory } from 'history';
-
-//因为这里不是组件，所以只能通过这个方式拿到api，而不能通过this.props.history
-const history = createBrowserHistory({
-    // forceRefresh: true   //强制刷新页面
-});     
-history.listen((res)=>{
-    console.log(res)
-})
+import history from './history'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || ''
 
