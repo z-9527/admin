@@ -151,29 +151,26 @@ class Users extends Component {
                             <Col span={7}>
                                 <Form.Item label="注册开始时间">
                                     {getFieldDecorator('startTime')(
-                                        <DatePicker showTime />
+                                        <DatePicker style={{width:200}} showTime />
                                     )}
                                 </Form.Item>
                             </Col>
                             <Col span={7}>
                                 <Form.Item label="注册截止时间">
                                     {getFieldDecorator('endTime')(
-                                        <DatePicker showTime />
+                                        <DatePicker style={{width:200}} showTime />
                                     )}
                                 </Form.Item>
                             </Col>
                             <Col span={4}>
-                                <Form.Item style={{marginRight:0}}>
-                                    <div style={{textAlign:'center'}}>
+                                <Form.Item style={{marginRight:0,width:'100%'}} wrapperCol={{span:24}}>
+                                    <div style={{textAlign:'right'}}>
                                         <Button type="primary" icon='search' onClick={this.onSearch}>搜索</Button>&emsp;
                                         <Button icon="reload" onClick={this.onReset}>重置</Button>
                                     </div>
                                 </Form.Item>
                             </Col>
                         </Row>
-
-
-
                     </Form>
                     <Table
                         bordered
