@@ -134,15 +134,21 @@ const login = async function (username, password) {
  * @param {*} params 
  */
 const getUsers = async (params) => {
-    const { current = 0, pageSize = 10 } = params
-    const sql = `select * from users order by registrationTime desc limit ${current * pageSize},${pageSize}`
+    const { current = 0, pageSize = 10, username, startTime, endTime } = params
+    let sql = `select SQL_CALC_FOUND_ROWS * from users where 1=1 and registrationTime between ${startTime || 0} and ${endTime || Date.now()} `
+    if (username) {
+        sql += `and username like '%${username}%' `
+    }
+    sql += `order by registrationTime desc limit ${current * pageSize},${pageSize}`
     const res = await exec(sql)
-    console.log(typeof current)
+    const sql2 = 'select found_rows() as total'
+    const res2 = await exec(sql2)
     return new SuccessModel({
         data: {
             list: res,
-            current:parseInt(current),
-            pageSize:parseInt(pageSize),
+            current: parseInt(current),
+            pageSize: parseInt(pageSize),
+            total: res2[0].total
         }
     })
 }

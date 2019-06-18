@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Table, Card, Form, Input, Button, DatePicker, message, Icon } from 'antd'
+import { Table, Card, Form, Input, Button, DatePicker, message, Icon, Row, Col } from 'antd'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 
-const { RangePicker } = DatePicker;
 
 @Form.create()
 class Users extends Component {
@@ -26,12 +25,15 @@ class Users extends Component {
      */
     getUsers = async () => {
         const { pagination } = this.state
+        const fields = this.props.form.getFieldsValue()
         this.setState({
-            usersLoading: true
+            usersLoading: true,
         })
-        console.log(typeof pagination.current)
         const res = await json.get('/user/getUsers', {
-            current: pagination.current - 1,   
+            current: pagination.current - 1,
+            username: fields.username || '',   //koa会把参数转换为字符串，undefined也会
+            startTime: fields.startTime ? fields.startTime.valueOf() : '',
+            endTime: fields.endTime ? fields.endTime.valueOf() : ''
         })
         if (res.status !== 0) {
             this.setState({
@@ -41,15 +43,9 @@ class Users extends Component {
         }
         this.setState({
             usersLoading: false,
-            users: res.data.list
+            users: res.data.list,
+            pagination: { ...pagination, total: res.data.total }
         })
-        console.log(123, res)
-    }
-
-    onReset = () => {
-        this.props.form.resetFields()
-        this.getUsers()
-        message.success('重置成功')
     }
     onTableChange = async (page) => {
         await this.setState({
@@ -57,10 +53,17 @@ class Users extends Component {
         })
         this.getUsers()
     }
+    onSearch = () => {
+        this.getUsers()
+    }
+    onReset = () => {
+        this.props.form.resetFields()
+        this.getUsers()
+        message.success('重置成功')
+    }
     render() {
         const { getFieldDecorator } = this.props.form
         const { users, usersLoading, pagination } = this.state
-        console.log(123,usersLoading)
         const columns = [
             {
                 title: '序号',
@@ -114,6 +117,12 @@ class Users extends Component {
                 render: (text) => text && moment(text).format('YYYY-MM-DD HH:mm:ss')
             },
             {
+                title: '身份',
+                dataIndex: 'isAdmin',
+                align: 'center',
+                render: (text) => text ? '管理员' : '游客'
+            },
+            {
                 title: '操作',
                 key: 'active',
                 align: 'center',
@@ -127,31 +136,44 @@ class Users extends Component {
         return (
             <div>
                 <Card bordered={false}>
-                    <Form layout='inline' style={{ marginBottom: 12 }}>
-                        <Form.Item label="用户名">
-                            {getFieldDecorator('username')(
-                                <Input
-                                    style={{ width: 200 }}
-                                    placeholder="用户名"
-                                />
-                            )}
-                        </Form.Item>
-                        <Form.Item label="注册开始时间">
-                            {getFieldDecorator('startTime')(
-                                <DatePicker />
-                            )}
-                        </Form.Item>
-                        <Form.Item label="注册截止时间">
-                            {getFieldDecorator('endTime')(
-                                <DatePicker />
-                            )}
-                        </Form.Item>
-                        <Form.Item>
-                            <div>
-                                <Button type="primary" icon='search'>搜索</Button>
-                                <Button icon="reload" onClick={this.onReset}>重置</Button>
-                            </div>
-                        </Form.Item>
+                    <Form layout='inline' style={{ marginBottom: 16 }}>
+                        <Row>
+                            <Col span={6}>
+                                <Form.Item label="用户名">
+                                    {getFieldDecorator('username')(
+                                        <Input
+                                            style={{ width: 200 }}
+                                            placeholder="用户名"
+                                        />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col span={7}>
+                                <Form.Item label="注册开始时间">
+                                    {getFieldDecorator('startTime')(
+                                        <DatePicker showTime />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col span={7}>
+                                <Form.Item label="注册截止时间">
+                                    {getFieldDecorator('endTime')(
+                                        <DatePicker showTime />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item style={{marginRight:0}}>
+                                    <div style={{textAlign:'center'}}>
+                                        <Button type="primary" icon='search' onClick={this.onSearch}>搜索</Button>&emsp;
+                                        <Button icon="reload" onClick={this.onReset}>重置</Button>
+                                    </div>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+
+
                     </Form>
                     <Table
                         bordered
