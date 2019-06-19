@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Card, Form, Input, Button, DatePicker, message, Icon, Row, Col } from 'antd'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
+import InfoModal from './InfoModal'
 
 
 @Form.create()
@@ -14,7 +15,9 @@ class Users extends Component {
             current: 1,  //前台分页是从1开始的，后台分页是从0开始的，所以要注意一下
             pageSize: 10,
             showQuickJumper: true
-        }
+        },
+        isShowInfoModal: false,
+        userInfo: {}
 
     }
     componentDidMount() {
@@ -61,9 +64,34 @@ class Users extends Component {
         this.getUsers()
         message.success('重置成功')
     }
+    showInfoModal = (record) => {
+        const registrationAddress = record.registrationAddress ? JSON.parse(record.registrationAddress) : {}
+        const lastLoginAddress = record.lastLoginAddress ? JSON.parse(record.lastLoginAddress) : {}
+        const userInfo = {
+            username: record.username,
+            gender: record.gender,
+            rIp: registrationAddress.ip,
+            rTime: record.registrationTime && moment(record.registrationTime).format('YYYY-MM-DD HH:mm:ss'),
+            rNation: registrationAddress.ad_info.nation,
+            rProvince: registrationAddress.ad_info.province,
+            rCity: `${registrationAddress.ad_info.city}（${registrationAddress.ad_info.district}）`,
+            lastLoginAddress: lastLoginAddress.ip && `${lastLoginAddress.ip}（${lastLoginAddress.ad_info.city}）`,
+            lastLoginTime: record.lastLoginTime && moment(record.lastLoginTime).format('YYYY-MM-DD HH:mm:ss')
+        }
+        this.setState({
+            isShowInfoModal: true,
+            userInfo: userInfo
+        })
+    }
+    closeInfoModal = () => {
+        this.setState({
+            isShowInfoModal: false,
+            userInfo: {}
+        })
+    }
     render() {
         const { getFieldDecorator } = this.props.form
-        const { users, usersLoading, pagination } = this.state
+        const { users, usersLoading, pagination, userInfo, isShowInfoModal } = this.state
         const columns = [
             {
                 title: '序号',
@@ -141,8 +169,8 @@ class Users extends Component {
                 key: 'active',
                 align: 'center',
                 render: (text, record) => (
-                    <div className='primary-color'>
-                        <Icon type="eye" /> 查看
+                    <div>
+                        <span className='my-a' onClick={() => this.showInfoModal(record)}><Icon type="eye" /> 查看</span>
                     </div>
                 )
             },
@@ -196,6 +224,7 @@ class Users extends Component {
                         onChange={this.onTableChange}
                     />
                 </Card>
+                <InfoModal visible={isShowInfoModal} userInfo={userInfo} onCancel={this.closeInfoModal} />
             </div>
         );
     }
