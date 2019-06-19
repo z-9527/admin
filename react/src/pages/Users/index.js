@@ -97,7 +97,8 @@ class Users extends Component {
                 title: '注册时间',
                 dataIndex: 'registrationTime',
                 align: 'center',
-                render: (text) => text && moment(text).format('YYYY-MM-DD HH:mm:ss')
+                render: (text) => text && moment(text).format('YYYY-MM-DD HH:mm:ss'),
+                sorter: (a, b) => a.registrationTime - b.registrationTime
             },
             {
                 title: '上一次登陆地址',
@@ -114,13 +115,26 @@ class Users extends Component {
                 title: '上一次登陆时间',
                 dataIndex: 'lastLoginTime',
                 align: 'center',
-                render: (text) => text && moment(text).format('YYYY-MM-DD HH:mm:ss')
+                render: (text) => text && moment(text).format('YYYY-MM-DD HH:mm:ss'),
+                sorter: (a, b) => a.lastLoginTime - b.lastLoginTime
             },
             {
                 title: '身份',
                 dataIndex: 'isAdmin',
                 align: 'center',
-                render: (text) => text ? '管理员' : '游客'
+                render: (text) => text ? '管理员' : '游客',
+                filterMultiple: false,
+                filters: [
+                    {
+                        text: '游客',
+                        value: 0,
+                    },
+                    {
+                        text: '管理员',
+                        value: 1,
+                    },
+                ],
+                onFilter: (text, record) => record.isAdmin === text,
             },
             {
                 title: '操作',
@@ -151,20 +165,20 @@ class Users extends Component {
                             <Col span={7}>
                                 <Form.Item label="注册开始时间">
                                     {getFieldDecorator('startTime')(
-                                        <DatePicker style={{width:200}} showTime />
+                                        <DatePicker style={{ width: 200 }} showTime />
                                     )}
                                 </Form.Item>
                             </Col>
                             <Col span={7}>
                                 <Form.Item label="注册截止时间">
                                     {getFieldDecorator('endTime')(
-                                        <DatePicker style={{width:200}} showTime />
+                                        <DatePicker style={{ width: 200 }} showTime />
                                     )}
                                 </Form.Item>
                             </Col>
                             <Col span={4}>
-                                <Form.Item style={{marginRight:0,width:'100%'}} wrapperCol={{span:24}}>
-                                    <div style={{textAlign:'right'}}>
+                                <Form.Item style={{ marginRight: 0, width: '100%' }} wrapperCol={{ span: 24 }}>
+                                    <div style={{ textAlign: 'right' }}>
                                         <Button type="primary" icon='search' onClick={this.onSearch}>搜索</Button>&emsp;
                                         <Button icon="reload" onClick={this.onReset}>重置</Button>
                                     </div>
