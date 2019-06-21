@@ -3,6 +3,8 @@ import { Layout, Icon } from 'antd'
 import MySider from './MySider'
 import MyHeader from './MyHeader'
 import MyContent from './MyContent'
+import store from '@/store'
+import { getUser } from '@/store/actions'
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -13,6 +15,10 @@ class Index extends React.Component {
         panes: [],    //网站打开的标签页列表
         activeMenu: ''  //网站活动的菜单
     };
+    componentDidMount() {
+        const username = localStorage.getItem('username')
+        store.dispatch(getUser({username}))
+    }
     _setState = (obj) => {
         this.setState(obj)
     }

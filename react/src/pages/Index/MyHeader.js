@@ -5,14 +5,18 @@ import ColorPicker from '@/components/ColorPicker/index'
 import EditInfoModal from './EditInfoModal'
 import EditPasswordModal from './EditPasswordModal'
 import { logout } from '@/utils/session'
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
-@withRouter
-class MyHeader extends React.Component {
+const store = connect(
+    (state) => ({ user: state.user })
+)
 
+@withRouter @store
+class MyHeader extends React.Component {
     constructor(props) {
         super(props);
         const userTheme = JSON.parse(localStorage.getItem('user-theme'))
@@ -67,7 +71,7 @@ class MyHeader extends React.Component {
 
     render() {
         const { isFullscreen, color } = this.state
-
+        const {user} = this.props
         return (
             <div style={{ background: '#fff', padding: '0 16px' }}>
                 <Icon
@@ -81,7 +85,7 @@ class MyHeader extends React.Component {
                     </div>
                     <div style={styles.headerItem}>
                         <Menu mode="horizontal" selectable={false}>
-                            <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />&nbsp;<span>张致豪</span></div>}>
+                            <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src={user.avatar || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'} />&nbsp;<span>{user.username}</span></div>}>
                                 <MenuItemGroup title="用户中心">
                                     <Menu.Item key={1} onClick={this.openEditInfoModal}><Icon type="user" />编辑个人信息</Menu.Item>
                                     <Menu.Item key={77} onClick={this.openEditPasswordModal}><Icon type="edit" />修改密码</Menu.Item>

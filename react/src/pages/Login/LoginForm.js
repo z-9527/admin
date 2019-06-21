@@ -65,6 +65,7 @@ class LoginForm extends React.Component {
             this.props.form.resetFields('captcha')
             return
         }
+        localStorage.setItem('username',values.username)
         authenticateSuccess(res2.data.token)
         this.props.history.push('/')
     }
