@@ -26,9 +26,10 @@ class MyHeader extends React.Component {
             color = userTheme['@primary-color']
         }
         this.state = {
-            isFullscreen: false,
+            isFullscreen: false,    //控制页面全屏
             color: color,
-            infoVisible:false
+            infoVisible: false,     //控制修改用户信息的模态框
+            passwordVisible: false   //控制修改密码的模态框
         }
     }
     toggleCollapsed = () => {
@@ -61,11 +62,13 @@ class MyHeader extends React.Component {
     }
     toggleInfoVisible = (visible) => {
         this.setState({
-            infoVisible:visible
+            infoVisible: visible
         })
     }
-    openEditPasswordModal = () => {
-        this.EditPasswordModal.toggleVisible(true)
+    togglePasswordVisible = (visible) => {
+        this.setState({
+            passwordVisible:visible
+        })
     }
     onLogout = () => {
         logout()   //清空cookie
@@ -73,8 +76,8 @@ class MyHeader extends React.Component {
     }
 
     render() {
-        const { isFullscreen, color,infoVisible } = this.state
-        const {user} = this.props
+        const { isFullscreen, color, infoVisible,passwordVisible } = this.state
+        const { user } = this.props
         return (
             <div style={{ background: '#fff', padding: '0 16px' }}>
                 <Icon
@@ -90,8 +93,8 @@ class MyHeader extends React.Component {
                         <Menu mode="horizontal" selectable={false}>
                             <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src={user.avatar || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'} />&nbsp;<span>{user.username}</span></div>}>
                                 <MenuItemGroup title="用户中心">
-                                    <Menu.Item key={1} onClick={()=>this.toggleInfoVisible(true)}><Icon type="user" />编辑个人信息</Menu.Item>
-                                    <Menu.Item key={77} onClick={this.openEditPasswordModal}><Icon type="edit" />修改密码</Menu.Item>
+                                    <Menu.Item key={1} onClick={() => this.toggleInfoVisible(true)}><Icon type="user" />编辑个人信息</Menu.Item>
+                                    <Menu.Item key={77} onClick={()=>this.togglePasswordVisible(true)}><Icon type="edit" />修改密码</Menu.Item>
                                     <Menu.Item key={2} onClick={this.onLogout}><Icon type="logout" />退出登录</Menu.Item>
                                 </MenuItemGroup>
                                 <MenuItemGroup title="设置中心">
@@ -102,8 +105,8 @@ class MyHeader extends React.Component {
                         </Menu>
                     </div>
                 </div>
-                <EditInfoModal toggleVisible={this.toggleInfoVisible} visible={infoVisible}/>
-                <EditPasswordModal wrappedComponentRef={(e) => this.EditPasswordModal = e} />
+                <EditInfoModal toggleVisible={this.toggleInfoVisible} visible={infoVisible} />
+                <EditPasswordModal toggleVisible={this.togglePasswordVisible} visible={passwordVisible} />
             </div>
         )
     }

@@ -67,7 +67,7 @@ const checkName = async function (username) {
 }
 
 /**
- * 淘宝ip地址有跨越，利用后端代理请求
+ * 腾讯地图api获取ip地址
  */
 const getIpInfo = async function () {
     const res = await axios.get('https://apis.map.qq.com/ws/location/v1/ip?key=MH2BZ-4WTK3-2D63K-YZRHP-HM537-HHBD3')
@@ -194,7 +194,15 @@ const update = async (params, sessionId) => {
     let str = ''
     for (let [key, value] of Object.entries(params)) {
         if (value) {
-            str += `,${key}='${value}'`
+            if (key === 'password') {
+                //先解密前端加密的密码
+                const originalText = decrypt(value)
+                //然后再用另一种方式加密密码
+                const ciphertext = genPassword(originalText)
+                str += `,${key}='${ciphertext}'`
+            } else {
+                str += `,${key}='${value}'`
+            }
         }
     }
     const sql = `update users set ${str.substring(1)} where username='${loginName}'`
@@ -204,13 +212,13 @@ const update = async (params, sessionId) => {
         return new SuccessModel({
             data: {
                 ...res2.data,
-                token: jwt.sign({ username:params.username }, TOKEN_SECRETKEY)
+                token: jwt.sign({ username: params.username }, TOKEN_SECRETKEY)
             },
             message: '修改成功'
         })
     } else {
         return new ErrorModel({
-            message:'修改失败'
+            message: '修改失败'
         })
     }
 }

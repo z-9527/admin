@@ -27,6 +27,7 @@ class InfoModal extends Component {
                 visible={this.props.visible}
                 onCancel={this.props.onCancel}
                 width={800}
+                centered
                 footer={<Button type='primary' onClick={this.props.onCancel}>确定</Button>}
                 title='用户注册信息'>
                 <Form {...formItemLayout} style={{ marginLeft: -40 }}>

@@ -51,6 +51,7 @@ class EditInfoModal extends React.Component {
             localStorage.setItem('username', values.username)
             authenticateSuccess(res.data.token)
             this.props.setUser(res.data)
+            message.success('修改信息成功')
             this.handleCancel()
         }
     }
@@ -106,6 +107,7 @@ class EditInfoModal extends React.Component {
                 onCancel={this.handleCancel}
                 onOk={this.handleOk}
                 visible={visible}
+                centered
                 title="编辑个人信息">
                 <div style={{ height: '60vh', overflow: 'auto' }}>
                     <Form>
@@ -121,9 +123,14 @@ class EditInfoModal extends React.Component {
                         </Form.Item>
                         <Form.Item label={'用户名'} {...formItemLayout}>
                             {getFieldDecorator('username', {
-                                rules: [{ required: true, message: '请输入用户名' }],
+                                validateFirst: true,
+                                rules: [
+                                    { required: true, message: '用户名不能为空' },
+                                    { pattern: '^[^ ]+$', message: '不能输入空格' },
+                                    { min: 3, message: '用户名至少为3位' }
+                                ]
                             })(
-                                <Input placeholder="请输入姓名" />
+                                <Input placeholder="请输入用户名" />
                             )}
                         </Form.Item>
                         <Form.Item label={'出生年月日'} {...formItemLayout}>
