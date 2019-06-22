@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import { Modal, Row, Col, Form, Input, Button } from 'antd'
+import { createFormField } from '../../utils/util'
 
-function createFormField(obj){
-    let target = {}
-    for(let [key,value] of Object.entries(obj)){
-        target[key] = Form.createFormField({
-            value
-        })
-    }
-    return target
-}
 
 const form = Form.create({
-    mapPropsToFields(props){
+    mapPropsToFields(props) {
         return createFormField(props.userInfo)
     }
 })

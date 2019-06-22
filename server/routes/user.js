@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { register, checkName, getIpInfo, login, getUsers, getUser } = require('../controller/user')
+const { register, checkName, getIpInfo, login, getUsers, getUser, update } = require('../controller/user')
 
 router.prefix('/user')
 
@@ -43,6 +43,12 @@ router.get('/getUsers', async function (ctx, next) {
 
 router.get('/getUser', async function (ctx, next) {
   const res = await getUser(ctx.query)
+  handleRes(ctx, next, res)
+})
+
+router.post('/update', async function (ctx, next) {
+  const token = ctx.cookies.get('sessionId')
+  const res = await update(ctx.request.body,token)
   handleRes(ctx, next, res)
 })
 

@@ -28,6 +28,7 @@ class MyHeader extends React.Component {
         this.state = {
             isFullscreen: false,
             color: color,
+            infoVisible:false
         }
     }
     toggleCollapsed = () => {
@@ -58,8 +59,10 @@ class MyHeader extends React.Component {
     resetColor = () => {
         this.changeColor('#13C2C2')
     }
-    openEditInfoModal = () => {
-        this.EditInfoModal.toggleVisible(true)
+    toggleInfoVisible = (visible) => {
+        this.setState({
+            infoVisible:visible
+        })
     }
     openEditPasswordModal = () => {
         this.EditPasswordModal.toggleVisible(true)
@@ -70,7 +73,7 @@ class MyHeader extends React.Component {
     }
 
     render() {
-        const { isFullscreen, color } = this.state
+        const { isFullscreen, color,infoVisible } = this.state
         const {user} = this.props
         return (
             <div style={{ background: '#fff', padding: '0 16px' }}>
@@ -87,7 +90,7 @@ class MyHeader extends React.Component {
                         <Menu mode="horizontal" selectable={false}>
                             <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src={user.avatar || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'} />&nbsp;<span>{user.username}</span></div>}>
                                 <MenuItemGroup title="用户中心">
-                                    <Menu.Item key={1} onClick={this.openEditInfoModal}><Icon type="user" />编辑个人信息</Menu.Item>
+                                    <Menu.Item key={1} onClick={()=>this.toggleInfoVisible(true)}><Icon type="user" />编辑个人信息</Menu.Item>
                                     <Menu.Item key={77} onClick={this.openEditPasswordModal}><Icon type="edit" />修改密码</Menu.Item>
                                     <Menu.Item key={2} onClick={this.onLogout}><Icon type="logout" />退出登录</Menu.Item>
                                 </MenuItemGroup>
@@ -99,7 +102,7 @@ class MyHeader extends React.Component {
                         </Menu>
                     </div>
                 </div>
-                <EditInfoModal wrappedComponentRef={(e) => this.EditInfoModal = e} />
+                <EditInfoModal toggleVisible={this.toggleInfoVisible} visible={infoVisible}/>
                 <EditPasswordModal wrappedComponentRef={(e) => this.EditPasswordModal = e} />
             </div>
         )

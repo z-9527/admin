@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js'
 import { SECRETKEY } from '../config/secret'
+import { Form } from 'antd'
 
 /**
  * 防抖函数
@@ -56,7 +57,7 @@ export function randomNum(min, max) {
  * 加密函数，加密同一个字符串生成的都不相同
  * @param {*} str 
  */
-export function encrypt(str){
+export function encrypt(str) {
     return CryptoJS.AES.encrypt(JSON.stringify(str), SECRETKEY).toString();
 }
 
@@ -64,7 +65,31 @@ export function encrypt(str){
  * 解密函数
  * @param {*} str 
  */
-export function decrypt(str){
-    const bytes  = CryptoJS.AES.decrypt(str, SECRETKEY);
+export function decrypt(str) {
+    const bytes = CryptoJS.AES.decrypt(str, SECRETKEY);
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+}
+
+/**
+ * 判断是否是对象
+ * @param {*} obj 
+ */
+export function isObject(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
+/**
+ * 创建表单回显的对象
+ * @param {*} obj 
+ */
+export function createFormField(obj) {
+    let target = {}
+    if (isObject(obj)) {
+        for (let [key, value] of Object.entries(obj)) {
+            target[key] = Form.createFormField({
+                value
+            })
+        }
+    }
+    return target
 }

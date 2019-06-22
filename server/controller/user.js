@@ -156,24 +156,63 @@ const getUsers = async (params) => {
  * 获取单个用户,可根据id或用户名查询单个用户
  * @param {*} params 
  */
-const getUser = async (params)=>{
-    const {id,username} = params
-    if(!id && !username){
+const getUser = async (params) => {
+    const { id, username } = params
+    if (!id && !username) {
         return new ErrorModel({
-            message:'参数异常',
-            httpCode:400
+            message: '参数异常',
+            httpCode: 400
         })
     }
     let sql = `select * from users where `
-    if(id){
+    if (id) {
         sql += `id=${id}`
-    } else if(username){
+    } else if (username) {
         sql += `username='${username}'`
     }
     const res = await exec(sql)
     return new SuccessModel({
-        data:res[0]
+        data: res[0]
     })
+}
+/**
+ * 更新用户信息
+ * @param {*} params 
+ */
+const update = async (params, sessionId) => {
+    const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
+    if (params.username && loginName !== params.username) {
+        //如果修改了用户名还要检查用户名是否已经存在
+        const checkNameResult = await checkName(params.username)
+        if (checkNameResult.data.num) {
+            return new ErrorModel({
+                message: '用户名已存在',
+                httpCode: 400
+            })
+        }
+    }
+    let str = ''
+    for (let [key, value] of Object.entries(params)) {
+        if (value) {
+            str += `,${key}='${value}'`
+        }
+    }
+    const sql = `update users set ${str.substring(1)} where username='${loginName}'`
+    const res = await exec(sql)
+    if (res.changedRows) {
+        const res2 = await getUser({ username: params.username })
+        return new SuccessModel({
+            data: {
+                ...res2.data,
+                token: jwt.sign({ username:params.username }, TOKEN_SECRETKEY)
+            },
+            message: '修改成功'
+        })
+    } else {
+        return new ErrorModel({
+            message:'修改失败'
+        })
+    }
 }
 
 module.exports = {
@@ -182,5 +221,6 @@ module.exports = {
     getIpInfo,
     login,
     getUsers,
-    getUser
+    getUser,
+    update
 }

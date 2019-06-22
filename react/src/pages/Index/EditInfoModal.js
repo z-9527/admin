@@ -1,49 +1,69 @@
 import React from 'react'
 import { Modal, Form, Upload, Icon, message, Input, Radio, DatePicker, Alert } from 'antd'
-import {isAuthenticated} from '../../utils/session'
+import { isAuthenticated, authenticateSuccess } from '../../utils/session'
 import moment from 'moment'
+import { json } from '../../utils/ajax'
+import { setUser } from '../../store/actions'
+import { connect, } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import {createFormField} from '../../utils/util'
+
 
 const RadioGroup = Radio.Group;
 
-@Form.create()
+const store = connect(
+    (state) => ({ user: state.user }),
+    (dispatch)=>bindActionCreators({setUser}, dispatch)
+)
+const form = Form.create({
+    mapPropsToFields(props) {
+        const user = props.user
+        return createFormField({
+            ...user,
+            birth:user.birth ? moment(user.birth) : null
+        })
+    }
+})
+
+@store @form
 class EditInfoModal extends React.Component {
     state = {
-        visible: false,
         uploading: false
     }
     handleCancel = () => {
         this.props.form.resetFields()
-        this.toggleVisible(false)
+        this.props.toggleVisible(false)
     }
     handleOk = () => {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.onUpdate(values)
-                this.handleCancel()
             }
         });
     }
-    onUpdate= async (values)=>{
+    onUpdate = async (values) => {
         const param = {
             ...values,
-            birth:values.birth && moment(values.birth).valueOf()
+            birth: values.birth && moment(values.birth).valueOf()
         }
-        console.log(param)
+        const res = await json.post('/user/update', param)
+        if (res.status === 0) {
+            localStorage.setItem('username', values.username)
+            authenticateSuccess(res.data.token)
+            this.props.setUser(res.data)
+            this.handleCancel()
+        }
     }
-    toggleVisible = (visible) => {
-        this.setState({
-            visible
-        })
-    }
-    _normFile = (e)=>{
-        if(e.file.response && e.file.response.data){
+    _normFile = (e) => {
+        if (e.file.response && e.file.response.data) {
             return e.file.response.data.url
         } else {
             return ''
         }
     }
     render() {
-        const { visible, uploading } = this.state
+        const {  uploading } = this.state
+        const {visible} = this.props
         const { getFieldDecorator, getFieldValue } = this.props.form
 
         const avatar = getFieldValue('avatar')
@@ -98,9 +118,9 @@ class EditInfoModal extends React.Component {
                             </Upload>
                         )}
                     </Form.Item>
-                    <Form.Item label={'姓名'} {...formItemLayout}>
-                        {getFieldDecorator('nickname', {
-                            rules: [{ required: true, message: '请输入姓名' }],
+                    <Form.Item label={'用户名'} {...formItemLayout}>
+                        {getFieldDecorator('username', {
+                            rules: [{ required: true, message: '请输入用户名' }],
                         })(
                             <Input placeholder="请输入姓名" />
                         )}
