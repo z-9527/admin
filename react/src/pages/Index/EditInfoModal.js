@@ -20,7 +20,8 @@ const form = Form.create({
         const user = props.user
         return createFormField({
             ...user,
-            birth: user.birth ? moment(user.birth) : null
+            birth: user.birth ? moment(user.birth) : null,
+            avatar: user.avatar || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
         })
     }
 })
