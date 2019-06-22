@@ -111,6 +111,7 @@ class EditPasswordModal extends React.Component {
                             ]
                         })(
                             <Input
+                                onPressEnter={this.handleOk}
                                 placeholder="请确认密码"
                                 autoComplete="new-password"
                                 type={'password'} />

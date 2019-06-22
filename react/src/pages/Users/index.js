@@ -184,6 +184,7 @@ class Users extends Component {
                                 <Form.Item label="用户名">
                                     {getFieldDecorator('username')(
                                         <Input
+                                            onPressEnter={this.onSearch}
                                             style={{ width: 200 }}
                                             placeholder="用户名"
                                         />
