@@ -2,6 +2,7 @@ const inspect = require('util').inspect
 const path = require('path')
 const fs = require('fs')
 const Busboy = require('busboy')
+const { SuccessModel, ErrorModel } = require('../model/resModel')
 
 /**
  * 同步创建文件目录
@@ -56,10 +57,9 @@ function uploadFile(ctx, options) {
 
       if (options.isImg) {
         if (!isPic) {
-          reject({
-            success: false,
+          resolve(new ErrorModel({
             message: '文件格式非图片类型'
-          })
+          }))
           return
         }
       }
@@ -73,11 +73,12 @@ function uploadFile(ctx, options) {
 
       // 文件写入事件结束
       file.on('end', function () {
-        result = {
+        result = new SuccessModel({
           message: '文件上传成功',
-          url: `${ctx.origin}/${fileType}/${fileName}`,
-          success: true
-        }
+          data: {
+            url: `${ctx.origin}/${fileType}/${fileName}`
+          }
+        })
         console.log('文件上传成功！')
       })
     })
@@ -91,10 +92,9 @@ function uploadFile(ctx, options) {
     // 解析错误事件
     busboy.on('error', function (err) {
       console.log('文件上出错')
-      reject({
-        success: false,
+      resolve(new ErrorModel({
         message: '文件上传出错'
-      })
+      }))
     })
 
     req.pipe(busboy)

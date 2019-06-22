@@ -1,18 +1,18 @@
 const LOGIN_COOKIE_NAME = 'sessionId'
 
-export function isAuthenticated () {
-  return !!_getCookie(LOGIN_COOKIE_NAME)
+export function isAuthenticated() {
+  return _getCookie(LOGIN_COOKIE_NAME)
 }
 
-export function authenticateSuccess (token) {
+export function authenticateSuccess(token) {
   _setCookie(LOGIN_COOKIE_NAME, token)
 }
 
-export function logout () {
+export function logout() {
   _setCookie(LOGIN_COOKIE_NAME, '', 0)
 }
 
-function _getCookie (name) {
+function _getCookie(name) {
   let start, end
   if (document.cookie.length > 0) {
     start = document.cookie.indexOf(name + '=')
@@ -28,7 +28,7 @@ function _getCookie (name) {
   return ''
 }
 
-function _setCookie (name, value, expire) {
+function _setCookie(name, value, expire) {
   let date = new Date()
   date.setDate(date.getDate() + expire)
   document.cookie = name + '=' + escape(value) + '; path=/' +

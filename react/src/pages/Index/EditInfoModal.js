@@ -1,5 +1,7 @@
 import React from 'react'
 import { Modal, Form, Upload, Icon, message, Input, Radio, DatePicker, Alert } from 'antd'
+import {isAuthenticated} from '../../utils/session'
+import moment from 'moment'
 
 const RadioGroup = Radio.Group;
 
@@ -16,21 +18,35 @@ class EditInfoModal extends React.Component {
     handleOk = () => {
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                this.onUpdate(values)
                 this.handleCancel()
             }
         });
+    }
+    onUpdate= async (values)=>{
+        const param = {
+            ...values,
+            birth:values.birth && moment(values.birth).valueOf()
+        }
+        console.log(param)
     }
     toggleVisible = (visible) => {
         this.setState({
             visible
         })
     }
+    _normFile = (e)=>{
+        if(e.file.response && e.file.response.data){
+            return e.file.response.data.url
+        } else {
+            return ''
+        }
+    }
     render() {
         const { visible, uploading } = this.state
         const { getFieldDecorator, getFieldValue } = this.props.form
 
-        let avatar = getFieldValue('avatar')
-        avatar = avatar && avatar.url
+        const avatar = getFieldValue('avatar')
 
         const formItemLayout = {
             labelCol: { span: 6 },
@@ -40,6 +56,9 @@ class EditInfoModal extends React.Component {
         const uploadProps = {
             name: "avatar",
             listType: "picture-card",
+            headers: {
+                Authorization: `Bearer ${isAuthenticated()}`,
+            },
             action: `${process.env.REACT_APP_BASE_URL}/upload?isImg=1`,
             showUploadList: false,
             accept: "image/*",
@@ -58,7 +77,7 @@ class EditInfoModal extends React.Component {
                     this.setState({
                         uploading: false
                     })
-                    message.error('上传头像失败')
+                    message.error(info.file.response.message || '上传头像失败')
                 }
             }
         }
@@ -72,7 +91,7 @@ class EditInfoModal extends React.Component {
                     <Form.Item label={'头像'} {...formItemLayout}>
                         {getFieldDecorator('avatar', {
                             rules: [{ required: true, message: '请上传用户头像' }],
-                            getValueFromEvent: (info) => info.file.response,     //将上传的结果作为表单项的值（用normalize报错了，所以用的这个）
+                            getValueFromEvent: this._normFile,     //将上传的结果作为表单项的值（用normalize报错了，所以用的这个属性）
                         })(
                             <Upload {...uploadProps} style={styles.avatarUploader}>
                                 {avatar ? <img src={avatar} alt="avatar" style={styles.avatar} /> : <Icon style={styles.icon} type={uploading ? 'loading' : 'plus'} />}
@@ -80,7 +99,7 @@ class EditInfoModal extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item label={'姓名'} {...formItemLayout}>
-                        {getFieldDecorator('name', {
+                        {getFieldDecorator('nickname', {
                             rules: [{ required: true, message: '请输入姓名' }],
                         })(
                             <Input placeholder="请输入姓名" />
@@ -101,7 +120,7 @@ class EditInfoModal extends React.Component {
                         )}
                     </Form.Item>
                     <Form.Item label={'所在地'} {...formItemLayout}>
-                        {getFieldDecorator('area', {
+                        {getFieldDecorator('location', {
                             validateFirst: true,
                             rules: [{ required: true, message: '请输入目前所在地' }],
                         })(
