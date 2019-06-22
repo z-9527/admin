@@ -6,21 +6,21 @@ import { json } from '../../utils/ajax'
 import { setUser } from '../../store/actions'
 import { connect, } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {createFormField} from '../../utils/util'
+import { createFormField } from '../../utils/util'
 
 
 const RadioGroup = Radio.Group;
 
 const store = connect(
     (state) => ({ user: state.user }),
-    (dispatch)=>bindActionCreators({setUser}, dispatch)
+    (dispatch) => bindActionCreators({ setUser }, dispatch)
 )
 const form = Form.create({
     mapPropsToFields(props) {
         const user = props.user
         return createFormField({
             ...user,
-            birth:user.birth ? moment(user.birth) : null
+            birth: user.birth ? moment(user.birth) : null
         })
     }
 })
@@ -35,7 +35,7 @@ class EditInfoModal extends React.Component {
         this.props.toggleVisible(false)
     }
     handleOk = () => {
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 this.onUpdate(values)
             }
@@ -62,8 +62,8 @@ class EditInfoModal extends React.Component {
         }
     }
     render() {
-        const {  uploading } = this.state
-        const {visible} = this.props
+        const { uploading } = this.state
+        const { visible } = this.props
         const { getFieldDecorator, getFieldValue } = this.props.form
 
         const avatar = getFieldValue('avatar')
@@ -107,61 +107,63 @@ class EditInfoModal extends React.Component {
                 onOk={this.handleOk}
                 visible={visible}
                 title="编辑个人信息">
-                <Form>
-                    <Form.Item label={'头像'} {...formItemLayout}>
-                        {getFieldDecorator('avatar', {
-                            rules: [{ required: true, message: '请上传用户头像' }],
-                            getValueFromEvent: this._normFile,     //将上传的结果作为表单项的值（用normalize报错了，所以用的这个属性）
-                        })(
-                            <Upload {...uploadProps} style={styles.avatarUploader}>
-                                {avatar ? <img src={avatar} alt="avatar" style={styles.avatar} /> : <Icon style={styles.icon} type={uploading ? 'loading' : 'plus'} />}
-                            </Upload>
-                        )}
-                    </Form.Item>
-                    <Form.Item label={'用户名'} {...formItemLayout}>
-                        {getFieldDecorator('username', {
-                            rules: [{ required: true, message: '请输入用户名' }],
-                        })(
-                            <Input placeholder="请输入姓名" />
-                        )}
-                    </Form.Item>
-                    <Form.Item label={'出生年月日'} {...formItemLayout}>
-                        {getFieldDecorator('birth', {
-                            rules: [{ required: true, message: '请选择出生年月日' }],
-                        })(
-                            <DatePicker />
-                        )}
-                    </Form.Item>
-                    <Form.Item label={'电话'} {...formItemLayout}>
-                        {getFieldDecorator('phone', {
-                            rules: [{ required: true, message: '请输入电话号码' }, { pattern: /^[0-9]*$/, message: '请输入正确的电话号码' }],
-                        })(
-                            <Input placeholder="请输入电话号码" />
-                        )}
-                    </Form.Item>
-                    <Form.Item label={'所在地'} {...formItemLayout}>
-                        {getFieldDecorator('location', {
-                            validateFirst: true,
-                            rules: [{ required: true, message: '请输入目前所在地' }],
-                        })(
-                            <Input placeholder="请输入目前所在地" />
-                        )}
-                    </Form.Item>
-                    <Form.Item label={'性别'} {...formItemLayout}>
-                        {getFieldDecorator('gender', {
-                            initialValue: '男',
-                            rules: [{ required: true, message: '请选择性别' }],
-                        })(
-                            <RadioGroup>
-                                <Radio value={'男'}>男</Radio>
-                                <Radio value={'女'}>女</Radio>
-                            </RadioGroup>
-                        )}
-                    </Form.Item>
-                    <Form.Item>
-                        <Alert message={"注：此信息仅为项目模拟数据，无其他用途"} type="info" />
-                    </Form.Item>
-                </Form>
+                <div style={{ height: '60vh', overflow: 'auto' }}>
+                    <Form>
+                        <Form.Item label={'头像'} {...formItemLayout}>
+                            {getFieldDecorator('avatar', {
+                                rules: [{ required: true, message: '请上传用户头像' }],
+                                getValueFromEvent: this._normFile,     //将上传的结果作为表单项的值（用normalize报错了，所以用的这个属性）
+                            })(
+                                <Upload {...uploadProps} style={styles.avatarUploader}>
+                                    {avatar ? <img src={avatar} alt="avatar" style={styles.avatar} /> : <Icon style={styles.icon} type={uploading ? 'loading' : 'plus'} />}
+                                </Upload>
+                            )}
+                        </Form.Item>
+                        <Form.Item label={'用户名'} {...formItemLayout}>
+                            {getFieldDecorator('username', {
+                                rules: [{ required: true, message: '请输入用户名' }],
+                            })(
+                                <Input placeholder="请输入姓名" />
+                            )}
+                        </Form.Item>
+                        <Form.Item label={'出生年月日'} {...formItemLayout}>
+                            {getFieldDecorator('birth', {
+                                rules: [{ required: true, message: '请选择出生年月日' }],
+                            })(
+                                <DatePicker />
+                            )}
+                        </Form.Item>
+                        <Form.Item label={'电话'} {...formItemLayout}>
+                            {getFieldDecorator('phone', {
+                                rules: [{ required: true, message: '请输入电话号码' }, { pattern: /^[0-9]*$/, message: '请输入正确的电话号码' }],
+                            })(
+                                <Input placeholder="请输入电话号码" />
+                            )}
+                        </Form.Item>
+                        <Form.Item label={'所在地'} {...formItemLayout}>
+                            {getFieldDecorator('location', {
+                                validateFirst: true,
+                                rules: [{ required: true, message: '请输入目前所在地' }],
+                            })(
+                                <Input placeholder="请输入目前所在地" />
+                            )}
+                        </Form.Item>
+                        <Form.Item label={'性别'} {...formItemLayout}>
+                            {getFieldDecorator('gender', {
+                                initialValue: '男',
+                                rules: [{ required: true, message: '请选择性别' }],
+                            })(
+                                <RadioGroup>
+                                    <Radio value={'男'}>男</Radio>
+                                    <Radio value={'女'}>女</Radio>
+                                </RadioGroup>
+                            )}
+                        </Form.Item>
+                        <Form.Item>
+                            <Alert message={"注：此信息仅为项目模拟数据，无其他用途"} type="info" />
+                        </Form.Item>
+                    </Form>
+                </div>
             </Modal>
         )
     }
