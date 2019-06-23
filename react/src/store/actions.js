@@ -1,5 +1,5 @@
 import {json} from '../utils/ajax'
-// 实际上用户信息完全可以保存在localStorage中，这里我是为了学习和使用redux才将用户信息保存在这里的
+// 虽然用户信息放在localStorage也可以全局使用，但是如果放在localStorage中，用户信息改变时页面不会实时更新
 export const SET_USER = 'SET_USER'
 export function setUser(user){
     return {

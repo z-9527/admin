@@ -179,7 +179,7 @@ const getUser = async (params) => {
  * 更新用户信息
  * @param {*} params 
  */
-const update = async (params, sessionId) => {
+const updateUser = async (params, sessionId) => {
     const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
     if (params.username && loginName !== params.username) {
         //如果修改了用户名还要检查用户名是否已经存在
@@ -223,6 +223,21 @@ const update = async (params, sessionId) => {
     }
 }
 
+const deleteUsers = async (params)=>{
+    const ids = params.ids
+    if(!Array.isArray(ids)){
+        return new ErrorModel({
+            message:'参数异常',
+            httpCode:400
+        })
+    }
+    const sql = `delete from users where id in (${ids.join(',')})`
+    const res = await exec(sql)
+    return new SuccessModel({
+        message:`成功删除${res.affectedRows}条数据`
+    })
+}
+
 module.exports = {
     register,
     checkName,
@@ -230,5 +245,6 @@ module.exports = {
     login,
     getUsers,
     getUser,
-    update
+    updateUser,
+    deleteUsers
 }

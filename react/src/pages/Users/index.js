@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { Table, Card, Form, Input, Button, DatePicker, message, Icon, Row, Col } from 'antd'
+import { Table, Card, Form, Input, Button, DatePicker, message, Icon, Row, Col, Divider, Modal, Popconfirm, notification } from 'antd'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import InfoModal from './InfoModal'
+import { connect } from 'react-redux'
+import { logout } from '../../utils/session'
+import { withRouter } from 'react-router-dom'
+
+const store = connect(
+    (state) => ({ user: state.user })
+)
 
 
-@Form.create()
+@withRouter @store @Form.create()
 class Users extends Component {
     state = {
         users: [],    //用户列表
@@ -17,7 +24,8 @@ class Users extends Component {
             showQuickJumper: true
         },
         isShowInfoModal: false,
-        userInfo: {}
+        userInfo: {},        //当前行的user信息
+        selectedRowKeys: []   //选择中的行keys
 
     }
     componentDidMount() {
@@ -26,14 +34,14 @@ class Users extends Component {
     /**
      * 虽然后台可以一次把所有数据返回给我，但是为了学习,前后台还是做了一个分页
      */
-    getUsers = async () => {
+    getUsers = async (page = 1) => {
         const { pagination } = this.state
         const fields = this.props.form.getFieldsValue()
         this.setState({
             usersLoading: true,
         })
         const res = await json.get('/user/getUsers', {
-            current: pagination.current - 1,
+            current: page - 1,
             username: fields.username || '',   //koa会把参数转换为字符串，undefined也会
             startTime: fields.startTime ? fields.startTime.valueOf() : '',
             endTime: fields.endTime ? fields.endTime.valueOf() : ''
@@ -47,23 +55,42 @@ class Users extends Component {
         this.setState({
             usersLoading: false,
             users: res.data.list,
-            pagination: { ...pagination, total: res.data.total }
+            pagination: {
+                ...pagination,
+                total: res.data.total,
+                current: page
+            }
         })
     }
+    /**
+     * table分页
+     */
     onTableChange = async (page) => {
         await this.setState({
             pagination: page
         })
-        this.getUsers()
+        this.getUsers(page.current)
     }
+    /**
+     * 搜索函数
+     */
     onSearch = () => {
         this.getUsers()
     }
+    /**
+     * 重置函数
+     */
     onReset = () => {
         this.props.form.resetFields()
         this.getUsers()
+        this.setState({
+            selectedRowKeys:[]
+        })
         message.success('重置成功')
     }
+    /**
+     * 打开用户信息模特框，并初始化用户信息回显
+     */
     showInfoModal = (record) => {
         const registrationAddress = record.registrationAddress ? JSON.parse(record.registrationAddress) : {}
         const lastLoginAddress = record.lastLoginAddress ? JSON.parse(record.lastLoginAddress) : {}
@@ -83,15 +110,62 @@ class Users extends Component {
             userInfo: userInfo
         })
     }
+    /**
+     * 关闭用户信息模态框
+     */
     closeInfoModal = () => {
         this.setState({
             isShowInfoModal: false,
             userInfo: {}
         })
     }
+    /**
+     * 批量删除
+     */
+    batchDelete = () => {
+        Modal.confirm({
+            title: '提示',
+            content: '您确定批量删除勾选内容吗？',
+            onOk: async () => {
+                if (!this.props.user.isAdmin) {
+                    message.warning('管理员才可批量删除')
+                    return
+                }
+                const res = await json.post('/user/delete', {
+                    ids: this.state.selectedRowKeys
+                })
+                if (res.status === 0) {
+                    notification.success({
+                        message: '删除成功',
+                        description: res.message,
+                    })
+                    this.getUsers()
+                }
+            }
+        })
+    }
+    /**
+     * 单条删除
+     */
+    singleDelete = async (record) => {
+        const res = await json.post('/user/delete', {
+            ids: [record.id]
+        })
+        if (res.status === 0) {
+            notification.success({
+                message: '删除成功',
+                description: '3秒后自动退出登录',
+                duration: 3
+            })
+            logout()
+            setTimeout(() => {
+                this.props.history.push('/login')
+            }, 3000)
+        }
+    }
     render() {
         const { getFieldDecorator } = this.props.form
-        const { users, usersLoading, pagination, userInfo, isShowInfoModal } = this.state
+        const { users, usersLoading, pagination, userInfo, isShowInfoModal, selectedRowKeys } = this.state
         const columns = [
             {
                 title: '序号',
@@ -169,12 +243,26 @@ class Users extends Component {
                 key: 'active',
                 align: 'center',
                 render: (text, record) => (
-                    <div>
+                    <div style={{ textAlign: 'left' }}>
                         <span className='my-a' onClick={() => this.showInfoModal(record)}><Icon type="eye" /> 查看</span>
+                        {
+                            this.props.user.username === record.username &&
+                            <Popconfirm title='您确定删除当前用户吗？' onConfirm={() => this.singleDelete(record)}>
+                                <span className='my-a'><Divider type='vertical' /><Icon type='delete' /> 删除</span>
+                            </Popconfirm>
+                        }
                     </div>
                 )
             },
         ]
+
+        const rowSelection = {
+            selectedRowKeys: selectedRowKeys,
+            onChange: (selectedRowKeys) => this.setState({ selectedRowKeys }),
+            getCheckboxProps: (record) => ({
+                disabled: record.id === this.props.user.id
+            })
+        }
         return (
             <div>
                 <Card bordered={false}>
@@ -215,12 +303,17 @@ class Users extends Component {
                             </Col>
                         </Row>
                     </Form>
+                    <div style={{ marginBottom: 16, textAlign: 'right' }}>
+                        <Button type='primary' icon='plus'>新增</Button>&emsp;
+                        <Button type='danger' icon='delete' disabled={!selectedRowKeys.length} onClick={this.batchDelete}>批量删除</Button>
+                    </div>
                     <Table
                         bordered
                         rowKey='id'
                         columns={columns}
                         dataSource={users}
                         loading={usersLoading}
+                        rowSelection={rowSelection}
                         pagination={pagination}
                         onChange={this.onTableChange}
                     />
