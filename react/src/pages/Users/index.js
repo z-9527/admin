@@ -6,6 +6,7 @@ import InfoModal from './InfoModal'
 import { connect } from 'react-redux'
 import { logout } from '../../utils/session'
 import { withRouter } from 'react-router-dom'
+import CreateUserModal from './CreateUserModal'
 
 const store = connect(
     (state) => ({ user: state.user })
@@ -25,7 +26,8 @@ class Users extends Component {
         },
         isShowInfoModal: false,
         userInfo: {},        //当前行的user信息
-        selectedRowKeys: []   //选择中的行keys
+        selectedRowKeys: [],   //选择中的行keys
+        isShowCreateModal: false
 
     }
     componentDidMount() {
@@ -84,7 +86,7 @@ class Users extends Component {
         this.props.form.resetFields()
         this.getUsers()
         this.setState({
-            selectedRowKeys:[]
+            selectedRowKeys: []
         })
         message.success('重置成功')
     }
@@ -139,7 +141,10 @@ class Users extends Component {
                         message: '删除成功',
                         description: res.message,
                     })
-                    this.onReset()
+                    this.setState({
+                        selectedRowKeys: []
+                    })
+                    this.getUsers()
                 }
             }
         })
@@ -163,9 +168,14 @@ class Users extends Component {
             }, 3000)
         }
     }
+    toggleShowCreateModal = (visible) => {
+        this.setState({
+            isShowCreateModal: visible
+        })
+    }
     render() {
         const { getFieldDecorator } = this.props.form
-        const { users, usersLoading, pagination, userInfo, isShowInfoModal, selectedRowKeys } = this.state
+        const { users, usersLoading, pagination, userInfo, isShowInfoModal, selectedRowKeys, isShowCreateModal } = this.state
         const columns = [
             {
                 title: '序号',
@@ -304,7 +314,7 @@ class Users extends Component {
                         </Row>
                     </Form>
                     <div style={{ marginBottom: 16, textAlign: 'right' }}>
-                        <Button type='primary' icon='plus'>新增</Button>&emsp;
+                        <Button type='primary' icon='plus' onClick={() => this.toggleShowCreateModal(true)}>新增</Button>&emsp;
                         <Button type='danger' icon='delete' disabled={!selectedRowKeys.length} onClick={this.batchDelete}>批量删除</Button>
                     </div>
                     <Table
@@ -319,6 +329,7 @@ class Users extends Component {
                     />
                 </Card>
                 <InfoModal visible={isShowInfoModal} userInfo={userInfo} onCancel={this.closeInfoModal} />
+                <CreateUserModal visible={isShowCreateModal} toggleVisible={this.toggleShowCreateModal} onRegister={this.getUsers} />
             </div>
         );
     }
