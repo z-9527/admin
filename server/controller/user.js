@@ -5,6 +5,21 @@ const jwt = require('jsonwebtoken');
 const { TOKEN_SECRETKEY } = require('../config/secret')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
+//用户表的列名（除去了密码）
+const usersColumns = [
+    'id',
+    'username',
+    'registrationAddress',
+    'registrationTime',
+    'lastLoginAddress',
+    'lastLoginTime',
+    'isAdmin',
+    'avatar',
+    'birth',
+    'phone',
+    'location',
+    'gender',
+]
 
 /**
  * 注册用户
@@ -59,7 +74,7 @@ const register = async function (username, password) {
  * @param {string} username 
  */
 const checkName = async function (username) {
-    const sql = `select * from users where username='${username}'`
+    const sql = `select username from users where username='${username}'`
     const res = await exec(sql)
     return new SuccessModel({
         data: { num: res.length }
@@ -99,7 +114,7 @@ const login = async function (username, password) {
     const originalText = decrypt(password)
     //然后再用另一种方式加密密码
     const ciphertext = genPassword(originalText)
-    const sql = `select * from users where username='${username}' and password='${ciphertext}'`
+    const sql = `select username from users where username='${username}' and password='${ciphertext}'`
     const res = await exec(sql)
     if (!res.length) {
         return new ErrorModel({
@@ -117,13 +132,10 @@ const login = async function (username, password) {
     const lastLoginAddress = JSON.stringify(ip.data)
     const sql2 = `update users set lastLoginAddress='${lastLoginAddress}',lastLoginTime='${Date.now()}' where username='${username}'`
     const res2 = await exec(sql2)
-
-    //去掉密码
-    delete res[0].password
     return new SuccessModel({
         message: '登陆成功',
         data: {
-            ...res2[0],
+            uesrname: res[0].username,
             token: jwt.sign({ username }, TOKEN_SECRETKEY)
         }
     })
@@ -135,7 +147,7 @@ const login = async function (username, password) {
  */
 const getUsers = async (params) => {
     const { current = 0, pageSize = 10, username, startTime, endTime } = params
-    let sql = `select SQL_CALC_FOUND_ROWS * from users where registrationTime between ${startTime || 0} and ${endTime || Date.now()} `
+    let sql = `select SQL_CALC_FOUND_ROWS ${usersColumns.join(',')} from users where registrationTime between ${startTime || 0} and ${endTime || Date.now()} `
     if (username) {
         sql += `and username like '%${username}%' `
     }
@@ -164,7 +176,7 @@ const getUser = async (params) => {
             httpCode: 400
         })
     }
-    let sql = `select * from users where `
+    let sql = `select ${usersColumns.join(',')} from users where `
     if (id) {
         sql += `id=${id}`
     } else if (username) {
@@ -223,18 +235,18 @@ const updateUser = async (params, sessionId) => {
     }
 }
 
-const deleteUsers = async (params)=>{
+const deleteUsers = async (params) => {
     const ids = params.ids
-    if(!Array.isArray(ids)){
+    if (!Array.isArray(ids)) {
         return new ErrorModel({
-            message:'参数异常',
-            httpCode:400
+            message: '参数异常',
+            httpCode: 400
         })
     }
     const sql = `delete from users where id in (${ids.join(',')})`
     const res = await exec(sql)
     return new SuccessModel({
-        message:`成功删除${res.affectedRows}条数据`
+        message: `成功删除${res.affectedRows}条数据`
     })
 }
 
