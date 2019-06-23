@@ -139,7 +139,7 @@ class Users extends Component {
                         message: '删除成功',
                         description: res.message,
                     })
-                    this.getUsers()
+                    this.onReset()
                 }
             }
         })
