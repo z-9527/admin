@@ -69,7 +69,7 @@ class RegisterForm extends React.Component {
                             validateFirst: true,
                             rules: [
                                 { required: true, message: '用户名不能为空' },
-                                { pattern: '^[^ ]+$', message: '不能输入空格' },
+                                { pattern: /^[^\s']+$/, message: '不能输入特殊字符' },
                                 { min: 3, message: '用户名至少为3位' }
                             ]
                         })(

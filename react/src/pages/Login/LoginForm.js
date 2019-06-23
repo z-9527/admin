@@ -65,7 +65,7 @@ class LoginForm extends React.Component {
             this.props.form.resetFields('captcha')
             return
         }
-        localStorage.setItem('username',values.username)
+        localStorage.setItem('username', values.username)
         authenticateSuccess(res2.data.token)
         this.props.history.push('/')
     }
@@ -121,7 +121,7 @@ class LoginForm extends React.Component {
                             validateFirst: true,
                             rules: [
                                 { required: true, message: '请输入用户名' },
-                                { pattern: '^[^ ]+$', message: '不能输入空格' }
+                                { pattern: /^[^\s']+$/, message: '不能输入特殊字符' },
                             ]
                         })(
                             <Input
