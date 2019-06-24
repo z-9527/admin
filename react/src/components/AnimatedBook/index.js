@@ -13,7 +13,7 @@ class AnimatedBooks extends React.Component {
     }
 
     render() {
-        const {cover,content,className='',style={}} = this.props
+        const { cover, content, className = '', style = {} } = this.props
         return (
             <div className={`book-container ${className}`} style={style}>
                 <div className="book">
