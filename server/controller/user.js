@@ -136,7 +136,7 @@ const login = async function (username, password) {
         message: '登陆成功',
         data: {
             uesrname: res[0].username,
-            token: jwt.sign({ username }, TOKEN_SECRETKEY)
+            token: jwt.sign({ username }, TOKEN_SECRETKEY, { expiresIn: '7d' })   //7天过期时间
         }
     })
 }
@@ -224,7 +224,7 @@ const updateUser = async (params, sessionId) => {
         return new SuccessModel({
             data: {
                 ...res2.data,
-                token: jwt.sign({ username: params.username }, TOKEN_SECRETKEY)
+                token: jwt.sign({ username: params.username }, TOKEN_SECRETKEY, { expiresIn: '7d' })
             },
             message: '修改成功'
         })

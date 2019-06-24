@@ -1,44 +1,6 @@
 import React from 'react'
 import { Menu, Icon } from 'antd'
-import tabs from '../tabs'
-
-const menu = [
-    {
-        name: '菜单一',
-        icon: 'user',
-        key: 'menu1',
-        children: [
-            {
-                name: '子菜单',
-                icon: '',
-                key: 'submenu'
-            }
-        ]
-
-    },
-    {
-        name: '用户管理',
-        icon: 'user',
-        key: 'Users'
-    },
-    {
-        name: 'antd',
-        icon: 'ant-design',
-        key:'antd',
-        children:[
-            {
-                name: '按钮',
-                icon: '',
-                key: 'ButtonDemo',   
-            },
-            {
-                name: '图标',
-                icon: '',
-                key: 'IconDemo',   
-            },
-        ]
-    }
-]
+import { tabs, menu } from '../tabs'
 
 class MySider extends React.Component {
 
