@@ -1,0 +1,44 @@
+.cover-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #6fb6e5;
+  color: #fff;
+  padding: 0 10px;
+  font-size: 12px;
+
+  .title {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  p {
+    width: 100%;
+  }
+}
+
+.content-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  .btn {
+    display: inline-block;
+    border: 2px solid #2c3e50;
+    color: #2c3e50;
+    padding: 5px;
+    cursor: pointer;
+    transition: all .3s;
+
+    &:hover {
+      color: var(--primaryColor);
+      border: 2px solid var(--primaryColor);
+    }
+  }
+}
