@@ -47,8 +47,8 @@ router.get('/getUser', async function (ctx, next) {
 })
 
 router.post('/update', async function (ctx, next) {
-  const token = ctx.cookies.get('sessionId')
-  const res = await updateUser(ctx.request.body, token)
+  const sessionId = ctx.cookies.get('sessionId')
+  const res = await updateUser(ctx.request.body, sessionId)
   handleRes(ctx, next, res)
 })
 

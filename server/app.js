@@ -13,6 +13,7 @@ const errorHandle = require('./middlewares/errorHandle')
 
 const index = require('./routes/index')
 const user = require('./routes/user')
+const works = require('./routes/works')
 
 // error handler
 onerror(app)
@@ -46,6 +47,7 @@ app.use(jwt({ secret: TOKEN_SECRETKEY ,cookie:'sessionId'}).unless({ path: unPat
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(user.routes(), user.allowedMethods())
+app.use(works.routes(), works.allowedMethods())
 
 //一定要写在路由后面，写在前面就不会返回接口内容，而是直接返回首页了
 app.use(historyApiFallback()); // 在这个地方加入。一定要加在静态文件的serve之前，否则会失效。

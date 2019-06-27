@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { Form, Input, Modal, Icon, } from 'antd'
+import { json } from '../../utils/ajax'
+import { connect } from 'react-redux'
 
 const { TextArea } = Input;
 
-@Form.create()
+const store = connect(
+    (state) => ({ user: state.user })
+)
+
+@store @Form.create()
 class CreateModal extends Component {
     state = {}
     onCancel = () => {
@@ -18,7 +24,11 @@ class CreateModal extends Component {
         })
     }
     onCreate = async (values) => {
-        console.log(values)
+        const res = await json.post('/works/create', values)
+        if (res.status === 0) {
+            this.props.onCreated()  //更新外面的数据
+            this.onCancel()
+        }
     }
     render() {
         const { getFieldDecorator } = this.props.form
@@ -29,9 +39,10 @@ class CreateModal extends Component {
         return (
             <Modal
                 visible={this.props.visible}
-                title='新增作品'
+                title='新增作品(仅管理员)'
                 centered
                 onCancel={this.onCancel}
+                okButtonProps={{ disabled: !this.props.user.isAdmin }}
                 onOk={this.onOk}
             >
                 <Form {...formItemLayout}>

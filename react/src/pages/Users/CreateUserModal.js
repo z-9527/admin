@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input, Select, message } from 'antd'
+import { Modal, Form, Input, message } from 'antd'
 import { encrypt } from '../../utils/util'
 import { post } from '../../utils/ajax'
 
