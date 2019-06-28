@@ -10,14 +10,14 @@ const { SuccessModel, ErrorModel } = require('../model/resModel')
  * @return {boolean}        创建目录结果
  */
 function mkdirsSync(dirname) {
-  if (fs.existsSync(dirname)) {
-    return true
-  } else {
-    if (mkdirsSync(path.dirname(dirname))) {
-      fs.mkdirSync(dirname)
-      return true
-    }
-  }
+	if (fs.existsSync(dirname)) {
+		return true
+	} else {
+		if (mkdirsSync(path.dirname(dirname))) {
+			fs.mkdirSync(dirname)
+			return true
+		}
+	}
 }
 
 /**
@@ -26,8 +26,8 @@ function mkdirsSync(dirname) {
  * @return {string}          文件后缀名
  */
 function getSuffixName(fileName) {
-  let nameList = fileName.split('.')
-  return nameList[nameList.length - 1]
+	let nameList = fileName.split('.')
+	return nameList[nameList.length - 1]
 }
 
 /**
@@ -37,68 +37,68 @@ function getSuffixName(fileName) {
  * @return {promise}         
  */
 function uploadFile(ctx, options) {
-  let req = ctx.req
-  let res = ctx.res
-  let busboy = new Busboy({ headers: req.headers })
+	let req = ctx.req
+	let res = ctx.res
+	let busboy = new Busboy({ headers: req.headers })
 
-  // 获取类型
-  let fileType = options.fileType || 'common'
-  let filePath = path.join(options.path, fileType)
-  let mkdirResult = mkdirsSync(filePath)       //创建上传文件的目录
+	// 获取类型
+	let fileType = options.fileType || 'common'
+	let filePath = path.join(options.path, fileType)
+	let mkdirResult = mkdirsSync(filePath)       //创建上传文件的目录
 
-  return new Promise((resolve, reject) => {
-    console.log('文件上传中...')
-    let result = {}
+	return new Promise((resolve, reject) => {
+		console.log('文件上传中...')
+		let result = {}
 
-    // 解析请求文件事件
-    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-      const patt = /\.(jpg|jpeg|png|bmp|BMP|JPG|PNG|JPEG)$/
-      const isPic = patt.test(filename)
+		// 解析请求文件事件
+		busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+			const patt = /\.(jpg|jpeg|png|bmp|BMP|JPG|PNG|JPEG)$/
+			const isPic = patt.test(filename)
 
-      if (options.isImg) {
-        if (!isPic) {
-          resolve(new ErrorModel({
-            message: '文件格式非图片类型'
-          }))
-          return
-        }
-      }
+			if (options.isImg) {
+				if (!isPic) {
+					resolve(new ErrorModel({
+						message: '文件格式非图片类型'
+					}))
+					return
+				}
+			}
 
-      let fileName = filename
-      let _uploadFilePath = path.join(filePath, fileName)
-      let saveTo = path.join(_uploadFilePath)
+			let fileName = filename
+			let _uploadFilePath = path.join(filePath, fileName)
+			let saveTo = path.join(_uploadFilePath)
 
-      // 文件保存到制定路径
-      file.pipe(fs.createWriteStream(saveTo))
+			// 文件保存到制定路径
+			file.pipe(fs.createWriteStream(saveTo))
 
-      // 文件写入事件结束
-      file.on('end', function () {
-        result = new SuccessModel({
-          message: '文件上传成功',
-          data: {
-            url: `${ctx.origin}/${fileType}/${fileName}`
-          }
-        })
-        console.log('文件上传成功！')
-      })
-    })
+			// 文件写入事件结束
+			file.on('end', function () {
+				result = new SuccessModel({
+					message: '文件上传成功',
+					data: {
+						url: `${ctx.origin}/${fileType}/${fileName}`
+					}
+				})
+				console.log('文件上传成功！')
+			})
+		})
 
-    // 解析结束事件
-    busboy.on('finish', function () {
-      console.log('文件上结束')
-      resolve(result)
-    })
+		// 解析结束事件
+		busboy.on('finish', function () {
+			console.log('文件上结束')
+			resolve(result)
+		})
 
-    // 解析错误事件
-    busboy.on('error', function (err) {
-      console.log('文件上出错')
-      resolve(new ErrorModel({
-        message: '文件上传出错'
-      }))
-    })
+		// 解析错误事件
+		busboy.on('error', function (err) {
+			console.log('文件上出错')
+			resolve(new ErrorModel({
+				message: '文件上传出错'
+			}))
+		})
 
-    req.pipe(busboy)
-  })
+		req.pipe(busboy)
+	})
 
 }
 

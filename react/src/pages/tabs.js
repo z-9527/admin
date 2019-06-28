@@ -6,6 +6,7 @@ const ButtonDemo = asyncComponent(() => import('./ButtonDemo/index'));
 const IconDemo = asyncComponent(() => import('./IconDemo/index'));
 const Users = asyncComponent(() => import('./Users/index'));
 const Collection = asyncComponent(() => import('./Collection/index'));
+const MessageBoard = asyncComponent(() => import('./MessageBoard/index'));
 const About = asyncComponent(() => import('./About/index'));
 
 
@@ -52,7 +53,7 @@ const menu = [
     {
         name: '留言板',
         icon: 'message',
-        key: 'T'
+        key: 'MessageBoard'
     },
     {
         name: '关于',
@@ -67,6 +68,7 @@ const tabs = {
     IconDemo: <IconDemo />,
     Users: <Users />,
     Collection: <Collection />,
+    MessageBoard: <MessageBoard />,
     About: <About />,
 
 }
