@@ -68,6 +68,7 @@ class CreateModal extends Component {
                         {getFieldDecorator('url', {
                             rules: [
                                 { required: true, message: '请输入项目预览地址' },
+                                { type: 'url', message: '请输入正确的网址' }
                             ]
                         })(
                             <Input placeholder='请输入项目预览地址' />
@@ -77,6 +78,7 @@ class CreateModal extends Component {
                         {getFieldDecorator('githubUrl', {
                             rules: [
                                 { required: true, message: '请输入项目github地址' },
+                                { type: 'url', message: '请输入正确的网址' }
                             ]
                         })(
                             <Input placeholder='请输入项目github地址' />

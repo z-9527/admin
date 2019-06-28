@@ -11,6 +11,7 @@
   font-size: 12px;
 
   .title {
+    width: 100%;
     color: #fff;
     font-size: 16px;
     margin-bottom: 0;
@@ -36,8 +37,14 @@
     cursor: pointer;
     transition: all .3s;
 
+    a {
+      color: #2c3e50;
+    }
+
     &:hover {
-      color: var(--primaryColor);
+      a {
+        color: var(--primaryColor);
+      }
       border: 2px solid var(--primaryColor);
     }
   }
