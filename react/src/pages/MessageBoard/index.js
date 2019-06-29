@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Comment, Divider, Button, Modal, message, Tooltip, Icon, Input } from 'antd'
+import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input } from 'antd'
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
 import 'braft-editor/dist/index.css'
@@ -187,7 +187,7 @@ class MessageBoard extends Component {
 
 
         return (
-            <div style={{ background: '#fff', marginBottom: 30 }}>
+            <Card bordered={false} style={{ marginBottom: 30 }} bodyStyle={{paddingTop:0}}>
                 <div>
                     {
                         isShowEditor ? (
@@ -238,7 +238,7 @@ class MessageBoard extends Component {
                         ))
                     }
                 </div>
-            </div>
+            </Card>
         );
     }
 }
