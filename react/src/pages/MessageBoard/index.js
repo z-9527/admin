@@ -255,7 +255,7 @@ class MessageBoard extends Component {
                                 key={item.id}
                                 author={<span style={{ fontSize: 16 }}>{item.userName}</span>}
                                 avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
-                                content={<div className='content-box' dangerouslySetInnerHTML={createMarkup(item.content)} />}
+                                content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                 actions={this.renderActions(item, item.id)}
                             >
                                 {item.children.length > 0 && item.children.map(i => (
@@ -263,7 +263,7 @@ class MessageBoard extends Component {
                                         key={i.id}
                                         author={<span style={{ fontSize: 15 }}>{i.userName} @ {i.targetUserName}</span>}
                                         avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
-                                        content={<div className='content-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
+                                        content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
                                         actions={this.renderActions(i, item.id)}
                                     />
                                 ))}
