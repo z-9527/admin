@@ -1,6 +1,6 @@
 const router = require('koa-router')()
 const { } = require('../controller/message')
-const { createMessage,getMessages } = require('../controller/message')
+const { createMessage, getMessages, deleteMessage } = require('../controller/message')
 
 router.prefix('/message')
 
@@ -22,6 +22,12 @@ router.post('/create', async function (ctx, next) {
 
 router.get('/list', async function (ctx, next) {
     const res = await getMessages()
+    handleRes(ctx, next, res)
+})
+
+router.post('/delete', async function (ctx, next) {
+    const sessionId = ctx.cookies.get('sessionId')
+    const res = await deleteMessage(ctx.request.body, sessionId)
     handleRes(ctx, next, res)
 })
 

@@ -143,10 +143,10 @@ const login = async function (username, password) {
 
 /**
  * 获取用户列表
- * @param {*} params 
+ * @param {*} param 
  */
-const getUsers = async (params) => {
-    const { current = 0, pageSize = 10, username, startTime, endTime } = params
+const getUsers = async (param) => {
+    const { current = 0, pageSize = 10, username, startTime, endTime } = param
     let sql = `select SQL_CALC_FOUND_ROWS ${usersColumns.join(',')} from users where registrationTime between ${startTime || 0} and ${endTime || Date.now()} `
     if (username) {
         sql += `and username like '%${username}%' `
@@ -166,10 +166,10 @@ const getUsers = async (params) => {
 }
 /**
  * 获取单个用户,可根据id或用户名查询单个用户
- * @param {*} params 
+ * @param {*} param 
  */
-const getUser = async (params) => {
-    const { id, username } = params
+const getUser = async (param) => {
+    const { id, username } = param
     if (!id && !username) {
         return new ErrorModel({
             message: '参数异常',
@@ -189,13 +189,13 @@ const getUser = async (params) => {
 }
 /**
  * 更新用户信息
- * @param {*} params 
+ * @param {*} param 
  */
-const updateUser = async (params, sessionId) => {
+const updateUser = async (param, sessionId) => {
     const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
-    if (params.username && loginName !== params.username) {
+    if (param.username && loginName !== param.username) {
         //如果修改了用户名还要检查用户名是否已经存在
-        const checkNameResult = await checkName(params.username)
+        const checkNameResult = await checkName(param.username)
         if (checkNameResult.data.num) {
             return new ErrorModel({
                 message: '用户名已存在',
@@ -204,7 +204,7 @@ const updateUser = async (params, sessionId) => {
         }
     }
     let str = ''
-    for (let [key, value] of Object.entries(params)) {
+    for (let [key, value] of Object.entries(param)) {
         if (value) {
             if (key === 'password') {
                 //先解密前端加密的密码
@@ -220,11 +220,11 @@ const updateUser = async (params, sessionId) => {
     const sql = `update users set ${str.substring(1)} where username='${loginName}'`
     const res = await exec(sql)
     if (res.changedRows) {
-        const res2 = await getUser({ username: params.username })
+        const res2 = await getUser({ username: param.username })
         return new SuccessModel({
             data: {
                 ...res2.data,
-                token: jwt.sign({ username: params.username }, TOKEN_SECRETKEY, { expiresIn: '7d' })
+                token: jwt.sign({ username: param.username }, TOKEN_SECRETKEY, { expiresIn: '7d' })
             },
             message: '修改成功'
         })
@@ -235,8 +235,8 @@ const updateUser = async (params, sessionId) => {
     }
 }
 
-const deleteUsers = async (params) => {
-    const ids = params.ids
+const deleteUsers = async (param) => {
+    const ids = param.ids
     if (!Array.isArray(ids)) {
         return new ErrorModel({
             message: '参数异常',

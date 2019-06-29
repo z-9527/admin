@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input } from 'antd'
+import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, notification } from 'antd'
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
 import 'braft-editor/dist/index.css'
@@ -7,6 +7,7 @@ import './style.less'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import { isAuthenticated } from '../../utils/session'
+import { connect } from 'react-redux'
 
 const TextArea = Input.TextArea
 
@@ -14,6 +15,11 @@ function createMarkup(html) {
     return { __html: html };
 }
 
+const store = connect(
+    (state) => ({ user: state.user })
+)
+
+@store
 class MessageBoard extends Component {
     state = {
         editorState: BraftEditor.createEditorState(null),   //留言内容
@@ -133,26 +139,60 @@ class MessageBoard extends Component {
             this.getMessages()
         }
     }
+    /**
+     * 删除回复
+     */
+    onDelete = async (item) => {
+        Modal.confirm({
+            title: '提示',
+            content: `确认删除该留言${item.children && item.children.length ? '及其底下的回复' : ''}吗？`,
+            onOk: async () => {
+                const res = await json.post('/message/delete', {
+                    id: item.id
+                })
+                if (res.status === 0) {
+                    notification.success({
+                        message: '删除成功',
+                        description: res.message,
+                        duration: 3
+                    });
+                    this.getMessages()
+                }
+            },
+        });
+    }
     renderActions = (item, pid) => {
-        const actions = [
+        let actions = [
             <span>
                 <Tooltip title="回复时间">
                     {moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}
                 </Tooltip>
             </span>,
-            <span>
+            <span style={styles.actionItem}>
                 <Tooltip title="赞">
-                    <Icon type="like" />
+                    <Icon type="like" />&nbsp;赞
                 </Tooltip>
             </span>,
-            <span>
+            <span style={styles.actionItem}>
                 <Tooltip title="回复">
                     <span onClick={() => this.showReply(item, pid)}>
-                        <Icon type="message" />&nbsp;回复
+                        <span className='iconfont icon-commentoutline my-iconfont' />&nbsp;回复
                    </span>
                 </Tooltip>
             </span>
         ]
+        //只有管理员或者本人才可删除
+        if (this.props.user.isAdmin || this.props.user.id === item.userId) {
+            actions.splice(2, 0, (
+                <span style={styles.actionItem}>
+                    <Tooltip title="删除">
+                        <span onClick={() => this.onDelete(item)}>
+                            <Icon type="delete" />&nbsp;删除
+                        </span>
+                    </Tooltip>
+                </span>
+            ))
+        }
         return actions
     }
     myUploadFn = async (param) => {
@@ -187,7 +227,7 @@ class MessageBoard extends Component {
 
 
         return (
-            <Card bordered={false} style={{ marginBottom: 30 }} bodyStyle={{paddingTop:0}}>
+            <Card bordered={false} style={{ marginBottom: 30 }} bodyStyle={{ paddingTop: 0 }}>
                 <div>
                     {
                         isShowEditor ? (
@@ -213,17 +253,17 @@ class MessageBoard extends Component {
                         messages && messages.map(item => (
                             <Comment
                                 key={item.id}
-                                author={item.userName}
+                                author={<span style={{ fontSize: 16 }}>{item.userName}</span>}
                                 avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
-                                content={<div dangerouslySetInnerHTML={createMarkup(item.content)} />}
+                                content={<div className='content-box' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                 actions={this.renderActions(item, item.id)}
                             >
                                 {item.children.length > 0 && item.children.map(i => (
                                     <Comment
                                         key={i.id}
-                                        author={<div>{i.userName} @ {i.targetUserName}</div>}
+                                        author={<span style={{ fontSize: 15 }}>{i.userName} @ {i.targetUserName}</span>}
                                         avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
-                                        content={<div dangerouslySetInnerHTML={createMarkup(i.content)} />}
+                                        content={<div className='content-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
                                         actions={this.renderActions(i, item.id)}
                                     />
                                 ))}
@@ -240,6 +280,12 @@ class MessageBoard extends Component {
                 </div>
             </Card>
         );
+    }
+}
+
+const styles = {
+    actionItem: {
+        fontSize: 14
     }
 }
 

@@ -6,24 +6,24 @@ const { getUser } = require('./user')
 
 /**
  * 创建留言
- * @param {*} params 
+ * @param {*} param 
  */
-const createMessage = async (params, sessionId) => {
+const createMessage = async (param, sessionId) => {
     const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
     const userRes = await getUser({ username: loginName })
     const user = userRes.data || {}
 
     let insertObj = {
-        type: params.type || 0,
-        pid: params.pid || -1,
+        type: param.type || 0,
+        pid: param.pid || -1,
         createTime: Date.now(),
-        content: `'${params.content}'` || '',
+        content: `'${param.content}'` || '',
         userId: user.id,
         userName: `'${user.username}'`,
         userAvatar: `'${user.avatar}'`
     }
-    if (params.type === 1) {
-        const targetUserRes = await getUser({ id: params.targetUserId })
+    if (param.type === 1) {
+        const targetUserRes = await getUser({ id: param.targetUserId })
         const targetUser = targetUserRes.data || {}
         insertObj = {
             ...insertObj,
@@ -56,15 +56,15 @@ const getMessages = async () => {
     const res = await exec(sql)
     //这里可以用sql查两次类型的回复，也可以用js来过滤
 
-    let list = res.reduce((total,current)=>{
-        if(current.type===0){
+    let list = res.reduce((total, current) => {
+        if (current.type === 0) {
             total.push({
                 ...current,
-                children:[]
+                children: []
             })
         }
         return total
-    },[])
+    }, [])
     let subList = res.filter(item => item.type === 1)
     subList.forEach(item => {
         const index = list.findIndex(i => i.id === item.pid)
@@ -75,7 +75,31 @@ const getMessages = async () => {
     })
 }
 
+/**
+ * 删除留言
+ * @param {*} param 
+ * @param {*} sessionId 
+ */
+const deleteMessage = async (param,sessionId) => {
+    const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
+    const userRes = await getUser({ username: loginName })
+    const user = userRes.data || {}
+    const sql = `select userId from messages where id=${param.id}`
+    const res = await exec(sql)
+    if(user.id!==res[0].userId && !user.isAdmin){
+        return new ErrorModel({
+            message:'暂无权限'
+        })
+    }
+    const sql2 = `delete from messages where id=${param.id} or pid=${param.id}`
+    const res2 = await exec(sql2)
+    return new SuccessModel({
+        message:`成功删除${res2.affectedRows}条数据`,
+    })
+}
+
 module.exports = {
     createMessage,
-    getMessages
+    getMessages,
+    deleteMessage
 }

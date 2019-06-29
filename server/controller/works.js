@@ -20,11 +20,11 @@ async function isAdmin(loginName) {
 
 /**
  * 创建作品
- * @param {*} params 
+ * @param {*} param 
  * @param {*} token 
  */
-const createWorks = async (params, sessionId) => {
-    const { title, description, url, githubUrl } = params
+const createWorks = async (param, sessionId) => {
+    const { title, description, url, githubUrl } = param
     const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
     const isAdminRes = await isAdmin(loginName)
     if (!isAdminRes) {
@@ -59,7 +59,7 @@ const getWorks = async () => {
     })
 }
 
-const deleteWorks = async (params, sessionId) => {
+const deleteWorks = async (param, sessionId) => {
     const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
     const isAdminRes = await isAdmin(loginName)
     if (!isAdminRes) {
@@ -67,7 +67,7 @@ const deleteWorks = async (params, sessionId) => {
             message: '暂无权限'
         })
     }
-    const ids = params.ids
+    const ids = param.ids
     if (!Array.isArray(ids)) {
         return new ErrorModel({
             message: '参数异常',
