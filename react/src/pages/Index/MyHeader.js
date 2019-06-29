@@ -91,7 +91,7 @@ class MyHeader extends React.Component {
                     </div>
                     <div style={styles.headerItem}>
                         <Menu mode="horizontal" selectable={false}>
-                            <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src={user.avatar || 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'} />&nbsp;<span>{user.username}</span></div>}>
+                            <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src={user.avatar} />&nbsp;<span>{user.username}</span></div>}>
                                 <MenuItemGroup title="用户中心">
                                     <Menu.Item key={1} onClick={() => this.toggleInfoVisible(true)}><Icon type="user" />编辑个人信息</Menu.Item>
                                     <Menu.Item key={77} onClick={()=>this.togglePasswordVisible(true)}><Icon type="edit" />修改密码</Menu.Item>
