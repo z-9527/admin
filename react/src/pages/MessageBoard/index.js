@@ -6,6 +6,7 @@ import 'braft-editor/dist/index.css'
 import './style.less'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
+import { isAuthenticated } from '../../utils/session'
 
 const TextArea = Input.TextArea
 
@@ -50,6 +51,15 @@ class MessageBoard extends Component {
         })
     }
     /**
+     * 关闭留言框
+     */
+    closeMessage = () => {
+        this.setState({
+            isShowEditor: false
+        })
+        this.clearContent()
+    }
+    /**
      * 获取留言列表
      */
     getMessages = async () => {
@@ -69,6 +79,7 @@ class MessageBoard extends Component {
             return
         }
         const htmlContent = this.state.editorState.toHTML()
+        console.log(222, htmlContent)
         const res = await json.post('/message/create', {
             content: htmlContent
         })
@@ -144,6 +155,25 @@ class MessageBoard extends Component {
         ]
         return actions
     }
+    myUploadFn = async (param) => {
+        const formData = new FormData();
+        formData.append('file', param.file);
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/upload`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${isAuthenticated()}`,
+            },
+            body: formData
+        }).then(response => response.json())
+
+        if (res.status === 0) {
+            param.success(res.data)
+        } else {
+            param.error({
+                msg: '上传错误'
+            })
+        }
+    }
 
     render() {
         const { isShowEditor, messages, editorState, replyPid, replyContent } = this.state
@@ -155,25 +185,26 @@ class MessageBoard extends Component {
             'italic', 'underline', 'separator', 'link', 'separator', 'media'
         ]
 
+
         return (
             <div style={{ background: '#fff', marginBottom: 30 }}>
                 <div>
-                    <Button onClick={() => this.setState({ isShowEditor: true })}>我要留言</Button>
                     {
-                        isShowEditor && (
+                        isShowEditor ? (
                             <div style={{ marginTop: 10 }}>
                                 <div className="editor-wrapper">
                                     <BraftEditor
                                         controls={controls}
                                         contentStyle={{ height: 210, boxShadow: 'inset 0 1px 3px rgba(0,0,0,.1)' }}
                                         value={editorState}
+                                        media={{ uploadFn: this.myUploadFn }}
                                         onChange={this.handleMessageChange}
                                     />
                                 </div>
                                 <Button type='primary' onClick={this.sendMessage}>发表</Button>&emsp;
-                                <Button onClick={() => this.setState({ isShowEditor: false })}>取消</Button>
+                                <Button onClick={this.closeMessage}>取消</Button>
                             </div>
-                        )
+                        ) : <Button onClick={() => this.setState({ isShowEditor: true })}>我要留言</Button>
                     }
                 </div>
                 <Divider />
