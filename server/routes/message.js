@@ -1,6 +1,6 @@
 const router = require('koa-router')()
 const { } = require('../controller/message')
-const { createMessage } = require('../controller/message')
+const { createMessage,getMessages } = require('../controller/message')
 
 router.prefix('/message')
 
@@ -15,10 +15,15 @@ function handleRes(ctx, next, res) {
 }
 
 router.post('/create', async function (ctx, next) {
-    const res = await createMessage(ctx.request.body)
+    const sessionId = ctx.cookies.get('sessionId')
+    const res = await createMessage(ctx.request.body, sessionId)
     handleRes(ctx, next, res)
 })
 
+router.get('/list', async function (ctx, next) {
+    const res = await getMessages()
+    handleRes(ctx, next, res)
+})
 
 
 
