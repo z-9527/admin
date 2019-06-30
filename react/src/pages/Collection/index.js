@@ -20,12 +20,18 @@ class Collection extends Component {
     componentDidMount() {
         this.getCollections()
     }
+    /**
+     * 获得作品集数据
+     */
     getCollections = async () => {
         const res = await json.get('/works/list')
         this.setState({
             collections: res.data || []
         })
     }
+    /**
+     * 打开/关闭创建模态框
+     */
     toggleShowCreateModal = (visible) => {
         this.setState({
             isShowCreateModal: visible

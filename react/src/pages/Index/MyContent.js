@@ -5,7 +5,9 @@ import './style.less'
 const TabPane = Tabs.TabPane;
 
 class MyContent extends React.Component {
-
+    /**
+     *  标签页的改变触发的函数
+     */
     onChange = (activeKey) => {
         this.props.onChangeState({
             activeMenu: activeKey
@@ -16,6 +18,9 @@ class MyContent extends React.Component {
             this.remove(targetKey)
         }
     }
+    /**
+    * 关闭标签页
+    */
     remove = (targetKey) => {
         let activeMenu = this.props.activeMenu
         let panes = this.props.panes.slice()

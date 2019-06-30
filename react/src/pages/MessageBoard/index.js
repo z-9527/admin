@@ -146,9 +146,9 @@ class MessageBoard extends Component {
             message.success('回复成功')
             this.closeReply()
             this.getMessages()
-            if(!this.state.expandIds.includes(item.id)){
+            if (!this.state.expandIds.includes(item.id)) {
                 this.setState({
-                    expandIds:[...this.state.expandIds,item.id]
+                    expandIds: [...this.state.expandIds, item.id]
                 })
             }
         }
@@ -194,6 +194,17 @@ class MessageBoard extends Component {
             expandIds: [...this.state.expandIds, item.id]
         })
     }
+    /**
+     * 点击赞
+     */
+    onLike = () => {
+        notification.warning({
+            message: '提示',
+            description: '暂不支持点赞功能',
+            duration: 3,
+            // icon: <Icon type="smile" />,
+        });
+    }
     renderActions = (item, pid) => {
         let actions = [
             <span>
@@ -203,7 +214,9 @@ class MessageBoard extends Component {
             </span>,
             <span style={styles.actionItem}>
                 <Tooltip title="赞">
-                    <Icon type="like" />&nbsp;赞
+                    <span onClick={this.onLike}>
+                        <Icon type="like" />&nbsp;赞
+                    </span>
                 </Tooltip>
             </span>,
             <span style={styles.actionItem}>
@@ -297,7 +310,7 @@ class MessageBoard extends Component {
                                 <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
                                     {
                                         expandIds.includes(item.id) ? (
-                                            <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle'/></span>
+                                            <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle' /></span>
                                         ) : (
                                                 <span onClick={() => this.expandReply(item)}>展开全部{item.children.length}条回复 <Icon type="down-circle" /></span>
                                             )
@@ -307,7 +320,7 @@ class MessageBoard extends Component {
                                     <div style={{ width: '70%', textAlign: 'right' }}>
                                         <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} placeholder={placeholder} />
                                         <Button size='small' onClick={this.closeReply}>取消</Button>&emsp;
-                                        <Button size='small' type='primary' onClick={()=>this.confirmReply(item)}>回复</Button>
+                                        <Button size='small' type='primary' onClick={() => this.confirmReply(item)}>回复</Button>
                                     </div>
                                 )}
                             </Comment>

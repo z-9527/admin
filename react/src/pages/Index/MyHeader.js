@@ -32,11 +32,17 @@ class MyHeader extends React.Component {
             passwordVisible: false   //控制修改密码的模态框
         }
     }
+    /**
+     * 切换侧边栏的折叠和展开
+     */
     toggleCollapsed = () => {
         this.props.onChangeState({
             collapsed: !this.props.collapsed
         })
     }
+    /**
+     * 切换全屏
+     */
     toggleFullscreen = () => {
         if (screenfull.enabled) {
             screenfull.toggle().then(() => {
@@ -46,6 +52,9 @@ class MyHeader extends React.Component {
             });
         }
     }
+    /**
+     * 切换主题
+     */
     changeColor = (color) => {
         window.less.modifyVars({
             '@primary-color': color,
@@ -57,19 +66,31 @@ class MyHeader extends React.Component {
             message.success('更换主题颜色成功')
         })
     }
+    /**
+     * 重置主题
+     */
     resetColor = () => {
         this.changeColor('#13C2C2')
     }
+    /**
+     * 展开/关闭修改信息模态框
+     */
     toggleInfoVisible = (visible) => {
         this.setState({
             infoVisible: visible
         })
     }
+    /**
+     * 展开/关闭修改密码模态框
+     */
     togglePasswordVisible = (visible) => {
         this.setState({
             passwordVisible:visible
         })
     }
+    /**
+     * 退出登录
+     */
     onLogout = () => {
         logout()   //清空cookie
         this.props.history.push('/login')

@@ -16,6 +16,10 @@ const store = connect(
     (dispatch) => bindActionCreators({ setUser }, dispatch)
 )
 const form = Form.create({
+    /**
+     * 表单回显
+     * @param {*} props 
+     */
     mapPropsToFields(props) {
         const user = props.user
         return createFormField({
@@ -30,10 +34,16 @@ class EditInfoModal extends React.Component {
     state = {
         uploading: false
     }
+    /**
+     * 关闭模态框
+     */
     handleCancel = () => {
         this.props.form.resetFields()
         this.props.toggleVisible(false)
     }
+    /**
+     * 模态框的确定按钮
+     */
     handleOk = () => {
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
@@ -41,6 +51,9 @@ class EditInfoModal extends React.Component {
             }
         });
     }
+    /**
+     * 更新用户信息
+     */
     onUpdate = async (values) => {
         const param = {
             ...values,
@@ -55,6 +68,9 @@ class EditInfoModal extends React.Component {
             this.handleCancel()
         }
     }
+    /**
+     * 转换上传组件表单的值
+     */
     _normFile = (e) => {
         if (e.file.response && e.file.response.data) {
             return e.file.response.data.url

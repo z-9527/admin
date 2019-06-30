@@ -20,7 +20,9 @@ class Login extends React.Component {
             // logout()
         }
     }
-
+    /**
+     * 切换登录和注册的面板
+     */
     toggleShow = () => {
         this.setState({
             show: this.state.show === 'login' ? 'register' : 'login'

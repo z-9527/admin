@@ -8,6 +8,7 @@ const store = connect(
     (state) => ({ user: state.user }),
 )
 const form = Form.create({
+    //表单回显
     mapPropsToFields(props) {
         const user = props.user
         return createFormField({
@@ -22,6 +23,9 @@ class EditPasswordModal extends React.Component {
         this.props.form.resetFields()
         this.props.toggleVisible(false)
     }
+    /**
+     * 模态框的确定按钮
+     */
     handleOk = () => {
         this.props.form.validateFields((err, values) => {
             if (!err) {
@@ -29,6 +33,9 @@ class EditPasswordModal extends React.Component {
             }
         });
     }
+    /**
+     * 提交修改密码
+     */
     onSubmit = async (values) => {
         //加密密码
         const ciphertext = encrypt(values.oldPassword)

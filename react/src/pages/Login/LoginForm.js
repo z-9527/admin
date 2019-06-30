@@ -18,7 +18,9 @@ class LoginForm extends React.Component {
     componentDidMount() {
         this._createCode()
     }
-
+    /**
+     * 转换面板为注册面板
+     */
     goRegister = () => {
         this.props.form.resetFields()
         this.props.toggleShow()
@@ -31,6 +33,9 @@ class LoginForm extends React.Component {
             }
         });
     }
+    /**
+     * 表单验证成功后的登录函数
+     */
     onLogin = async (values) => {
         // 表单登录时，若验证码长度小于4则不会验证，所以我们这里要手动验证一次
         if (this.state.code.toUpperCase() !== values.captcha.toUpperCase()) {

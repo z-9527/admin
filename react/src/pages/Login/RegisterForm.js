@@ -9,6 +9,9 @@ class RegisterForm extends React.Component {
     state = {
         focusItem: -1   //当前焦点聚焦在哪一项上
     }
+    /**
+     * 返回登录面板
+     */
     backLogin = () => {
         this.props.form.resetFields()
         this.props.toggleShow()
@@ -20,6 +23,9 @@ class RegisterForm extends React.Component {
             }
         });
     }
+    /**
+     * 注册函数
+     */
     onRegister = async (values) => {
         //加密密码
         const ciphertext = encrypt(values.registerPassword)

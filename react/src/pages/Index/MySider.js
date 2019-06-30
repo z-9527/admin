@@ -3,7 +3,9 @@ import { Menu, Icon } from 'antd'
 import { tabs, menu } from '../tabs'
 
 class MySider extends React.Component {
-
+    /**
+     * 生成侧边栏菜单
+     */
     renderMenu = (menu) => {
         if (Array.isArray(menu)) {
             return menu.map(item => {
@@ -23,6 +25,9 @@ class MySider extends React.Component {
             })
         }
     }
+    /**
+     * 点击侧边栏菜单添加标签页
+     */
     addPane = (item) => {
         const panes = this.props.panes.slice()
         const activeMenu = item.key

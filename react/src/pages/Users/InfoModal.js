@@ -4,6 +4,7 @@ import { createFormField } from '../../utils/util'
 
 
 const form = Form.create({
+    //表单回显
     mapPropsToFields(props) {
         return createFormField(props.userInfo)
     }
