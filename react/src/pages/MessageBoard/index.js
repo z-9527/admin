@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, notification } from 'antd'
+import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, notification, Tag } from 'antd'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import { isAuthenticated } from '../../utils/session'
@@ -33,7 +33,9 @@ class MessageBoard extends Component {
         isShowEditor: false,
         replyPid: '',//回复第几条的父级id
         replyContent: '',  //回复内容
-        replyUser: null //回复的对象
+        replyUser: null, //回复的对象
+        expandIds: [],  //展开的id列表
+        placeholder: '',  //回复的placeholder
     }
     componentDidMount() {
         this.getMessages()
@@ -76,7 +78,6 @@ class MessageBoard extends Component {
      */
     getMessages = async () => {
         const res = await json.get('/message/list')
-        console.log(1111, res)
         this.setState({
             messages: res.data || []
         })
@@ -110,7 +111,8 @@ class MessageBoard extends Component {
         this.setState({
             replyPid: pid,
             replyContent: '',
-            replyUser: item
+            replyUser: item,
+            placeholder: `${this.props.user.username} @ ${item.userName}`
         })
     }
     /**
@@ -120,13 +122,14 @@ class MessageBoard extends Component {
         this.setState({
             replyPid: '',
             replyContent: '',
-            replyUser: ''
+            replyUser: '',
+            placeholder: ''
         })
     }
     /**
      * 确认回复
      */
-    confirmReply = async () => {
+    confirmReply = async (item) => {
         const replyContent = this.state.replyContent
         if (!replyContent) {
             message.warning('请输入回复内容')
@@ -143,6 +146,11 @@ class MessageBoard extends Component {
             message.success('回复成功')
             this.closeReply()
             this.getMessages()
+            if(!this.state.expandIds.includes(item.id)){
+                this.setState({
+                    expandIds:[...this.state.expandIds,item.id]
+                })
+            }
         }
     }
     /**
@@ -166,6 +174,25 @@ class MessageBoard extends Component {
                 }
             },
         });
+    }
+    /**
+     * 折叠回复
+     */
+    foldReply = (item) => {
+        const list = this.state.expandIds.slice()
+        const index = list.findIndex(i => i === item.id)
+        list.splice(index, 1)
+        this.setState({
+            expandIds: list
+        })
+    }
+    /**
+     * 展开回复
+     */
+    expandReply = (item) => {
+        this.setState({
+            expandIds: [...this.state.expandIds, item.id]
+        })
     }
     renderActions = (item, pid) => {
         let actions = [
@@ -222,7 +249,7 @@ class MessageBoard extends Component {
     }
 
     render() {
-        const { isShowEditor, messages, editorState, replyPid, replyContent } = this.state
+        const { isShowEditor, messages, editorState, replyPid, replyContent, expandIds, placeholder } = this.state
         const controls = ['undo', 'redo', 'clear', 'separator', 'bold', 'text-color', 'blockquote', 'code', 'emoji', 'separator', 'link', 'separator', 'media']
 
 
@@ -253,25 +280,34 @@ class MessageBoard extends Component {
                         messages && messages.map(item => (
                             <Comment
                                 key={item.id}
-                                author={<span style={{ fontSize: 16 }}>{item.userName}</span>}
+                                author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
                                 avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
                                 content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                 actions={this.renderActions(item, item.id)}
                             >
-                                {item.children.length > 0 && item.children.map(i => (
+                                {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
                                     <Comment
                                         key={i.id}
-                                        author={<span style={{ fontSize: 15 }}>{i.userName} @ {i.targetUserName}</span>}
+                                        author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
                                         avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
                                         content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
                                         actions={this.renderActions(i, item.id)}
                                     />
                                 ))}
+                                <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
+                                    {
+                                        expandIds.includes(item.id) ? (
+                                            <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle'/></span>
+                                        ) : (
+                                                <span onClick={() => this.expandReply(item)}>展开全部{item.children.length}条回复 <Icon type="down-circle" /></span>
+                                            )
+                                    }
+                                </div>
                                 {replyPid === item.id && (
                                     <div style={{ width: '70%', textAlign: 'right' }}>
-                                        <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} />
+                                        <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} placeholder={placeholder} />
                                         <Button size='small' onClick={this.closeReply}>取消</Button>&emsp;
-                                        <Button size='small' type='primary' onClick={this.confirmReply}>回复</Button>
+                                        <Button size='small' type='primary' onClick={()=>this.confirmReply(item)}>回复</Button>
                                     </div>
                                 )}
                             </Comment>

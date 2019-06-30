@@ -19,6 +19,7 @@ const createMessage = async (param, sessionId) => {
         createTime: Date.now(),
         content: `'${param.content}'` || '',
         userId: user.id,
+        userIsAdmin: user.isAdmin,
         userName: `'${user.username}'`,
         userAvatar: `'${user.avatar}'`
     }
@@ -28,6 +29,7 @@ const createMessage = async (param, sessionId) => {
         insertObj = {
             ...insertObj,
             targetUserId: targetUser.id,
+            targetUserIsAdmin: targetUser.isAdmin,
             targetUserName: `'${targetUser.username}'`,
             targetUserAvatar: `'${targetUser.avatar}'`,
         }
@@ -80,21 +82,21 @@ const getMessages = async () => {
  * @param {*} param 
  * @param {*} sessionId 
  */
-const deleteMessage = async (param,sessionId) => {
+const deleteMessage = async (param, sessionId) => {
     const loginName = jwt.verify(sessionId, TOKEN_SECRETKEY).username
     const userRes = await getUser({ username: loginName })
     const user = userRes.data || {}
     const sql = `select userId from messages where id=${param.id}`
     const res = await exec(sql)
-    if(user.id!==res[0].userId && !user.isAdmin){
+    if (user.id !== res[0].userId && !user.isAdmin) {
         return new ErrorModel({
-            message:'暂无权限'
+            message: '暂无权限'
         })
     }
     const sql2 = `delete from messages where id=${param.id} or pid=${param.id}`
     const res2 = await exec(sql2)
     return new SuccessModel({
-        message:`成功删除${res2.affectedRows}条数据`,
+        message: `成功删除${res2.affectedRows}条数据`,
     })
 }
 
