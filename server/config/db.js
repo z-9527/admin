@@ -8,7 +8,8 @@ if (env === 'dev') {
         user: 'root',
         password: '1234567890',
         port: '3306',
-        database: 'admin'
+        database: 'admin',
+        charset:'utf8mb4'   //字符集一定要写，否则表情包存储不了
     }
 }
 if (env === 'production') {
@@ -17,7 +18,8 @@ if (env === 'production') {
         user: 'root',
         password: '1234567890',
         port: '3306',
-        database: 'admin'
+        database: 'admin',
+        charset:'utf8mb4'   //字符集一定要写，否则表情包存储不了
     }
 }
 module.exports = {

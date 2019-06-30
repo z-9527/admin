@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, notification } from 'antd'
-import BraftEditor from 'braft-editor'
-import { ContentUtils } from 'braft-utils'
-import 'braft-editor/dist/index.css'
-import './style.less'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import { isAuthenticated } from '../../utils/session'
 import { connect } from 'react-redux'
+import BraftEditor from 'braft-editor'
+import { ContentUtils } from 'braft-utils'
+import CodeHighlighter from 'braft-extensions/dist/code-highlighter'
+import 'braft-editor/dist/index.css'
+import 'braft-editor/dist/output.css'
+import 'braft-extensions/dist/code-highlighter.css'
+import './style.less'
+
+BraftEditor.use(CodeHighlighter({
+}))
 
 const TextArea = Input.TextArea
 
@@ -217,13 +223,7 @@ class MessageBoard extends Component {
 
     render() {
         const { isShowEditor, messages, editorState, replyPid, replyContent } = this.state
-        const controls = [
-            {
-                key: 'bold',
-                text: <b>加粗</b>
-            },
-            'italic', 'underline', 'separator', 'link', 'separator', 'media'
-        ]
+        const controls = ['undo', 'redo', 'clear', 'separator', 'bold', 'text-color', 'blockquote', 'code', 'emoji', 'separator', 'link', 'separator', 'media']
 
 
         return (
@@ -255,7 +255,7 @@ class MessageBoard extends Component {
                                 key={item.id}
                                 author={<span style={{ fontSize: 16 }}>{item.userName}</span>}
                                 avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
-                                content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(item.content)} />}
+                                content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                 actions={this.renderActions(item, item.id)}
                             >
                                 {item.children.length > 0 && item.children.map(i => (
