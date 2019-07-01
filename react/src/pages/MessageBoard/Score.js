@@ -38,11 +38,14 @@ class Score extends Component {
         this.setState({
             isScored: !!list.find(item => item.userId === this.props.user.id),
             scores: list,
-            average: average.toFixed(1), //保留一位小数
+            average: Number(average.toFixed(1)), //保留一位小数
             rankList
         })
         console.log(res)
     }
+    /**
+     * 评分
+     */
     createScore = async (num) => {
         this.setState({
             userScore: num
@@ -54,6 +57,21 @@ class Score extends Component {
         if (res.status === 0) {
             this.getScores()
         }
+    }
+    /**
+     * 计算显示平均分的星星
+     */
+    handleScore = (score) => {
+        score = score / 2
+        const integer = Math.floor(score)   //取整数部分
+        let decimal = score - integer    //取小数部分
+        //不足0.5当半星，大于0.5当整星
+        if (decimal > 0 && decimal <= 0.5) {
+            decimal = 0.5
+        } else if (decimal > 0.5) {
+            decimal = 1
+        }
+        return integer + decimal
     }
     render() {
         const { isScored, userScore, scores, average, rankList } = this.state
@@ -74,17 +92,17 @@ class Score extends Component {
                 <div>
                     <div>{average}</div>
                     <div>
-                        <div><Rate disabled defaultValue={4} /></div>
+                        <div><Rate disabled defaultValue={this.handleScore(average)} allowHalf /></div>
                         <div>{scores.length}人评价</div>
                     </div>
-                    <div>
-                        {rankList.map((item, index) => (
-                            <div key={index}>
-                                <span>{5 - index}星</span>
-                                <Progress percent={item} status={'active'} strokeLinecap='square' strokeWidth={15} />
-                            </div>
-                        ))}
-                    </div>
+                </div>
+                <div>
+                    {rankList.map((item, index) => (
+                        <div key={index}>
+                            <span>{5 - index}星</span>
+                            <Progress percent={item} status={'active'} strokeLinecap='square' strokeWidth={15} />
+                        </div>
+                    ))}
                 </div>
             </div>
         )
