@@ -15,6 +15,7 @@ const index = require('./routes/index')
 const user = require('./routes/user')
 const works = require('./routes/works')
 const message = require('./routes/message')
+const score = require('./routes/score')
 
 // error handler
 onerror(app)
@@ -50,6 +51,7 @@ app.use(index.routes(), index.allowedMethods())
 app.use(user.routes(), user.allowedMethods())
 app.use(works.routes(), works.allowedMethods())
 app.use(message.routes(), message.allowedMethods())
+app.use(score.routes(), score.allowedMethods())
 
 //一定要写在路由后面，写在前面就不会返回接口内容，而是直接返回首页了
 app.use(historyApiFallback()); // 在这个地方加入。一定要加在静态文件的serve之前，否则会失效。

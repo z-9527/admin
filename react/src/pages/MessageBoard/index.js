@@ -3,6 +3,7 @@ import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, n
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import { isAuthenticated } from '../../utils/session'
+import Score from './Score'
 import { connect } from 'react-redux'
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
@@ -12,8 +13,7 @@ import 'braft-editor/dist/output.css'
 import 'braft-extensions/dist/code-highlighter.css'
 import './style.less'
 
-BraftEditor.use(CodeHighlighter({
-}))
+BraftEditor.use(CodeHighlighter({}))
 
 const TextArea = Input.TextArea
 
@@ -326,6 +326,9 @@ class MessageBoard extends Component {
                             </Comment>
                         ))
                     }
+                </div>
+                <div className='score-box'>
+                    <Score/>
                 </div>
             </Card>
         );
