@@ -41,7 +41,6 @@ class Score extends Component {
             average: Number(average.toFixed(1)), //保留一位小数
             rankList
         })
-        console.log(res)
     }
     /**
      * 评分
@@ -89,18 +88,18 @@ class Score extends Component {
         )
         const ScoreInfo = () => (
             <div>
-                <div>
-                    <div>{average}</div>
+                <div className='info'>
+                    <div className='average-num'>{average}</div>
                     <div>
                         <div><Rate disabled defaultValue={this.handleScore(average)} allowHalf /></div>
-                        <div>{scores.length}人评价</div>
+                        <div className='people-num'>{scores.length}人评价</div>
                     </div>
                 </div>
                 <div>
                     {rankList.map((item, index) => (
-                        <div key={index}>
-                            <span>{5 - index}星</span>
-                            <Progress percent={item} status={'active'} strokeLinecap='square' strokeWidth={15} />
+                        <div key={index} className='star-item'>
+                            <div className='star-label'>{5 - index}星</div>
+                            <Progress percent={item} status={'active'} strokeLinecap='square' strokeWidth={10} strokeColor={'var(--primaryColor)'} />
                         </div>
                     ))}
                 </div>
