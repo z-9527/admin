@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Rate, Progress } from 'antd'
+import { Rate, Progress, Icon } from 'antd'
 import { json } from '../../utils/ajax'
 import { connect } from 'react-redux'
 
@@ -14,7 +14,8 @@ class Score extends Component {
         scores: [],          //所有评分列表
         userScore: 4,         //当前用户的评分值（默认4星）
         average: 0,         //平均分
-        rankList: []        //1-5星的占比
+        rankList: [],        //1-5星的占比
+        visible: true,
     }
     componentDidMount() {
         this.getScores()
@@ -73,7 +74,7 @@ class Score extends Component {
         return integer + decimal
     }
     render() {
-        const { isScored, userScore, scores, average, rankList } = this.state
+        const { isScored, userScore, scores, average, rankList,visible } = this.state
         const desc = ['有bug', '再接再厉', '有待提高', '不错', '666']
 
         const NotScore = () => (
@@ -87,13 +88,14 @@ class Score extends Component {
             </div>
         )
         const ScoreInfo = () => (
-            <div>
+            <div style={{display:visible?'block':'none'}}>
                 <div className='info'>
                     <div className='average-num'>{average}</div>
                     <div>
                         <div><Rate disabled defaultValue={this.handleScore(average)} allowHalf /></div>
                         <div className='people-num'>{scores.length}人评价</div>
                     </div>
+                    <div className='close-box' onClick={()=>this.setState({visible:false})}><Icon type="close" /></div>
                 </div>
                 <div>
                     {rankList.map((item, index) => (
