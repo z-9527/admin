@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Rate, Progress, Icon } from 'antd'
+import { Rate, Progress, Icon, Modal } from 'antd'
 import { json } from '../../utils/ajax'
 import { connect } from 'react-redux'
 
@@ -39,7 +39,7 @@ class Score extends Component {
         this.setState({
             isScored: !!list.find(item => item.userId === this.props.user.id),
             scores: list,
-            average: Number(average.toFixed(1)), //保留一位小数
+            average: average.toFixed(1), //保留一位小数,这里不要用Number否则7.0会显示7
             rankList
         })
     }
@@ -47,34 +47,39 @@ class Score extends Component {
      * 评分
      */
     createScore = async (num) => {
-        this.setState({
-            userScore: num
+        Modal.confirm({
+            title: '提示',
+            content: <div>确定当前评分 <Rate disabled defaultValue={num} /></div>,
+            onOk: async () => {
+                const res = await json.post('/score/create', {
+                    score: num,
+                    userId: this.props.user.id
+                })
+                if (res.status === 0) {
+                    this.getScores()
+                    this.setState({
+                        userScore: num
+                    })
+                }
+            }
         })
-        const res = await json.post('/score/create', {
-            score: num,
-            userId: this.props.user.id
-        })
-        if (res.status === 0) {
-            this.getScores()
-        }
     }
     /**
-     * 计算显示平均分的星星
+     * 计算显示平均分的星星，满分10分，一分为半星，大于0小于0.5不算星，大于等于0.5小于1算半星
      */
     handleScore = (score) => {
-        score = score / 2
+        score = Number(score)
         const integer = Math.floor(score)   //取整数部分
         let decimal = score - integer    //取小数部分
-        //不足0.5当半星，大于0.5当整星
-        if (decimal > 0 && decimal <= 0.5) {
-            decimal = 0.5
-        } else if (decimal > 0.5) {
+        if (decimal >= 0.5) {
             decimal = 1
+        } else {
+            decimal = 0
         }
-        return integer + decimal
+        return (integer + decimal) / 2
     }
     render() {
-        const { isScored, userScore, scores, average, rankList,visible } = this.state
+        const { isScored, userScore, scores, average, rankList, visible } = this.state
         const desc = ['有bug', '再接再厉', '有待提高', '不错', '666']
 
         const NotScore = () => (
@@ -88,14 +93,14 @@ class Score extends Component {
             </div>
         )
         const ScoreInfo = () => (
-            <div style={{display:visible?'block':'none'}}>
+            <div style={{ display: visible ? 'block' : 'none' }}>
                 <div className='info'>
                     <div className='average-num'>{average}</div>
                     <div>
                         <div><Rate disabled defaultValue={this.handleScore(average)} allowHalf /></div>
                         <div className='people-num'>{scores.length}人评价</div>
                     </div>
-                    <div className='close-box' onClick={()=>this.setState({visible:false})}><Icon type="close" /></div>
+                    <div className='close-box' onClick={() => this.setState({ visible: false })}><Icon type="close" /></div>
                 </div>
                 <div>
                     {rankList.map((item, index) => (
