@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "antd": "^3.17.0",
+    "antd": "^3.20.0",
     "antd-theme-generator": "^1.1.6",
     "babel-plugin-import": "^1.11.0",
     "braft-editor": "^2.3.7",

@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 
 // 如何将react节点转换为dom，比如拥有className、style、onClick的react元素，我们生成的dom如何保留这些。
 // 本来想直接用React.createElement来代替document.createElement。但是ReactDOM.render()方法插入的位置节点必须是dom所以此方法不行
+function isObject(obj){
+    return Object.prototype.toString.call(obj) === '[object Object]'
+}
 
 class Typing extends React.Component {
     static propTypes = {
@@ -29,34 +32,29 @@ class Typing extends React.Component {
     }
     /**
      * children转换为符合打印的数组
-     * @param {*} children  
+     * @param {*} children  Object、Array、String、undefined、Null
      * @param {array} arr 保存打印的数组
      */
     _convert(children, arr = []) {
         let list = arr.slice()
-        if (Array.isArray(children)) {
-            for (let item of children) {
-                if (Object.prototype.toString.call(item) === '[object Object]') {        //元素节点
-                    let val = []
-                    let dom = this._createDom({
-                        ...item.props,
-                        type: item.type
-                    })
-                    val = this._convert(item.props.children, val)
-                    list.push({
-                        dom,
-                        val
-                    })
-                } else {                                                               //非元素节点
-                    if (item !== null && item !== undefined) {                         // 防止null、undefined这些变量
-                        list = list.concat(item.split(''))
-                    }
-                }
+        if(Array.isArray(children)){
+            for(let item of children){
+                list = list.concat(this._convert(item))
             }
-        } else {
-            if (children !== null && children !== undefined) {                         // 防止null、undefined这些变量
-                list = list.concat(children.split(''))
-            }
+        }
+        if(isObject(children)){
+            const dom = this._createDom({
+                ...children.props,
+                type:children.type
+            })
+            const val = this._convert(children.props.children,[])
+            list.push({
+                dom,
+                val
+            })
+        }
+        if(typeof children === 'string'){
+            list = list.concat(children.split(''))
         }
         return list
     }

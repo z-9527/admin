@@ -3,6 +3,7 @@ import asyncComponent from '../utils/asyncComponent'
 //const Test = React.lazy(() => import('./Test'));   //报错，就没用React.lazy了
 const ButtonDemo = asyncComponent(() => import('./ButtonDemo/index'));
 const IconDemo = asyncComponent(() => import('./IconDemo/index'));
+const FeedbackDemo = asyncComponent(() => import('./FeedbackDemo/index'));
 const Users = asyncComponent(() => import('./Users/index'));
 const Collection = asyncComponent(() => import('./Collection/index'));
 const MessageBoard = asyncComponent(() => import('./MessageBoard/index'));
@@ -24,6 +25,11 @@ const menu = [
                 name: '图标',
                 icon: '',
                 key: 'IconDemo',
+            },
+            {
+                name: '反馈',
+                icon: '',
+                key: 'FeedbackDemo',
             },
         ]
     },
@@ -52,6 +58,7 @@ const menu = [
 const tabs = {
     ButtonDemo: <ButtonDemo />,
     IconDemo: <IconDemo />,
+    FeedbackDemo: <FeedbackDemo />,
     Users: <Users />,
     Collection: <Collection />,
     MessageBoard: <MessageBoard />,
