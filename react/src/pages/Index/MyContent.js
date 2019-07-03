@@ -58,7 +58,6 @@ class MyContent extends React.Component {
                         </Tabs>
                     ) : <div style={styles.bg} />
                 }
-
             </div>
         )
     }
@@ -76,7 +75,9 @@ const styles = {
         left: 0,
         width: '100%',
         height: 'calc(100vh - 64px)',
-        backgroundColor: '#eee'
+        backgroundColor: '#eee',
+        backgroundImage:`url(${require('../../assets/images/bg.jpg')})`,
+        backgroundSize:'100%'
     }
 }
 

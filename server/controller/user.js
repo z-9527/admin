@@ -219,20 +219,14 @@ const updateUser = async (param, sessionId) => {
     }
     const sql = `update users set ${str.substring(1)} where username='${loginName}'`
     const res = await exec(sql)
-    if (res.changedRows) {
-        const res2 = await getUser({ username: param.username })
-        return new SuccessModel({
-            data: {
-                ...res2.data,
-                token: jwt.sign({ username: param.username }, TOKEN_SECRETKEY, { expiresIn: '7d' })
-            },
-            message: '修改成功'
-        })
-    } else {
-        return new ErrorModel({
-            message: '修改失败'
-        })
-    }
+    const res2 = await getUser({ username: param.username })
+    return new SuccessModel({
+        data: {
+            ...res2.data,
+            token: jwt.sign({ username: param.username }, TOKEN_SECRETKEY, { expiresIn: '7d' })
+        },
+        message: '修改成功'
+    })
 }
 
 const deleteUsers = async (param) => {
