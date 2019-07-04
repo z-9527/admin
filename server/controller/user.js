@@ -4,7 +4,7 @@ const { decrypt, genPassword } = require('../utils/util')
 const jwt = require('jsonwebtoken');
 const { TOKEN_SECRETKEY } = require('../config/secret')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
-const { updateUserMessage } = require('./message')
+// const { updateUserMessage } = require('./message')不能引用message否则message和user形成循环引用
 
 //用户表的列名（除去了密码）
 const usersColumns = [
@@ -188,6 +188,20 @@ const getUser = async (param) => {
         data: res[0]
     })
 }
+
+/**
+ * 当更新用户名或用户头像时，更新他留言的用户名和头像
+ * @param {*} user 
+ */
+const updateUserMessage = (user) => {
+    const sql = `update messages set userIsAdmin=${user.isAdmin},userName='${user.username}',userAvatar='${user.avatar}' where userId=${user.id}`
+    const sql2 = `update messages set targetUserIsAdmin=${user.isAdmin},targetUserName='${user.username}',targetUserAvatar='${user.avatar}' where targetUserId=${user.id}`
+    Promise.all([exec(sql), exec(sql2)]).then(([res, res2]) => {
+        console.log(444, res)
+        console.log(555, res2)
+    })
+}
+
 /**
  * 更新用户信息
  * @param {*} param 
