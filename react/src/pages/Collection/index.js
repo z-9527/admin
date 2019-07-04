@@ -73,6 +73,7 @@ class Collection extends Component {
 
     render() {
         const { collections, isShowCreateModal } = this.state
+        const colors = ['#f3b47e','#83d3d3','#8bc2e8','#a3c7a3']
         return (
             <div>
                 <Card bordered={false}>
@@ -81,11 +82,11 @@ class Collection extends Component {
                             <Button icon='delete' type='danger' onClick={this.openDeleteModal}>删除</Button>
                     </div>
                     <div style={styles.box}>
-                        {collections && collections.map(item => (
+                        {collections && collections.map((item,index) => (
                             <AnimatedBook
                                 key={item.id}
                                 cover={(
-                                    <div className='cover-box'>
+                                    <div className='cover-box' style={{background:colors[index%4]}}>
                                         <h3 className='title ellipsis'>{item.title}</h3>
                                         <p className='ellipsis'>{item.description}</p>
                                     </div>
