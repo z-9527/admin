@@ -40,6 +40,12 @@ class MessageBoard extends Component {
     componentDidMount() {
         this.getMessages()
     }
+    componentDidUpdate(prevProps) {
+        //修改用户信息时，重新加载
+        if (this.props.user !== prevProps.user) {
+            this.getMessages()
+        }
+    }
     /**
      * 留言输入框的onChange
      */
@@ -328,7 +334,7 @@ class MessageBoard extends Component {
                     }
                 </div>
                 <div className='score-box'>
-                    <Score/>
+                    <Score />
                 </div>
             </Card>
         );

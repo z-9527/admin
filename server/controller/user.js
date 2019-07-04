@@ -4,6 +4,7 @@ const { decrypt, genPassword } = require('../utils/util')
 const jwt = require('jsonwebtoken');
 const { TOKEN_SECRETKEY } = require('../config/secret')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
+const { updateUserMessage } = require('./message')
 
 //用户表的列名（除去了密码）
 const usersColumns = [
@@ -220,6 +221,10 @@ const updateUser = async (param, sessionId) => {
     const sql = `update users set ${str.substring(1)} where username='${loginName}'`
     const res = await exec(sql)
     const res2 = await getUser({ username: param.username })
+    if (res2.status === 0) {
+        //更新用户的留言（头像、用户名）
+        updateUserMessage(res2.data)
+    }
     return new SuccessModel({
         data: {
             ...res2.data,

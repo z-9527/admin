@@ -100,8 +100,22 @@ const deleteMessage = async (param, sessionId) => {
     })
 }
 
+/**
+ * 当更新用户名或用户头像时，更新他留言的用户名和头像
+ * @param {*} user 
+ */
+const updateUserMessage = (user)=>{
+    const sql = `update messages set userIsAdmin=${user.isAdmin},userName='${user.username}',userAvatar='${user.avatar}' where userId=${user.id}`
+    const sql2 = `update messages set targetUserIsAdmin=${user.isAdmin},targetUserName='${user.username}',targetUserAvatar='${user.avatar}' where targetUserId=${user.id}`
+    Promise.all([exec(sql),exec(sql2)]).then(([res,res2])=>{
+        console.log(444,res)
+        console.log(555,res2)
+    })  
+}
+
 module.exports = {
     createMessage,
     getMessages,
-    deleteMessage
+    deleteMessage,
+    updateUserMessage
 }

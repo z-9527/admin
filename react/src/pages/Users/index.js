@@ -33,6 +33,12 @@ class Users extends Component {
     componentDidMount() {
         this.getUsers()
     }
+    componentDidUpdate(prevProps) {
+        //当修改用户信息时，重新加载
+        if (this.props.user !== prevProps.user) {
+            this.getUsers(this.state.pagination.current)
+        }
+    }
     /**
      * 虽然后台可以一次把所有数据返回给我，但是为了学习,前后台还是做了一个分页
      */
