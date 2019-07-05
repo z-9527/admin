@@ -27,7 +27,7 @@ app.use(bodyparser({
 app.use(json())
 app.use(logger())
 
-app.use(views(__dirname, +'/public/build'))
+app.use(views(__dirname + '/public/build'))
 
 // logger
 app.use(async (ctx, next) => {
@@ -42,7 +42,7 @@ app.use(errorHandle)
 app.use(cors({ credentials: true })); //前端调试时解决跨域，上线不用跨域
 
 //验证token登陆,unless是不需要验证的路由，每一项是匹配路由的正则
-const unPath = [/^\/public/, /checkName/, /register/, /getIpInfo/, /login/]
+const unPath = [/^\/public/, /checkName/, /register/, /getIpInfo/, /login/, /.js/, /.css/, /.less/]
 app.use(jwt({ secret: TOKEN_SECRETKEY, cookie: 'sessionId' }).unless({ path: unPath }));
 
 

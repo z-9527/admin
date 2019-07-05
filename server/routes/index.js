@@ -13,7 +13,7 @@ function handleRes(ctx, next, res) {
 }
 
 router.get('/', async (ctx, next) => {
-	await ctx.render('pubilc/build/index.html')
+	await ctx.render('index.html')
 })
 
 //上传接口
