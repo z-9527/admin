@@ -1,8 +1,12 @@
 import React from 'react'
-import { Tabs } from 'antd'
+import { Tabs,Carousel } from 'antd'
 import './style.less'
+import bg1 from '../../assets/images/bg1.jpg'
+import bg2 from '../../assets/images/bg2.jpg'
+import bg3 from '../../assets/images/bg3.jpg'
 
 const TabPane = Tabs.TabPane;
+const imgs = [bg1,bg2,bg3]
 
 class MyContent extends React.Component {
     /**
@@ -56,7 +60,17 @@ class MyContent extends React.Component {
                                 </TabPane>))
                             }
                         </Tabs>
-                    ) : <div style={styles.bg} />
+                    ) : (
+                        <div className='bg-box'>
+                            <Carousel className='bg-size' autoplay autoplaySpeed={5000}>
+                                {imgs.map(item=>(
+                                    <div className='bg-size' key={item}>
+                                        <img src={item} alt="" style={{width:'100%',height:'100%'}}/>
+                                    </div>
+                                ))}
+                            </Carousel>
+                        </div>
+                    )
                 }
             </div>
         )
@@ -68,16 +82,6 @@ const styles = {
         position: 'relative',
         height: '100%',
         backgroundColor: '#fff'
-    },
-    bg: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: 'calc(100vh - 64px)',
-        backgroundColor: '#eee',
-        backgroundImage:`url(${require('../../assets/images/bg.jpg')})`,
-        backgroundSize:'100%'
     }
 }
 

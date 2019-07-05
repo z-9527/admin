@@ -31,7 +31,7 @@ class Login extends React.Component {
     render() {
         const { show } = this.state
         return (
-            <Background>
+            <Background url='http://localhost:8888/public/images/bg1.jpg'> 
                 <div className="login-container">
                     <div className={`box ${show === 'login' ? 'active' : ''}`}>
                         <LoginForm toggleShow={this.toggleShow} />
