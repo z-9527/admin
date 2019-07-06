@@ -10,6 +10,7 @@ const historyApiFallback = require('koa-history-api-fallback')
 const { TOKEN_SECRETKEY } = require('./config/secret')
 const jwt = require('koa-jwt')
 const errorHandle = require('./middlewares/errorHandle')
+const chat = require('./chat')    
 
 const index = require('./routes/index')
 const user = require('./routes/user')

@@ -107,6 +107,10 @@ class LoginForm extends React.Component {
             code
         })
     }
+    changeCaptcha = () => {
+        this.props.form.resetFields(['captcha'])
+        this._createCode()
+    }
 
     render() {
         const { getFieldDecorator, getFieldError } = this.props.form
@@ -191,7 +195,7 @@ class LoginForm extends React.Component {
                                 )}
                             </Col>
                             <Col span={9}>
-                                <canvas onClick={this._createCode} width="80" height='40' ref={el => this.canvas = el} />
+                                <canvas onClick={this.changeCaptcha} width="80" height='40' ref={el => this.canvas = el} />
                             </Col>
                         </Row>
                     </Form.Item>
