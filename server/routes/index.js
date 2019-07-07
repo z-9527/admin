@@ -19,11 +19,12 @@ router.get('/', async (ctx, next) => {
 
 //上传接口
 router.post('/upload', async (ctx, next) => {
+	const { isImg, fileType } = ctx.query
 	const serverFilePath = path.join(__dirname, '../public/upload-files')
 	const res = await uploadFile(ctx, {
-		fileType: 'myUpload', // common or album
+		fileType: fileType || 'myUpload', // common or album
 		path: serverFilePath,
-		isImg: !!ctx.query.isImg
+		isImg: !!isImg
 	})
 	handleRes(ctx, next, res)
 })

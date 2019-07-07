@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { message } from 'antd'
+import { message, Avatar } from 'antd'
 import { getUser, initWebSocket } from '@/store/actions'
 import { connect, } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { isAuthenticated } from '../../utils/session'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import './style.less'
@@ -16,6 +17,18 @@ const store = connect(
 class Chat extends Component {
     state = {
         editorState: BraftEditor.createEditorState(null)
+    }
+    componentDidMount() {
+        if (this.props.websocket && this.props.websocket.readyState !== 1) {
+            this.props.initWebSocket(this.props.user)
+        }
+        this.chatListDom.scrollTop = this.chatListDom.scrollHeight
+    }
+    //首次渲染不会执行此方法
+    componentDidUpdate(prevProps) {
+        if (this.props.chatList !== prevProps.chatList) {
+            this.chatListDom.scrollTop = this.chatListDom.scrollHeight
+        }
     }
     handleEditorChange = (editorState) => {
         this.setState({ editorState })
@@ -48,10 +61,44 @@ class Chat extends Component {
             editorState: BraftEditor.createEditorState(null)
         })
     }
+    myUploadFn = async (param) => {
+        const formData = new FormData();
+        formData.append('file', param.file);
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/upload?fileType=chat`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${isAuthenticated()}`,
+            },
+            body: formData
+        }).then(response => response.json())
+
+        if (res.status === 0) {
+            param.success(res.data)
+        } else {
+            param.error({
+                msg: '上传错误'
+            })
+        }
+    }
     render() {
         const { editorState } = this.state
-        const { chatList } = this.props
+        const { chatList, user } = this.props
         const controls = ['emoji', 'italic', 'text-color', 'separator', 'link', 'separator', 'media']
+        // 禁止上传video、audio
+        const media = {
+            uploadFn: this.myUploadFn,
+            accepts: {
+                image: 'image/png,image/jpeg,image/gif,image/webp,image/apng,image/svg',
+                video: false,
+                audio: false
+            },
+            externals: {
+                image: 'image/png,image/jpeg,image/gif,image/webp,image/apng,image/svg',
+                video: false,
+                audio: false,
+                embed: false
+            }
+        }
         return (
             <div className='chat-container'>
                 <div className='chat-box'>
@@ -59,10 +106,17 @@ class Chat extends Component {
                     <div className='chat-body'>
                         <div className='left'></div>
                         <div className='main'>
-                            <div className='chat-list'>
-                                {chatList && chatList.map((item,index)=>(
-                                    <div key={index}>
-                                        {item.content}
+                            <div className='chat-list' ref={el => this.chatListDom = el}>
+                                {chatList && chatList.map((item, index) => (
+                                    <div key={index} className='chat-item'>
+                                        <div></div>
+                                        <div className={`chat-item-info ${user.id === item.userId ? 'chat-right' : ''}`}>
+                                            <div><Avatar src={item.userAvatar} /></div>
+                                            <div className='chat-main'>
+                                                <div className='username'>{item.username}</div>
+                                                <div className='chat-content' dangerouslySetInnerHTML={{ __html: item.content }} />
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -71,6 +125,7 @@ class Chat extends Component {
                                     draftProps={{
                                         handleKeyCommand: this.handleKeyCommand
                                     }}
+                                    media={media}
                                     value={editorState}
                                     onChange={this.handleEditorChange}
                                     contentStyle={styles.contentStyle}

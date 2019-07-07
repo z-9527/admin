@@ -10,7 +10,7 @@
     margin: 0 auto;
     border-radius: 5px;
     border: 1px solid #d1d1d1;
-    box-shadow: 0 15px 40px rgba(0,0,0,.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
 
     .chat-header {
       width: 100%;
@@ -25,6 +25,7 @@
       display: flex;
 
       .left {
+        flex-shrink: 0;
         width: 171px;
         height: 100%;
         border-right: 1px solid #f3f3f3;
@@ -37,7 +38,8 @@
         height: 100%;
 
         .chat-list {
-          flex-grow: 1;
+          // flex-grow: 1;   //火狐浏览器不起作用只能计算值了
+          height: 300px;
           overflow: scroll;
         }
 
@@ -49,10 +51,67 @@
       }
 
       .right {
+        flex-shrink: 0;
         width: 135px;
         height: 100%;
         background: #f6f7f9;
         border-left: 1px solid #f3f3f3;
+      }
+    }
+  }
+}
+
+
+//避免css嵌套太深就从上面的提出来了
+.chat-item {
+  padding: 15px;
+
+  .chat-item-info {
+    display: flex;
+    justify-content: flex-start;
+
+    &.chat-right {
+      flex-direction: row-reverse;
+
+      .chat-main {
+        text-align: right;
+        margin-right: 12px;
+
+        .username {
+          color: #9f9f9f;
+        }
+
+        .chat-content {
+          background: #d9f4fe;
+        }
+      }
+    }
+
+    .chat-main {
+      flex-grow: 1;
+      margin-left: 12px;
+
+      .username {
+        color: #a0abca;
+        font-size: 16px;
+      }
+
+      .chat-content {
+        display: inline-block;
+        max-width: 80%;
+        padding: 12px;
+        border-radius: 5px;
+        background: #f3f3f3;
+        word-wrap: break-word;
+        word-break: break-all;
+
+        img {
+          max-width: 100%;
+        }
+
+        p {
+          margin-bottom: 0;
+        }
       }
     }
   }
