@@ -10,7 +10,7 @@ export function setUser(user) {
     }
 }
 
-export const GET_USER = 'GET_USER'
+//异步action
 export function getUser(param) {
     return async function (dispatch) {
         const res = await json.get('/user/getUser', param)
@@ -18,18 +18,25 @@ export function getUser(param) {
     }
 }
 
-export const SET_WEBSOCKET = 'SET_WEBSOCKET'
+export const SET_WEBSOCKET = 'SET_WEBSOCKET'  //设置websocket对象
 export function setWebsocket(websocket) {
     return {
         type: SET_WEBSOCKET,
         websocket
     }
 }
-export function initWebSocket(user) {
+
+
+export function initWebSocket(user) {    //初始化websocket对象
     return async function (dispatch) {
         const websocket = new WebSocket("ws://" + window.location.hostname + ":8081")
         websocket.onopen = function () {
-            websocket.send(JSON.stringify(user))
+            const data = {
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar
+            }
+            websocket.send(JSON.stringify(data))
         }
         websocket.onmessage = function (event) {
             const data = JSON.parse(event.data)
@@ -40,16 +47,44 @@ export function initWebSocket(user) {
                     description: data.msg.text
                 })
             }
+            if(data.type === 1){
+                dispatch(addChat(data.msg))
+            }
             console.log(11, data)
         }
         dispatch(setWebsocket(websocket))
+        dispatch(initChatList())
     }
 }
 
-export const SET_ONLINELIST = 'SET_ONLINELIST'
+export const SET_ONLINELIST = 'SET_ONLINELIST'   //设置在线列表
 export function setOnlinelist(onlineList) {
     return {
         type: SET_ONLINELIST,
         onlineList
+    }
+}
+
+//异步action
+export function initChatList() {
+    return async function (dispatch) {
+        const res = await json.get('/chat/list')
+        dispatch(setChatList(res.data || []))
+    }
+}
+
+export const SET_CHATLIST = 'SET_CHATLIST'
+export function setChatList(chatList) {
+    return {
+        type: SET_CHATLIST,
+        chatList
+    }
+}
+
+export const ADD_CHAT = 'ADD_CHAT'
+export function addChat(chat) {
+    return {
+        type: ADD_CHAT,
+        chat
     }
 }

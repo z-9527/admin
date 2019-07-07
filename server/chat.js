@@ -1,4 +1,5 @@
 const ws = require('nodejs-websocket')
+const { addChat } = require('./controller/chat')
 
 //当前在线列表
 let onlineList = []
@@ -22,7 +23,15 @@ const server = ws.createServer(function (connection) {
             }
             broadcast(data, msgType.onlineInfo)
         } else {
-            broadcast(info)
+            const data = {
+                userId: connection.user.id,
+                username: connection.user.username,
+                userAvatar: connection.user.avatar,
+                createTime: Date.now(),
+                content: info.content
+            }
+            addChat(data)
+            broadcast(data)
         }
     })
     // 断开连接

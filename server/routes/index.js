@@ -1,6 +1,7 @@
 const router = require('koa-router')()
 const uploadFile = require('../utils/upload')
 const path = require('path')
+const { getChatList } = require('../controller/chat')
 
 function handleRes(ctx, next, res) {
 	if (res.status === 0) {
@@ -24,6 +25,11 @@ router.post('/upload', async (ctx, next) => {
 		path: serverFilePath,
 		isImg: !!ctx.query.isImg
 	})
+	handleRes(ctx, next, res)
+})
+
+router.get('/chat/list', async (ctx, next) => {
+	const res = await getChatList()
 	handleRes(ctx, next, res)
 })
 

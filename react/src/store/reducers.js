@@ -1,6 +1,11 @@
 import { combineReducers } from 'redux'
-import { SET_USER, SET_WEBSOCKET, SET_ONLINELIST } from './actions'
+import { SET_USER, SET_WEBSOCKET, SET_ONLINELIST, SET_CHATLIST, ADD_CHAT } from './actions'
 
+/**
+ * 用户信息
+ * @param {*} state 
+ * @param {*} action 
+ */
 function user(state = {}, action) {
     switch (action.type) {
         case SET_USER: {
@@ -11,6 +16,11 @@ function user(state = {}, action) {
     }
 }
 
+/**
+ * websocket对象
+ * @param {*} state 
+ * @param {*} action 
+ */
 function websocket(state = null, action) {
     switch (action.type) {
         case SET_WEBSOCKET: {
@@ -21,6 +31,11 @@ function websocket(state = null, action) {
     }
 }
 
+/**
+ * 在线列表
+ * @param {*} state 
+ * @param {*} action 
+ */
 function onlineList(state = [], action) {
     switch (action.type) {
         case SET_ONLINELIST: {
@@ -31,12 +46,30 @@ function onlineList(state = [], action) {
     }
 }
 
+/**
+ * 聊天记录
+ * @param {*} state 
+ * @param {*} action 
+ */
+function chatList(state = [], action) {
+    switch (action.type) {
+        case SET_CHATLIST: {
+            return action.chatList
+        }
+        case ADD_CHAT: {
+            return [...state, action.chat]
+        }
+        default:
+            return state
+    }
+}
 
 
 const rootReducer = combineReducers({
     user,
     websocket,
-    onlineList
+    onlineList,
+    chatList
 })
 
 export default rootReducer 

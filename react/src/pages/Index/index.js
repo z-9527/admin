@@ -35,12 +35,7 @@ class Index extends React.Component {
     init = async () => {
         const username = localStorage.getItem('username')
         await this.props.getUser({username})
-        const user = this.props.user
-        this.props.initWebSocket({
-            id: user.id,
-            username: user.username,
-            avatar: user.avatar
-        })
+        this.props.initWebSocket(this.props.user)
     }
     _setState = (obj) => {
         this.setState(obj)

@@ -7,6 +7,7 @@ const FeedbackDemo = asyncComponent(() => import('./FeedbackDemo/index'));
 const Users = asyncComponent(() => import('./Users/index'));
 const Collection = asyncComponent(() => import('./Collection/index'));
 const MessageBoard = asyncComponent(() => import('./MessageBoard/index'));
+const Chat = asyncComponent(() => import('./Chat/index'));
 const About = asyncComponent(() => import('./About/index'));
 
 
@@ -49,6 +50,11 @@ const menu = [
         key: 'MessageBoard'
     },
     {
+        name: '聊天室',
+        icon: 'qq',
+        key: 'Chat'
+    },
+    {
         name: '关于',
         icon: 'info-circle',
         key: 'About'
@@ -62,6 +68,7 @@ const tabs = {
     Users: <Users />,
     Collection: <Collection />,
     MessageBoard: <MessageBoard />,
+    Chat: <Chat />,
     About: <About />,
 
 }
