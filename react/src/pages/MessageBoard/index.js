@@ -270,7 +270,16 @@ class MessageBoard extends Component {
     render() {
         const { isShowEditor, messages, editorState, replyPid, replyContent, expandIds, placeholder } = this.state
         const controls = ['undo', 'redo', 'clear', 'separator', 'bold', 'text-color', 'blockquote', 'code', 'emoji', 'separator', 'link', 'separator', 'media']
-
+        const hooks = {
+            'toggle-link': ({ href, target }) => {
+                const pattern = /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/?)+(\?([\w\-\.,@?^=%&:\/~\+#]*)+)?$/
+                if (pattern.test(href)) {
+                    return { href, target }
+                }
+                message.warning('请输入正确的网址')
+                return false
+            }
+        }
 
         return (
             <Card bordered={false} style={{ marginBottom: 30 }} bodyStyle={{ paddingTop: 0 }}>
@@ -280,6 +289,7 @@ class MessageBoard extends Component {
                             <div style={{ marginTop: 10 }}>
                                 <div className="editor-wrapper">
                                     <BraftEditor
+                                        hooks={hooks}
                                         controls={controls}
                                         contentStyle={{ height: 210, boxShadow: 'inset 0 1px 3px rgba(0,0,0,.1)' }}
                                         value={editorState}

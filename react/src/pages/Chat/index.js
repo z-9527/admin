@@ -99,6 +99,16 @@ class Chat extends Component {
                 embed: false
             }
         }
+        const hooks = {
+            'toggle-link': ({ href, target }) => {
+                const pattern = /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/?)+(\?([\w\-\.,@?^=%&:\/~\+#]*)+)?$/
+                if (pattern.test(href)) {
+                    return { href, target }
+                }
+                message.warning('请输入正确的网址')
+                return false
+            }
+        }
         return (
             <div className='chat-container'>
                 <div className='chat-box'>
@@ -126,6 +136,7 @@ class Chat extends Component {
                                         handleKeyCommand: this.handleKeyCommand
                                     }}
                                     media={media}
+                                    hooks={hooks}
                                     value={editorState}
                                     onChange={this.handleEditorChange}
                                     contentStyle={styles.contentStyle}
