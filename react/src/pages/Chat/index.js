@@ -169,7 +169,7 @@ class Chat extends Component {
                                 <div className='left-item-text'>
                                     <div className='group-name'>聊天室01</div>
                                     <div className='group-message' style={{ display: lastChat.userId ? 'flex' : 'none' }}>
-                                        <div>{lastChat.username}:&nbsp;</div>
+                                        <div style={{flexFlow:1,flexShrink:0}}>{lastChat.username}:&nbsp;</div>
                                         <div className='ellipsis' dangerouslySetInnerHTML={{ __html: replaceImg(lastChat.content) }} />
                                     </div>
                                 </div>
