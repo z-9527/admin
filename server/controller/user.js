@@ -190,15 +190,18 @@ const getUser = async (param) => {
 }
 
 /**
- * 当更新用户名或用户头像时，更新他留言的用户名和头像
+ * 当更新用户名或用户头像时，更新其它表中和用户相关连的信息
  * @param {*} user 
  */
 const updateUserMessage = (user) => {
     const sql = `update messages set userIsAdmin=${user.isAdmin},userName='${user.username}',userAvatar='${user.avatar}' where userId=${user.id}`
     const sql2 = `update messages set targetUserIsAdmin=${user.isAdmin},targetUserName='${user.username}',targetUserAvatar='${user.avatar}' where targetUserId=${user.id}`
-    Promise.all([exec(sql), exec(sql2)]).then(([res, res2]) => {
+    const sql3 = `update chats set username='${user.username}',userAvatar='${user.avatar}'`
+    // 同步执行3个异步任务
+    Promise.all([exec(sql), exec(sql2), exec(sql3)]).then(([res, res2, res3]) => {
         console.log(444, res)
         console.log(555, res2)
+        console.log(666, res3)
     })
 }
 
@@ -263,6 +266,17 @@ const deleteUsers = async (param) => {
     })
 }
 
+/**
+ * 获取所有用户
+ */
+const getAllUsers = async () => {
+    const sql = `select id,username,avatar,isAdmin from users order by registrationTime desc`
+    const res = await exec(sql)
+    return new SuccessModel({
+        data: res
+    })
+}
+
 module.exports = {
     register,
     checkName,
@@ -271,5 +285,6 @@ module.exports = {
     getUsers,
     getUser,
     updateUser,
-    deleteUsers
+    deleteUsers,
+    getAllUsers
 }

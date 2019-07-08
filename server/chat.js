@@ -23,6 +23,11 @@ const server = ws.createServer(function (connection) {
             }
             broadcast(data, msgType.onlineInfo)
         } else {
+            //当用户修改头像或昵称时，修改connection.user,onlineList不用修改，因为userid不会变
+            if(info.id){
+                connection.user = info
+                return 
+            }
             const data = {
                 userId: connection.user.id,
                 username: connection.user.username,

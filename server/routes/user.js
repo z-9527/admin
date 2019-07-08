@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { register, checkName, getIpInfo, login, getUsers, getUser, updateUser, deleteUsers } = require('../controller/user')
+const { register, checkName, getIpInfo, login, getUsers, getUser, updateUser, deleteUsers, getAllUsers } = require('../controller/user')
 
 router.prefix('/user')
 
@@ -54,6 +54,11 @@ router.post('/update', async function (ctx, next) {
 
 router.post('/delete', async function (ctx, next) {
 	const res = await deleteUsers(ctx.request.body)
+	handleRes(ctx, next, res)
+})
+
+router.get('/getAllUsers', async function (ctx, next) {
+	const res = await getAllUsers()
 	handleRes(ctx, next, res)
 })
 

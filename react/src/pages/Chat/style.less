@@ -38,9 +38,9 @@
         height: 100%;
 
         .chat-list {
-          // flex-grow: 1;   //火狐浏览器不起作用只能计算值了
-          height: 300px;
-          overflow: scroll;
+          flex-grow: 1;
+          height: 0;      //防止火狐浏览器滚动失效
+          overflow: auto;
         }
 
         .chat-editor-wrapper {
@@ -51,11 +51,49 @@
       }
 
       .right {
+        display: flex;
+        flex-direction: column;
         flex-shrink: 0;
         width: 135px;
         height: 100%;
         background: #f6f7f9;
         border-left: 1px solid #f3f3f3;
+
+        .member {
+          padding: 8px 10px 3px;
+        }
+
+        .user-item {
+          display: flex;
+          align-items: center;
+          color: #787677;
+          font-size: 12px;
+          padding: 5px 10px;
+
+          .avatar-box {
+            position: relative;
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            overflow: hidden;
+
+            &.mask {
+              img {
+                opacity: .7;
+              }
+
+              div {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.2);
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -80,14 +118,15 @@
     margin-left: 10px;
 
     .group-name {
-      color: #000;
-      font-size: 16px;
+      color: rgba(0, 0, 0, 0.75);
+      font-size: 15px;
+      line-height: 1.5;
     }
 
     .group-message {
       display: flex;
       color: #777777;
-      font-size: 14px;
+      font-size: 13px;
       height: 21px;
       overflow: hidden;
 
@@ -136,7 +175,7 @@
 
       .username {
         color: #a0abca;
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .chat-content {

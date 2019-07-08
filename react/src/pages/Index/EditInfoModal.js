@@ -3,7 +3,7 @@ import { Modal, Form, Upload, Icon, message, Input, Radio, DatePicker, Alert } f
 import { isAuthenticated, authenticateSuccess } from '../../utils/session'
 import moment from 'moment'
 import { json } from '../../utils/ajax'
-import { setUser } from '../../store/actions'
+import { setUser, initWebSocket } from '../../store/actions'
 import { connect, } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { createFormField } from '../../utils/util'
@@ -12,8 +12,8 @@ import { createFormField } from '../../utils/util'
 const RadioGroup = Radio.Group;
 
 const store = connect(
-    (state) => ({ user: state.user }),
-    (dispatch) => bindActionCreators({ setUser }, dispatch)
+    (state) => ({ user: state.user, websocket: state.websocket }),
+    (dispatch) => bindActionCreators({ setUser, initWebSocket }, dispatch)
 )
 const form = Form.create({
     /**
@@ -61,9 +61,22 @@ class EditInfoModal extends React.Component {
         }
         const res = await json.post('/user/update', param)
         if (res.status === 0) {
+            //修改localStorage，为什么我们在redux中保存了用户信息还要在localStorage中保存？redux刷新就重置了，我们需要username重新去后台获取
             localStorage.setItem('username', values.username)
+            //修改cookie
             authenticateSuccess(res.data.token)
+            //修改redux中的user信息
             this.props.setUser(res.data)
+            //修改websocket中的user信息
+            if (this.props.websocket.readyState !== 1) {
+                this.props.initWebSocket(res.data)
+            } else {
+                this.props.websocket.send(JSON.stringify({
+                    id: res.data.id,
+                    username: res.data.username,
+                    avatar: res.data.avatar
+                }))
+            }
             message.success('修改信息成功')
             this.handleCancel()
         }
