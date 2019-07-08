@@ -12,7 +12,7 @@ export function setUser(user) {
     }
 }
 
-//异步action
+//异步action，从后台获取用户信息
 export function getUser(param) {
     return async function (dispatch) {
         const res = await json.get('/user/getUser', param)
@@ -32,16 +32,20 @@ export function setWebsocket(websocket) {
 export function initWebSocket(user) {    //初始化websocket对象
     return async function (dispatch) {
         const websocket = new WebSocket("ws://" + window.location.hostname + ":8081")
+        //建立连接时触发
         websocket.onopen = function () {
             const data = {
                 id: user.id,
                 username: user.username,
                 avatar: user.avatar
             }
+            //当用户第一次建立websocket链接时，发送用户信息到后台，告诉它是谁建立的链接
             websocket.send(JSON.stringify(data))
         }
+        //监听服务端的消息事件
         websocket.onmessage = function (event) {
             const data = JSON.parse(event.data)
+            //在线人数变化的消息
             if (data.type === 0) {
                 setOnlinelist(data.msg.onlineList)
                 notification.info({
@@ -49,6 +53,7 @@ export function initWebSocket(user) {    //初始化websocket对象
                     description: data.msg.text
                 })
             }
+            //聊天的消息
             if (data.type === 1) {
                 dispatch(addChat(data.msg))
                 notification.open({
@@ -72,7 +77,7 @@ export function setOnlinelist(onlineList) {
     }
 }
 
-//异步action
+//异步action，初始化聊天记录列表
 export function initChatList() {
     return async function (dispatch) {
         const res = await json.get('/chat/list')
