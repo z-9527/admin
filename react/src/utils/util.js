@@ -93,3 +93,14 @@ export function createFormField(obj) {
     }
     return target
 }
+
+/**
+ * 将img标签转换为【图片】
+ * @param {string} str 
+ */
+export function replaceImg(str){
+    if(typeof str === 'string'){
+        str = str.replace(/<img(.*?)>/g, "[图片]")
+    }
+    return str
+}

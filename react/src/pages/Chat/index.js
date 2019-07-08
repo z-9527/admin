@@ -4,6 +4,7 @@ import { getUser, initWebSocket } from '@/store/actions'
 import { connect, } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { isAuthenticated } from '../../utils/session'
+import { replaceImg } from '../../utils/util'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import './style.less'
@@ -101,7 +102,7 @@ class Chat extends Component {
         }
         const hooks = {
             'toggle-link': ({ href, target }) => {
-                const pattern = /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/?)+(\?([\w\-\.,@?^=%&:\/~\+#]*)+)?$/
+                const pattern = /^((ht|f)tps?):\/\/([\w-]+(\.[\w-]+)*\/?)+(\?([\w\-.,@?^=%&:/~+#]*)+)?$/
                 if (pattern.test(href)) {
                     return { href, target }
                 }
@@ -109,12 +110,24 @@ class Chat extends Component {
                 return false
             }
         }
+        const lastChat = chatList[chatList.length - 1] || {}
         return (
             <div className='chat-container'>
                 <div className='chat-box'>
                     <div className='chat-header'>头部</div>
                     <div className='chat-body'>
-                        <div className='left'></div>
+                        <div className='left'>
+                            <div className='left-item'>
+                                <div><Avatar size='large' src='https://www.runoob.com/wp-content/uploads/2016/02/react.png' /></div>
+                                <div className='left-item-text'>
+                                    <div className='group-name'>聊天室01</div>
+                                    <div className='group-message' style={{ display: lastChat.userId ? 'flex' : 'none' }}>
+                                        <div>{lastChat.username}:&nbsp;</div>
+                                        <div className='ellipsis' dangerouslySetInnerHTML={{ __html: replaceImg(lastChat.content) }} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className='main'>
                             <div className='chat-list' ref={el => this.chatListDom = el}>
                                 {chatList && chatList.map((item, index) => (

@@ -1,5 +1,7 @@
+import React from 'react'
 import { json } from '../utils/ajax'
-import { notification } from 'antd'
+import { notification, Avatar } from 'antd'
+import { replaceImg } from '../utils/util'
 
 // 虽然用户信息放在localStorage也可以全局使用，但是如果放在localStorage中，用户信息改变时页面不会实时更新
 export const SET_USER = 'SET_USER'
@@ -47,8 +49,13 @@ export function initWebSocket(user) {    //初始化websocket对象
                     description: data.msg.text
                 })
             }
-            if(data.type === 1){
+            if (data.type === 1) {
                 dispatch(addChat(data.msg))
+                notification.open({
+                    message: data.msg.username,
+                    description: <div dangerouslySetInnerHTML={{ __html: replaceImg(data.msg.content) }} />,
+                    icon: <Avatar src={data.msg.userAvatar} />
+                })
             }
             console.log(11, data)
         }

@@ -5,7 +5,7 @@
   .chat-box {
     display: flex;
     flex-direction: column;
-    width: 750px;
+    width: 780px;
     height: 495px;
     margin: 0 auto;
     border-radius: 5px;
@@ -26,7 +26,7 @@
 
       .left {
         flex-shrink: 0;
-        width: 171px;
+        width: 200px;
         height: 100%;
         border-right: 1px solid #f3f3f3;
       }
@@ -62,7 +62,50 @@
 }
 
 
-//避免css嵌套太深就从上面的提出来了
+//避免css嵌套太深就从上面的提出来了,css没有模块化，所以要注意此样式会影响其他页面相同样式名的样式
+
+
+.left-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+
+  &:hover {
+    background: #f3f3f3;
+  }
+
+  .left-item-text {
+    flex-grow: 1;
+    overflow: hidden;
+    margin-left: 10px;
+
+    .group-name {
+      color: #000;
+      font-size: 16px;
+    }
+
+    .group-message {
+      display: flex;
+      color: #777777;
+      font-size: 14px;
+      height: 21px;
+      overflow: hidden;
+
+      &:last-child {
+        flex-grow: 1;
+        overflow: hidden;
+      }
+
+      p {
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
 .chat-item {
   padding: 15px;
 
