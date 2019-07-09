@@ -157,7 +157,7 @@
 
       span:last-child {
         font-size: 12px;
-        color: #ABAAAB;
+        color: #abaaab;
       }
     }
 
@@ -210,6 +210,22 @@
 
         .chat-content {
           background: #d9f4fe;
+
+          &::before{
+            display: none;
+          }
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 100%;
+            width: 0;
+            height: 0;
+            border-top: 3px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 6px solid #d9f4fe;
+          }
         }
       }
     }
@@ -224,6 +240,7 @@
       }
 
       .chat-content {
+        position: relative;
         display: inline-block;
         max-width: 80%;
         padding: 12px;
@@ -231,6 +248,18 @@
         background: #f3f3f3;
         word-wrap: break-word;
         word-break: break-all;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 8px;
+          right: 100%;
+          width: 0;
+          height: 0;
+          border-top: 3px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-right: 6px solid #f3f3f3;
+        }
 
         img {
           max-width: 100%;
