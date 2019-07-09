@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { isAuthenticated } from '../../utils/session'
 import { json } from '../../utils/ajax'
 import { replaceImg, throttle } from '../../utils/util'
+import moment from 'moment'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import './style.less'
@@ -166,6 +167,33 @@ class Chat extends Component {
         this.chatHeader.style.cursor = 'default'
         this.mouse = null
     }
+    //处理时间
+    handleTime = (time, small) => {
+        const HHmm = moment(time).format('HH:mm')
+        //不在同一年，就算时间差一秒都要显示完整时间
+        if (moment().format('YYYY') !== moment(time).format('YYYY')) {
+            return moment(time).format('YYYY-MM-DD HH:mm:ss')
+        }
+        //判断时间是否在同一天
+        if (moment().format('YYYY-MM-DD') === moment(time).format('YYYY-MM-DD')) {
+            return HHmm
+        }
+        //判断时间是否是昨天。不在同一天又相差不超过24小时就是昨天
+        if (moment().diff(time, 'days') === 0) {
+            return `昨天 ${HHmm}`
+        }
+        //判断时间是否相隔一周
+        if (moment().diff(time, 'days') < 7) {
+            const weeks = ['日', '一', '二', '三', '四', '五', '六']
+            return `星期${weeks[moment(time).weekday()]} ${HHmm}`
+        }
+        if (small) {
+            return moment(time).format('MM-DD HH:mm')
+        } else {
+            return moment(time).format('M月D日 HH:mm')
+        }
+
+    }
     render() {
         const { editorState, userList } = this.state
         const { chatList, user, onlineList } = this.props
@@ -215,7 +243,10 @@ class Chat extends Component {
                             <div className='left-item'>
                                 <div><Avatar size='large' src={require('./imgs/react.png')} /></div>
                                 <div className='left-item-text'>
-                                    <div className='group-name'>聊天室01</div>
+                                    <div className='group-name'>
+                                        <span>聊天室01</span>
+                                        <span>{this.handleTime(lastChat.createTime, true).split(' ')[0]}</span>
+                                    </div>
                                     <div className='group-message' style={{ display: lastChat.userId ? 'flex' : 'none' }}>
                                         <div style={{ flexFlow: 1, flexShrink: 0 }}>{lastChat.username}:&nbsp;</div>
                                         <div className='ellipsis' dangerouslySetInnerHTML={{ __html: replaceImg(lastChat.content) }} />
@@ -227,7 +258,10 @@ class Chat extends Component {
                             <div className='chat-list' ref={el => this.chatListDom = el}>
                                 {chatList && chatList.map((item, index) => (
                                     <div key={index} className='chat-item'>
-                                        <div></div>
+                                        {/* 两条消息记录间隔超过3分钟就显示时间 */}
+                                        {(index === 0 || item.createTime - chatList[index - 1].createTime > 3000) && (
+                                            <div className='time'>{this.handleTime(item.createTime)}</div>
+                                        )}
                                         <div className={`chat-item-info ${user.id === item.userId ? 'chat-right' : ''}`}>
                                             <div><Avatar src={item.userAvatar} /></div>
                                             <div className='chat-main'>
