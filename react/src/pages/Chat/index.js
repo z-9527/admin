@@ -5,7 +5,7 @@ import { connect, } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { isAuthenticated } from '../../utils/session'
 import { json } from '../../utils/ajax'
-import { replaceImg } from '../../utils/util'
+import { replaceImg, throttle } from '../../utils/util'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import './style.less'
@@ -27,6 +27,7 @@ class Chat extends Component {
         }
         this.chatListDom.scrollTop = this.chatListDom.scrollHeight
         this.getUserList()
+        window.onmouseup = this.onMouseUp
     }
     //首次渲染不会执行此方法
     componentDidUpdate(prevProps) {
@@ -40,6 +41,9 @@ class Chat extends Component {
             this.getUserList()
             this.props.initChatList()
         }
+    }
+    componentWillUnmount() {
+        window.onmouseup = null
     }
     /**
      * 获取所有用户列表
@@ -128,6 +132,40 @@ class Chat extends Component {
             })
         }
     }
+    onMouseDown = (e) => {
+        e.persist()
+        e.preventDefault()
+        this.isDown = true
+        this.chatHeader.style.cursor = 'move'
+        //保存初始位置
+        this.mouse = {
+            startX: e.clientX,
+            startY: e.clientY,
+            offsetLeft: this.chatBox.offsetLeft,
+            offsetTop: this.chatBox.offsetTop,
+        }
+    }
+    //节流函数优化
+    onMouseMove = throttle((e) => {
+        if (!this.isDown) {
+            return
+        }
+        //计算偏移位置
+        let offsetLeft = this.mouse.offsetLeft + e.clientX - this.mouse.startX
+        let offsetTop = this.mouse.offsetTop + e.clientY - this.mouse.startY
+
+        //设置偏移距离的范围[0,window.innerWidth - 400]
+        offsetLeft = Math.max(0, Math.min(offsetLeft, this.chatContainer.clientWidth - 780))
+        offsetTop = Math.max(0, Math.min(offsetTop, window.innerHeight - 624))
+
+        this.chatBox.style.left = offsetLeft + 'px';
+        this.chatBox.style.top = offsetTop + 'px';
+    }, 10)
+    onMouseUp = () => {
+        this.isDown = false
+        this.chatHeader.style.cursor = 'default'
+        this.mouse = null
+    }
     render() {
         const { editorState, userList } = this.state
         const { chatList, user, onlineList } = this.props
@@ -159,9 +197,9 @@ class Chat extends Component {
         }
         const lastChat = chatList[chatList.length - 1] || {}
         return (
-            <div className='chat-container'>
-                <div className='chat-box'>
-                    <div className='chat-header'>
+            <div className='chat-container' ref={el => this.chatContainer = el}>
+                <div className='chat-box' ref={el => this.chatBox = el}>
+                    <div className='chat-header' onMouseDown={this.onMouseDown} onMouseMove={this.onMouseMove} ref={el => this.chatHeader = el}>
                         <div className='header-left'>
                             <img src={require('./imgs/header1.png')} alt="" />
                         </div>
@@ -239,7 +277,6 @@ class Chat extends Component {
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     }
