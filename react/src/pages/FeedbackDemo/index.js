@@ -112,7 +112,7 @@ class FeedbackDemo extends Component {
     render() {
         const { drawer, notification, modal, result } = this.state
         return (
-            <div style={{ marginBottom: 30, background: '#fff' }}>
+            <div style={{ padding: 24 }}>
                 <Card bordered={false} hoverable style={{ marginBottom: 24 }} bodyStyle={{ minHeight: 305 }}>
                     <Typing className="markdown">
                         <h3>何时使用</h3>

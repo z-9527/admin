@@ -8,7 +8,7 @@ class IconDemo extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{ padding: 24 }}>
                 <Card bordered={false} hoverable style={{ marginBottom: 24 }} bodyStyle={{minHeight:250}}>
                     <Typing className="markdown">
                         <h3>SVG图标</h3>

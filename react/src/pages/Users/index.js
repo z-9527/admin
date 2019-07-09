@@ -280,7 +280,7 @@ class Users extends Component {
             })
         }
         return (
-            <div>
+            <div style={{ padding: 24 }}>
                 <Card bordered={false}>
                     <Form layout='inline' style={{ marginBottom: 16 }}>
                         <Row>

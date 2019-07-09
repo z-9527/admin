@@ -14,7 +14,7 @@ class ButtonDemo extends Component {
             </Menu>
         );
         return (
-            <div>
+            <div style={{ padding: 24 }}>
                 <Card bordered={false} hoverable style={{ marginBottom: 24 }} bodyStyle={{ minHeight: 130 }}>
                     <Typing className="markdown">
                         <h3>何时使用</h3>

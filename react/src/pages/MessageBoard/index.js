@@ -282,71 +282,73 @@ class MessageBoard extends Component {
         }
 
         return (
-            <Card bordered={false} style={{ marginBottom: 30 }} bodyStyle={{ paddingTop: 0 }}>
-                <div>
-                    {
-                        isShowEditor ? (
-                            <div style={{ marginTop: 10 }}>
-                                <div className="editor-wrapper">
-                                    <BraftEditor
-                                        hooks={hooks}
-                                        controls={controls}
-                                        contentStyle={{ height: 210, boxShadow: 'inset 0 1px 3px rgba(0,0,0,.1)' }}
-                                        value={editorState}
-                                        media={{ uploadFn: this.myUploadFn }}
-                                        onChange={this.handleMessageChange}
-                                    />
-                                </div>
-                                <Button type='primary' onClick={this.sendMessage}>发表</Button>&emsp;
-                                <Button onClick={this.closeMessage}>取消</Button>
-                            </div>
-                        ) : <Button onClick={() => this.setState({ isShowEditor: true })}>我要留言</Button>
-                    }
-                </div>
-                <Divider />
-                <div className='message-list-box'>
-                    {
-                        messages && messages.map(item => (
-                            <Comment
-                                key={item.id}
-                                author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
-                                avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
-                                content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
-                                actions={this.renderActions(item, item.id)}
-                            >
-                                {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
-                                    <Comment
-                                        key={i.id}
-                                        author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
-                                        avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
-                                        content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
-                                        actions={this.renderActions(i, item.id)}
-                                    />
-                                ))}
-                                <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
-                                    {
-                                        expandIds.includes(item.id) ? (
-                                            <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle' /></span>
-                                        ) : (
-                                                <span onClick={() => this.expandReply(item)}>展开全部{item.children.length}条回复 <Icon type="down-circle" /></span>
-                                            )
-                                    }
-                                </div>
-                                {replyPid === item.id && (
-                                    <div style={{ width: '70%', textAlign: 'right' }}>
-                                        <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} placeholder={placeholder} />
-                                        <Button size='small' onClick={this.closeReply}>取消</Button>&emsp;
-                                        <Button size='small' type='primary' onClick={() => this.confirmReply(item)}>回复</Button>
+            <div style={{ padding: 24 }}>
+                <Card bordered={false} bodyStyle={{ paddingTop: 0 }}>
+                    <div>
+                        {
+                            isShowEditor ? (
+                                <div style={{ marginTop: 10 }}>
+                                    <div className="editor-wrapper">
+                                        <BraftEditor
+                                            hooks={hooks}
+                                            controls={controls}
+                                            contentStyle={{ height: 210, boxShadow: 'inset 0 1px 3px rgba(0,0,0,.1)' }}
+                                            value={editorState}
+                                            media={{ uploadFn: this.myUploadFn }}
+                                            onChange={this.handleMessageChange}
+                                        />
                                     </div>
-                                )}
-                            </Comment>
-                        ))
-                    }
-                </div>
-                <div className='score-box'>
-                    <Score />
-                </div>
-            </Card>
+                                    <Button type='primary' onClick={this.sendMessage}>发表</Button>&emsp;
+                                <Button onClick={this.closeMessage}>取消</Button>
+                                </div>
+                            ) : <Button onClick={() => this.setState({ isShowEditor: true })}>我要留言</Button>
+                        }
+                    </div>
+                    <Divider />
+                    <div className='message-list-box'>
+                        {
+                            messages && messages.map(item => (
+                                <Comment
+                                    key={item.id}
+                                    author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
+                                    avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
+                                    content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
+                                    actions={this.renderActions(item, item.id)}
+                                >
+                                    {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
+                                        <Comment
+                                            key={i.id}
+                                            author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
+                                            avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
+                                            content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
+                                            actions={this.renderActions(i, item.id)}
+                                        />
+                                    ))}
+                                    <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
+                                        {
+                                            expandIds.includes(item.id) ? (
+                                                <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle' /></span>
+                                            ) : (
+                                                    <span onClick={() => this.expandReply(item)}>展开全部{item.children.length}条回复 <Icon type="down-circle" /></span>
+                                                )
+                                        }
+                                    </div>
+                                    {replyPid === item.id && (
+                                        <div style={{ width: '70%', textAlign: 'right' }}>
+                                            <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} placeholder={placeholder} />
+                                            <Button size='small' onClick={this.closeReply}>取消</Button>&emsp;
+                                        <Button size='small' type='primary' onClick={() => this.confirmReply(item)}>回复</Button>
+                                        </div>
+                                    )}
+                                </Comment>
+                            ))
+                        }
+                    </div>
+                    <div className='score-box'>
+                        <Score />
+                    </div>
+                </Card>
+            </div>
         );
     }
 }

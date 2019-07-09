@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Icon } from 'antd'
+import { Layout } from 'antd'
 import MySider from './MySider'
 import MyHeader from './MyHeader'
 import MyContent from './MyContent'
@@ -7,7 +7,7 @@ import { getUser, initWebSocket } from '@/store/actions'
 import { connect, } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-const { Header, Sider, Content, Footer } = Layout;
+const { Header, Sider, Content } = Layout;
 
 const store = connect(
     (state) => ({ user: state.user, websocket: state.websocket }),
@@ -25,7 +25,7 @@ class Index extends React.Component {
     componentDidMount() {
         this.init()
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         const websocket = this.props.websocket
         websocket && websocket.close()
     }
@@ -34,7 +34,7 @@ class Index extends React.Component {
      */
     init = async () => {
         const username = localStorage.getItem('username')
-        await this.props.getUser({username})
+        await this.props.getUser({ username })
         this.props.initWebSocket(this.props.user)
     }
     _setState = (obj) => {
@@ -62,9 +62,6 @@ class Index extends React.Component {
                             activeMenu={activeMenu}
                             onChangeState={this._setState} />
                     </Content>
-                    <Footer style={{ textAlign: 'center', background: '#fff' }}>
-                        React-Admin ©{new Date().getFullYear()} Created by 137596665@qq.com <a target='_blank' href='https://github.com/zhangZhiHao1996/admin' rel="noopener noreferrer"><Icon type="github" /></a>
-                    </Footer>
                 </Layout>
             </Layout>
         )

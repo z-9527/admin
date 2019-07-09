@@ -1,12 +1,13 @@
 import React from 'react'
-import { Tabs,Carousel } from 'antd'
+import { Tabs, Carousel, Layout, Icon } from 'antd'
 import './style.less'
 import bg1 from '../../assets/images/bg1.jpg'
 import bg2 from '../../assets/images/bg2.jpg'
 import bg3 from '../../assets/images/bg3.jpg'
 
+const Footer = Layout.Footer
 const TabPane = Tabs.TabPane;
-const imgs = [bg1,bg2,bg3]
+const imgs = [bg1, bg2, bg3]
 
 class MyContent extends React.Component {
     /**
@@ -44,10 +45,11 @@ class MyContent extends React.Component {
     render() {
         const { panes, activeMenu } = this.props
         return (
-            <div style={styles.container}>
+            <div className='content-container'>
                 {
                     panes.length ? (
                         <Tabs
+                            style={{ height: '100%' }}
                             tabBarStyle={{ background: '#f0f2f5', marginBottom: 0 }}
                             onEdit={this.onEdit}
                             onChange={this.onChange}
@@ -55,34 +57,33 @@ class MyContent extends React.Component {
                             type="editable-card"
                             hideAdd>
                             {
-                                panes.map(item => (<TabPane key={item.key} tab={item.name} style={{ padding: 24 }}>
-                                    {item.content}
+                                panes.map(item => (<TabPane key={item.key} tab={item.name}>
+                                    <div className='tabpane-box'>
+                                        {item.content}
+                                    </div>
+                                    <Footer style={{ textAlign: 'center', background: '#fff' }}>
+                                        React-Admin ©{new Date().getFullYear()} Created by 137596665@qq.com <a target='_blank' href='https://github.com/zhangZhiHao1996/admin' rel="noopener noreferrer"><Icon type="github" /></a>
+                                    </Footer>
                                 </TabPane>))
                             }
                         </Tabs>
                     ) : (
-                        <div className='bg-box'>
-                            <Carousel className='bg-size' autoplay autoplaySpeed={5000}>
-                                {imgs.map(item=>(
-                                    <div className='bg-size' key={item}>
-                                        <img src={item} alt="" style={{width:'100%',height:'100%'}}/>
-                                    </div>
-                                ))}
-                            </Carousel>
-                        </div>
-                    )
+                            <div className='bg-box'>
+                                <Carousel className='bg-size' autoplay autoplaySpeed={5000}>
+                                    {imgs.map(item => (
+                                        <div className='bg-size' key={item}>
+                                            <img src={item} alt="" style={{ width: '100%', height: '100%' }} />
+                                        </div>
+                                    ))}
+                                </Carousel>
+                            </div>
+                        )
                 }
             </div>
         )
     }
 }
 
-const styles = {
-    container: {
-        position: 'relative',
-        height: '100%',
-        backgroundColor: '#fff'
-    }
-}
+
 
 export default MyContent

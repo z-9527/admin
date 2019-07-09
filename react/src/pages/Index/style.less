@@ -1,20 +1,32 @@
-.ant-tabs-content{
-    height: calc(100vh - 120px);
-    overflow: auto;
-}
+.content-container {
+  position: relative;
+  height: 100%;
+  background-color: #fff;
 
-.bg-box{
+  .ant-tabs-content {
+    height: calc(100vh - 104px);
+    overflow: auto;
+  }
+
+  .bg-box {
     position: 'absolute';
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 64px);
+    height: 100%;
     overflow: hidden;
     background: #eee;
-}
+  }
 
-.bg-size{
+  .bg-size {
     width: 100%;
     height: calc(100vh - 64px);
     overflow: hidden;
+  }
+
+  .tabpane-box {
+    min-height: calc(100vh - 173px);
+    overflow: auto;
+  }
 }
+
