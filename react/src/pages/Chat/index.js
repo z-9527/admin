@@ -37,7 +37,7 @@ class Chat extends Component {
             this.handleUserList()
         }
         if (this.props.user !== prevProps.user) {
-            this.getUserList()      
+            this.getUserList()
             this.props.initChatList()
         }
     }
@@ -161,15 +161,25 @@ class Chat extends Component {
         return (
             <div className='chat-container'>
                 <div className='chat-box'>
-                    <div className='chat-header'>头部</div>
+                    <div className='chat-header'>
+                        <div className='header-left'>
+                            <img src={require('./imgs/header1.png')} alt="" />
+                        </div>
+                        <div className='header-center'>
+                            <img src={require('./imgs/header2.png')} alt="" />
+                        </div>
+                        <div className='header-right'>
+                            <Avatar src={user.avatar} />
+                        </div>
+                    </div>
                     <div className='chat-body'>
                         <div className='left'>
                             <div className='left-item'>
-                                <div><Avatar size='large' src='https://www.runoob.com/wp-content/uploads/2016/02/react.png' /></div>
+                                <div><Avatar size='large' src={require('./imgs/react.png')} /></div>
                                 <div className='left-item-text'>
                                     <div className='group-name'>聊天室01</div>
                                     <div className='group-message' style={{ display: lastChat.userId ? 'flex' : 'none' }}>
-                                        <div style={{flexFlow:1,flexShrink:0}}>{lastChat.username}:&nbsp;</div>
+                                        <div style={{ flexFlow: 1, flexShrink: 0 }}>{lastChat.username}:&nbsp;</div>
                                         <div className='ellipsis' dangerouslySetInnerHTML={{ __html: replaceImg(lastChat.content) }} />
                                     </div>
                                 </div>

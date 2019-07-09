@@ -6,17 +6,40 @@
     display: flex;
     flex-direction: column;
     width: 780px;
-    height: 495px;
+    height: 520px;
     margin: 0 auto;
     border-radius: 5px;
     border: 1px solid #d1d1d1;
     box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
 
     .chat-header {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 100%;
       height: 60px;
-      background: #e5e3e2;
+      background: #E6E6E6;
       flex-shrink: 0;
+
+      .header-left{
+        position: absolute;
+        left:0;
+        height: 80%;
+        img{
+          height: 100%;
+        }
+      }
+      .header-center{
+        height: 80%;
+        img{
+          height: 100%;
+        }
+      }
+      .header-right{
+        position: absolute;
+        right: 30px;
+      }
     }
 
     .chat-body {

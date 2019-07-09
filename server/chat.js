@@ -10,11 +10,11 @@ const msgType = {
 }
 
 const server = ws.createServer(function (connection) {
-    connection.user = null
+    connection.user = {}
 
     connection.on('text', function (str) {
         const info = JSON.parse(str)
-        if (!connection.user) {
+        if (!connection.user.id) {
             connection.user = info
             onlineList.push(info)
             const data = {
@@ -24,9 +24,9 @@ const server = ws.createServer(function (connection) {
             broadcast(data, msgType.onlineInfo)
         } else {
             //当用户修改头像或昵称时，修改connection.user,onlineList不用修改，因为userid不会变
-            if(info.id){
+            if (info.id) {
                 connection.user = info
-                return 
+                return
             }
             const data = {
                 userId: connection.user.id,
