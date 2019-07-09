@@ -197,7 +197,6 @@ class Chat extends Component {
     render() {
         const { editorState, userList } = this.state
         const { chatList, user, onlineList } = this.props
-        console.log(111, chatList)
         const controls = ['emoji', 'italic', 'text-color', 'separator', 'link', 'separator', 'media']
         // 禁止上传video、audio
         const media = {
