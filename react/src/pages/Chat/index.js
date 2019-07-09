@@ -155,7 +155,7 @@ class Chat extends Component {
         let offsetLeft = this.mouse.offsetLeft + e.clientX - this.mouse.startX
         let offsetTop = this.mouse.offsetTop + e.clientY - this.mouse.startY
 
-        //设置偏移距离的范围[0,window.innerWidth - 400]
+        //设置偏移距离的范围[0,this.chatContainer.clientWidth - 780]
         offsetLeft = Math.max(0, Math.min(offsetLeft, this.chatContainer.clientWidth - 780))
         offsetTop = Math.max(0, Math.min(offsetTop, window.innerHeight - 624))
 
@@ -197,6 +197,7 @@ class Chat extends Component {
     render() {
         const { editorState, userList } = this.state
         const { chatList, user, onlineList } = this.props
+        console.log(111, chatList)
         const controls = ['emoji', 'italic', 'text-color', 'separator', 'link', 'separator', 'media']
         // 禁止上传video、audio
         const media = {
@@ -259,7 +260,7 @@ class Chat extends Component {
                                 {chatList && chatList.map((item, index) => (
                                     <div key={index} className='chat-item'>
                                         {/* 两条消息记录间隔超过3分钟就显示时间 */}
-                                        {(index === 0 || item.createTime - chatList[index - 1].createTime > 3000) && (
+                                        {(index === 0 || item.createTime - chatList[index - 1].createTime > 3 * 60 * 1000) && (
                                             <div className='time'>{this.handleTime(item.createTime)}</div>
                                         )}
                                         <div className={`chat-item-info ${user.id === item.userId ? 'chat-right' : ''}`}>
