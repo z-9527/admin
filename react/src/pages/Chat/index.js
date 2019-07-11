@@ -7,6 +7,7 @@ import { isAuthenticated } from '../../utils/session'
 import { json } from '../../utils/ajax'
 import { replaceImg, throttle } from '../../utils/util'
 import moment from 'moment'
+import { ContentUtils } from 'braft-utils'
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import './style.less'
@@ -111,7 +112,8 @@ class Chat extends Component {
             content: htmlContent
         }))
         this.setState({
-            editorState: BraftEditor.createEditorState(null)
+            editorState: ContentUtils.clear(this.state.editorState)
+            // editorState: BraftEditor.createEditorState(null)    //用这种方法清空富文本编辑器，在下次输入时光标容易跳动
         })
     }
     myUploadFn = async (param) => {

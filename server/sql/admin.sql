@@ -11,11 +11,25 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 05/07/2019 11:43:08
+ Date: 09/07/2019 16:38:19
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for chats
+-- ----------------------------
+DROP TABLE IF EXISTS `chats`;
+CREATE TABLE `chats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) DEFAULT NULL COMMENT '用户id',
+  `username` varchar(32) DEFAULT NULL COMMENT '用户名',
+  `userAvatar` varchar(128) DEFAULT NULL COMMENT '用户头像',
+  `createTime` bigint(20) DEFAULT NULL COMMENT '创建时间',
+  `content` varchar(512) DEFAULT NULL COMMENT '聊天内容',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for messages
@@ -37,7 +51,7 @@ CREATE TABLE `messages` (
   `pid` int(11) DEFAULT '-1' COMMENT '父id',
   `likeNum` int(11) DEFAULT '0' COMMENT '赞的数量',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=179 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for scores
@@ -49,7 +63,7 @@ CREATE TABLE `scores` (
   `createTime` bigint(20) DEFAULT NULL COMMENT '创建时间',
   `score` int(8) DEFAULT NULL COMMENT '分数',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for users
