@@ -7,7 +7,8 @@ import { get, post } from '@/utils/ajax'
 @Form.create()
 class RegisterForm extends React.Component {
     state = {
-        focusItem: -1   //当前焦点聚焦在哪一项上
+        focusItem: -1,   //当前焦点聚焦在哪一项上
+        loading: false   //注册的loding
     }
     /**
      * 返回登录面板
@@ -27,12 +28,24 @@ class RegisterForm extends React.Component {
      * 注册函数
      */
     onRegister = async (values) => {
+        //如果正在注册，则return，防止重复注册
+        if (this.state.loading) {
+            return
+        }
+        this.setState({
+            loading: true
+        })
+        const hide = message.loading('注册中...', 0)
         //加密密码
         const ciphertext = encrypt(values.registerPassword)
         const res = await post('/user/register', {
             username: values.registerUsername,
             password: ciphertext,
         })
+        this.setState({
+            loading: false
+        })
+        hide()
         if (res.status === 0) {
             message.success('注册成功')
         }
