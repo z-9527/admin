@@ -78,7 +78,7 @@ CREATE TABLE `users` (
   `lastLoginAddress` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '最后登录地址信息',
   `lastLoginTime` bigint(20) DEFAULT NULL COMMENT '最后登录时间',
   `isAdmin` int(8) unsigned DEFAULT '0' COMMENT '是否是管理员',
-  `avatar` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' COMMENT '用户头像',
+  `avatar` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'http://localhost:8888/public/images/default.png' COMMENT '用户头像',
   `birth` bigint(20) DEFAULT NULL COMMENT '出生日期',
   `phone` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '电话',
   `location` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '所在地',
