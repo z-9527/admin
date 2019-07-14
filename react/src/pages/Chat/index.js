@@ -171,6 +171,9 @@ class Chat extends Component {
     }
     //处理时间
     handleTime = (time, small) => {
+        if (!time) {
+            return ''
+        }
         const HHmm = moment(time).format('HH:mm')
         //不在同一年，就算时间差一秒都要显示完整时间
         if (moment().format('YYYY') !== moment(time).format('YYYY')) {

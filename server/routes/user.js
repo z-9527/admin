@@ -15,13 +15,13 @@ function handleRes(ctx, next, res) {
 
 router.post('/register', async function (ctx, next) {
 	const { username, password } = ctx.request.body
-	const res = await register(username, password)
+	const res = await register(username, password, ctx)
 	handleRes(ctx, next, res)
 })
 
 router.post('/login', async function (ctx, next) {
 	const { username, password } = ctx.request.body
-	const res = await login(username, password)
+	const res = await login(username, password, ctx)
 	handleRes(ctx, next, res)
 })
 
@@ -32,7 +32,7 @@ router.get('/checkName', async function (ctx, next) {
 })
 
 router.get('/getIpInfo', async function (ctx, next) {
-	const res = await getIpInfo()
+	const res = await getIpInfo(ctx)
 	handleRes(ctx, next, res)
 })
 

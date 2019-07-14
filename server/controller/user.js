@@ -26,8 +26,9 @@ const usersColumns = [
  * 注册用户
  * @param {*} username 
  * @param {*} password 
+ * @param {*} ctx 
  */
-const register = async function (username, password) {
+const register = async function (username, password, ctx) {
     if (!username || !password) {
         return new ErrorModel({
             message: '请输入账号或密码',
@@ -41,7 +42,7 @@ const register = async function (username, password) {
             httpCode: 400
         })
     }
-    const ip = await getIpInfo()
+    const ip = await getIpInfo(ctx)
     if (ip.status !== 0) {
         return new ErrorModel({
             message: '获取IP地址失败',
@@ -85,8 +86,14 @@ const checkName = async function (username) {
 /**
  * 腾讯地图api获取ip地址
  */
-const getIpInfo = async function () {
-    const res = await axios.get('https://apis.map.qq.com/ws/location/v1/ip?key=MH2BZ-4WTK3-2D63K-YZRHP-HM537-HHBD3')
+const getIpInfo = async function (ctx) {
+    const ip = ctx.ip.split(':').pop()   
+    const res = await axios.get('https://apis.map.qq.com/ws/location/v1/ip', {
+        params: {
+            key: 'MH2BZ-4WTK3-2D63K-YZRHP-HM537-HHBD3',
+            // ip //本地测试时ip一直是:::1，所以先注释掉
+        }
+    })
     if (res.data.status === 0) {
         return new SuccessModel({
             data: res.data.result
@@ -102,8 +109,9 @@ const getIpInfo = async function () {
  * 登陆
  * @param {*} username 
  * @param {*} password 
+ * @param {*} ctx 
  */
-const login = async function (username, password) {
+const login = async function (username, password, ctx) {
     const checkNameResult = await checkName(username)
     if (!checkNameResult.data.num) {
         return new ErrorModel({
@@ -123,7 +131,7 @@ const login = async function (username, password) {
             httpCode: 400
         })
     }
-    const ip = await getIpInfo()
+    const ip = await getIpInfo(ctx)
     if (ip.status !== 0) {
         return new ErrorModel({
             message: '获取IP地址失败',
