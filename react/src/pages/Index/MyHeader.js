@@ -2,14 +2,16 @@ import React from 'react'
 import screenfull from 'screenfull'
 import { Icon, message, Menu, Avatar } from 'antd'
 import ColorPicker from '@/components/ColorPicker/index'
-import EditInfoModal from './EditInfoModal'
-import EditPasswordModal from './EditPasswordModal'
 import { logout } from '@/utils/session'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import LoadableComponent from '@/utils/LoadableComponent'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
+
+const EditInfoModal = LoadableComponent(import('./EditInfoModal'))
+const EditPasswordModal = LoadableComponent(import('./EditPasswordModal'))
 
 const store = connect(
     (state) => ({ user: state.user })

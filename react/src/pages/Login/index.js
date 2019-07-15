@@ -1,10 +1,13 @@
 import React from 'react'
-import Background from '@/components/Background'
+// import Background from '@/components/Background'
 import './style.less'
-import LoginForm from './LoginForm'
-import RegisterForm from './RegisterForm'
 import { isAuthenticated, logout } from '../../utils/session'
 import { withRouter } from 'react-router-dom'
+import LoadableComponent from '@/utils/LoadableComponent'
+
+const LoginForm = LoadableComponent(import('./LoginForm'))
+const RegisterForm = LoadableComponent(import('./RegisterForm'))
+const Background = LoadableComponent(import('@/components/Background'))
 
 @withRouter
 class Login extends React.Component {

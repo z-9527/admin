@@ -3,7 +3,6 @@ import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, n
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import { isAuthenticated } from '../../utils/session'
-import Score from './Score'
 import { connect } from 'react-redux'
 import BraftEditor from 'braft-editor'
 import { ContentUtils } from 'braft-utils'
@@ -12,10 +11,12 @@ import 'braft-editor/dist/index.css'
 import 'braft-editor/dist/output.css'
 import 'braft-extensions/dist/code-highlighter.css'
 import './style.less'
+import LoadableComponent from '@/utils/LoadableComponent'
 
 BraftEditor.use(CodeHighlighter({}))
 
 const TextArea = Input.TextArea
+const Score = LoadableComponent(import('./Score.js'))
 
 function createMarkup(html) {
     return { __html: html };

@@ -3,9 +3,11 @@ import './App.css'
 import './index.css'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import PrivateRoute from './components/PrivateRoute'
-import Index from './pages/Index'
-import Login from './pages/Login'
 import './assets/iconfont/iconfont.css'
+import LoadableComponent from '@/utils/LoadableComponent'
+
+const Index = LoadableComponent(import('./pages/Index'))
+const Login = LoadableComponent(import('./pages/Login'))
 
 @withRouter
 class App extends React.Component {
