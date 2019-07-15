@@ -1,13 +1,14 @@
 import React from 'react'
 import { Tabs, Carousel, Layout, Icon } from 'antd'
 import './style.less'
-import bg1 from '../../assets/images/bg1.jpg'
-import bg2 from '../../assets/images/bg2.jpg'
-import bg3 from '../../assets/images/bg3.jpg'
 
 const Footer = Layout.Footer
 const TabPane = Tabs.TabPane;
-const imgs = [bg1, bg2, bg3]
+const imgs = [
+    `${process.env.REACT_APP_BASE_URL}/public/images/bg1.jpg`,
+    `${process.env.REACT_APP_BASE_URL}/public/images/bg2.jpg`,
+    `${process.env.REACT_APP_BASE_URL}/public/images/bg3.jpg`,
+]
 
 class MyContent extends React.Component {
     /**

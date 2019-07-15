@@ -1,13 +1,20 @@
 import React from 'react'
-// import Background from '@/components/Background'
 import './style.less'
 import { isAuthenticated, logout } from '../../utils/session'
 import { withRouter } from 'react-router-dom'
 import LoadableComponent from '@/utils/LoadableComponent'
+import { preloadingImages } from '../../utils/util'
 
 const LoginForm = LoadableComponent(import('./LoginForm'))
 const RegisterForm = LoadableComponent(import('./RegisterForm'))
 const Background = LoadableComponent(import('@/components/Background'))
+
+const imgs = [
+    `${process.env.REACT_APP_BASE_URL}/public/images/bg1.jpg`,
+    `${process.env.REACT_APP_BASE_URL}/public/images/bg2.jpg`,
+    `${process.env.REACT_APP_BASE_URL}/public/images/bg3.jpg`,
+]
+
 
 @withRouter
 class Login extends React.Component {
@@ -22,6 +29,7 @@ class Login extends React.Component {
             this.props.history.go(1)   //不然他后退或者后退了直接登出
             // logout()
         }
+        preloadingImages(imgs)
     }
     /**
      * 切换登录和注册的面板
@@ -34,7 +42,7 @@ class Login extends React.Component {
     render() {
         const { show } = this.state
         return (
-            <Background url={`${process.env.REACT_APP_BASE_URL}/public/images/bg1.jpg`}> 
+            <Background url={`${process.env.REACT_APP_BASE_URL}/public/images/login_bg1.jpg`}>
                 <div className="login-container">
                     <div className={`box ${show === 'login' ? 'active' : ''}`}>
                         <LoginForm toggleShow={this.toggleShow} />

@@ -104,3 +104,17 @@ export function replaceImg(str){
     }
     return str
 }
+
+/**
+ * 图片预加载
+ * @param arr
+ * @constructor
+ */
+export function preloadingImages(arr) {
+    if(Array.isArray(arr)){
+        arr.forEach(item=>{
+            const img = new Image()
+            img.src = item
+          })
+    }
+  }
