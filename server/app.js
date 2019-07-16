@@ -58,9 +58,9 @@ app.use(score.routes(), score.allowedMethods())
 
 //一定要写在路由后面，写在前面就不会返回接口内容，而是直接返回首页了
 app.use(historyApiFallback()); // 在这个地方加入。一定要加在静态文件的serve之前，否则会失效。
-app.use(koaStatic(__dirname, { maxage: 7 * 24 * 60 * 60 }))
-app.use(koaStatic(__dirname + '/public/build', { maxage: 7 * 24 * 60 * 60 }))
-app.use(koaStatic(__dirname + '/public/upload-files', { maxage: 7 * 24 * 60 * 60 }))
+app.use(koaStatic(__dirname, { maxage: 604800000 }))    //一周的缓存时间，单位ms
+app.use(koaStatic(__dirname + '/public/build', { maxage: 604800000 }))
+app.use(koaStatic(__dirname + '/public/upload-files', { maxage: 604800000 }))
 
 // error-handling
 app.on('error', (err, ctx) => {
