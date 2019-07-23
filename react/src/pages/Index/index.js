@@ -20,7 +20,8 @@ class Index extends React.Component {
     state = {
         collapsed: false,  //侧边栏的折叠和展开
         panes: [],    //网站打开的标签页列表
-        activeMenu: ''  //网站活动的菜单
+        activeMenu: '',  //网站活动的菜单
+        theme: 'dark',   //侧边栏主题
     };
     componentDidMount() {
         this.init()
@@ -41,11 +42,12 @@ class Index extends React.Component {
         this.setState(obj)
     }
     render() {
-        const { collapsed, panes, activeMenu } = this.state
+        const { collapsed, panes, activeMenu, theme } = this.state
         return (
             <Layout style={{ height: '100vh' }}>
-                <Sider trigger={null} collapsible collapsed={collapsed}>
+                <Sider trigger={null} collapsible collapsed={collapsed} theme={theme}>
                     <MySider
+                        theme={theme}
                         panes={panes}
                         activeMenu={activeMenu}
                         onChangeState={this._setState} />
@@ -53,6 +55,7 @@ class Index extends React.Component {
                 <Layout>
                     <Header style={{ padding: 0 }}>
                         <MyHeader
+                            theme={theme}
                             collapsed={collapsed}
                             onChangeState={this._setState} />
                     </Header>

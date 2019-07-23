@@ -45,24 +45,23 @@ class MySider extends React.Component {
         })
     }
     render() {
-        const { activeMenu } = this.props
+        const { activeMenu, theme } = this.props
         return (
-            <div>
-                <div style={styles.logo} />
-                <Menu theme="dark" mode="inline" selectedKeys={[activeMenu]}>
+            <div className={`my-sider ${theme}`}>
+                <div className={`sider-menu-logo ${theme}`}>
+                    <a href="https://ant.design/docs/react/introduce-cn" target="_blank" rel="noopener noreferrer">
+                        <img src={require('../../assets/images/antd.svg')} alt="" />
+                        <h1>Ant Design</h1>
+                    </a>
+                </div>
+                <Menu theme={theme} mode="inline" selectedKeys={[activeMenu]} style={{ paddingTop: 16 }}>
                     {this.renderMenu(menu)}
                 </Menu>
-            </div>
+            </div >
         )
     }
 }
 
-const styles = {
-    logo: {
-        height: 32,
-        background: 'rgba(255, 255, 255, .2)',
-        margin: 16,
-    }
-}
+
 
 export default MySider

@@ -30,3 +30,54 @@
   }
 }
 
+.my-sider {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+  &.light{
+    box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
+  }
+
+  .ant-menu-light{
+    border-right-color: transparent;
+  }
+
+
+  .sider-menu-logo {
+    position: relative;
+    height: 64px;
+    padding-left: 24px;
+    overflow: hidden;
+    line-height: 64px;
+    background: #001529;
+    transition: all .3s;
+
+    &.light {
+      background: #fff;
+      box-shadow: 1px 1px 0 0 #e8e8e8;
+
+      h1 {
+        color: #1890ff;
+      }
+    }
+
+    img {
+      display: inline-block;
+      height: 32px;
+      vertical-align: middle;
+    }
+
+    h1 {
+      display: inline-block;
+      margin: 0 0 0 12px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 20px;
+      font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
+      vertical-align: middle;
+    }
+  }
+}
+
+

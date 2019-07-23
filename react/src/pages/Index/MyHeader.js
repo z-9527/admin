@@ -87,7 +87,7 @@ class MyHeader extends React.Component {
      */
     togglePasswordVisible = (visible) => {
         this.setState({
-            passwordVisible:visible
+            passwordVisible: visible
         })
     }
     /**
@@ -97,10 +97,15 @@ class MyHeader extends React.Component {
         logout()   //清空cookie
         this.props.history.push('/login')
     }
+    changeTheme = () => {
+        this.props.onChangeState({
+            theme: this.props.theme === 'dark' ? 'light' : 'dark'
+        })
+    }
 
     render() {
-        const { isFullscreen, color, infoVisible,passwordVisible } = this.state
-        const { user } = this.props
+        const { isFullscreen, color, infoVisible, passwordVisible } = this.state
+        const { user,theme } = this.props
         return (
             <div style={{ background: '#fff', padding: '0 16px' }}>
                 <Icon
@@ -113,11 +118,14 @@ class MyHeader extends React.Component {
                         <ColorPicker color={color} onChange={this.changeColor} />
                     </div>
                     <div style={styles.headerItem}>
+                        <img width={24} src={require(`../../assets/images/${theme}.svg`)} alt='' onClick={this.changeTheme} />
+                    </div>
+                    <div style={styles.headerItem}>
                         <Menu mode="horizontal" selectable={false}>
                             <SubMenu title={<div style={styles.avatarBox}><Avatar size='small' src={user.avatar} />&nbsp;<span>{user.username}</span></div>}>
                                 <MenuItemGroup title="用户中心">
                                     <Menu.Item key={1} onClick={() => this.toggleInfoVisible(true)}><Icon type="user" />编辑个人信息</Menu.Item>
-                                    <Menu.Item key={77} onClick={()=>this.togglePasswordVisible(true)}><Icon type="edit" />修改密码</Menu.Item>
+                                    <Menu.Item key={77} onClick={() => this.togglePasswordVisible(true)}><Icon type="edit" />修改密码</Menu.Item>
                                     <Menu.Item key={2} onClick={this.onLogout}><Icon type="logout" />退出登录</Menu.Item>
                                 </MenuItemGroup>
                                 <MenuItemGroup title="设置中心">
