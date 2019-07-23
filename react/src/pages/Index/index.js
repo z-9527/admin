@@ -21,7 +21,7 @@ class Index extends React.Component {
         collapsed: false,  //侧边栏的折叠和展开
         panes: [],    //网站打开的标签页列表
         activeMenu: '',  //网站活动的菜单
-        theme: 'dark',   //侧边栏主题
+        theme: localStorage.getItem('theme') || 'dark',   //侧边栏主题
     };
     componentDidMount() {
         this.init()

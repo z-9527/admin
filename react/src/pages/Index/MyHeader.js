@@ -98,14 +98,16 @@ class MyHeader extends React.Component {
         this.props.history.push('/login')
     }
     changeTheme = () => {
+        const theme = this.props.theme === 'dark' ? 'light' : 'dark'
+        localStorage.setItem('theme', theme)
         this.props.onChangeState({
-            theme: this.props.theme === 'dark' ? 'light' : 'dark'
+            theme
         })
     }
 
     render() {
         const { isFullscreen, color, infoVisible, passwordVisible } = this.state
-        const { user,theme } = this.props
+        const { user, theme } = this.props
         return (
             <div style={{ background: '#fff', padding: '0 16px' }}>
                 <Icon
