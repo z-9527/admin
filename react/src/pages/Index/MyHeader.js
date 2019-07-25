@@ -6,6 +6,7 @@ import { logout } from '@/utils/session'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import LoadableComponent from '@/utils/LoadableComponent'
+import MyIcon from '../../components/MyIcon'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -120,7 +121,8 @@ class MyHeader extends React.Component {
                         <ColorPicker color={color} onChange={this.changeColor} />
                     </div>
                     <div style={styles.headerItem}>
-                        <img width={24} src={require(`../../assets/images/${theme}.svg`)} alt='' onClick={this.changeTheme} />
+                        <MyIcon type={theme === 'dark' ? 'icon-yueliang1' : 'icon-taiyang'} style={{ fontSize: 24 }} onClick={this.changeTheme}/>
+                        {/* <img width={24} src={require(`../../assets/images/${theme}.svg`)} alt='' onClick={this.changeTheme} /> */}
                     </div>
                     <div style={styles.headerItem}>
                         <Menu mode="horizontal" selectable={false}>
