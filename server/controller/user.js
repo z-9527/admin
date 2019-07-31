@@ -204,7 +204,7 @@ const getUser = async (param) => {
 const updateUserMessage = (user) => {
     const sql = `update messages set userIsAdmin=${user.isAdmin},userName='${user.username}',userAvatar='${user.avatar}' where userId=${user.id}`
     const sql2 = `update messages set targetUserIsAdmin=${user.isAdmin},targetUserName='${user.username}',targetUserAvatar='${user.avatar}' where targetUserId=${user.id}`
-    const sql3 = `update chats set username='${user.username}',userAvatar='${user.avatar}'`
+    const sql3 = `update chats set username='${user.username}',userAvatar='${user.avatar}' where userId=${user.id}`
     // 同步执行3个异步任务
     Promise.all([exec(sql), exec(sql2), exec(sql3)]).then(([res, res2, res3]) => {
         console.log(444, res)
