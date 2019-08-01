@@ -308,13 +308,14 @@ class MessageBoard extends Component {
                     <Divider />
                     <div className='message-list-box'>
                         {
-                            messages && messages.map(item => (
+                            messages && messages.map((item, index) => (
                                 <Comment
                                     key={item.id}
                                     author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
                                     avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
                                     content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                     actions={this.renderActions(item, item.id)}
+                                    datetime={`第${messages.length - index}楼`}
                                 >
                                     {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
                                         <Comment
