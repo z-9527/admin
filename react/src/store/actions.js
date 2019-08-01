@@ -48,7 +48,7 @@ export function initWebSocket(user) {    //初始化websocket对象
             //在线人数变化的消息
             if (data.type === 0) {
                 dispatch(setOnlinelist(data.msg.onlineList))
-                notification.info({
+                data.msg.text && notification.info({
                     message: '提示',
                     description: data.msg.text
                 })

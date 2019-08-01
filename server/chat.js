@@ -9,6 +9,18 @@ const msgType = {
     chatInfo: 1     //关于聊天内容
 }
 
+//对象数组去重
+function unique(arr) {
+    const obj = {}
+    const result = arr.reduce((total, cur) => {
+        if (!obj[cur.id]) {
+            obj[cur.id] = total.push(cur)
+        }
+        return total
+    }, [])
+    return result
+}
+
 const server = ws.createServer(function (connection) {
     connection.user = {}
 
@@ -16,10 +28,12 @@ const server = ws.createServer(function (connection) {
         const info = JSON.parse(str)
         if (!connection.user.id) {
             connection.user = info
+            //防止同一个账号在同一个浏览器中的不同窗口重复上线
+            const isExist = onlineList.find(item => item.id === connection.user.id)
             onlineList.push(info)
             const data = {
-                onlineList,
-                text: `用户${connection.user.username}已上线`
+                onlineList: unique(onlineList),
+                text: isExist ? '' : `用户${connection.user.username}已上线`
             }
             broadcast(data, msgType.onlineInfo)
         } else {
@@ -41,10 +55,14 @@ const server = ws.createServer(function (connection) {
     })
     // 断开连接
     connection.on('close', function (code, reason) {
-        onlineList = onlineList.filter(item => item.id !== connection.user.id)
+        //当同一个账号在同个浏览器的多个窗口打开时，会有多个userId相同的连接，如果用filter就全部下线了，我们应该只删除当前窗口的连接
+        // onlineList = onlineList.filter(item => item.id !== connection.user.id)
+        const index = onlineList.findIndex(item => item.id === connection.user.id)
+        onlineList.splice(index, 1)   //只删除一个连接
+        const isExist = onlineList.find(item => item.id === connection.user.id)
         const data = {
-            onlineList,
-            text: `用户${connection.user.username}已下线`
+            onlineList: unique(onlineList),
+            text: isExist ? '' : `用户${connection.user.username}已下线`
         }
         broadcast(data, msgType.onlineInfo)
     })
