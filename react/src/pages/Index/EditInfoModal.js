@@ -164,14 +164,14 @@ class EditInfoModal extends React.Component {
                         </Form.Item>
                         <Form.Item label={'出生年月日'} {...formItemLayout}>
                             {getFieldDecorator('birth', {
-                                rules: [{ required: true, message: '请选择出生年月日' }],
+                                // rules: [{ required: true, message: '请选择出生年月日' }],
                             })(
                                 <DatePicker />
                             )}
                         </Form.Item>
                         <Form.Item label={'电话'} {...formItemLayout}>
                             {getFieldDecorator('phone', {
-                                rules: [{ required: true, message: '请输入电话号码' }, { pattern: /^[0-9]*$/, message: '请输入正确的电话号码' }],
+                                // rules: [{ required: true, message: '请输入电话号码' }, { pattern: /^[0-9]*$/, message: '请输入正确的电话号码' }],
                             })(
                                 <Input placeholder="请输入电话号码" />
                             )}
@@ -179,7 +179,7 @@ class EditInfoModal extends React.Component {
                         <Form.Item label={'所在地'} {...formItemLayout}>
                             {getFieldDecorator('location', {
                                 validateFirst: true,
-                                rules: [{ required: true, message: '请输入目前所在地' }],
+                                // rules: [{ required: true, message: '请输入目前所在地' }],
                             })(
                                 <Input placeholder="请输入目前所在地" />
                             )}
@@ -187,7 +187,7 @@ class EditInfoModal extends React.Component {
                         <Form.Item label={'性别'} {...formItemLayout}>
                             {getFieldDecorator('gender', {
                                 initialValue: '男',
-                                rules: [{ required: true, message: '请选择性别' }],
+                                // rules: [{ required: true, message: '请选择性别' }],
                             })(
                                 <RadioGroup>
                                     <Radio value={'男'}>男</Radio>
