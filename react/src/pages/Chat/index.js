@@ -301,7 +301,7 @@ class Chat extends Component {
                                 <Divider style={{ margin: '10px 0 0' }} />
                                 <div className='member'>成员 {onlineList.length}/{userList.length}</div>
                             </div>
-                            <div style={{ overflow: 'auto', flexGrow: 1, height: 0 }}>
+                            <div style={{ overflow: 'auto', height: 296 }}>
                                 {userList && userList.map(item => (
                                     <div key={item.id} className='user-item'>
                                         <div className={`avatar-box ${item.online ? '' : 'mask'}`}>
