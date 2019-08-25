@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-07-07 11:03:21
+ * @LastEditTime: 2019-08-25 16:05:10
+ * @LastEditors: Please set LastEditors
+ */
 import React, { Component } from 'react';
 import { message, Avatar, Divider } from 'antd'
 import { initChatList, initWebSocket } from '@/store/actions'
@@ -189,7 +196,7 @@ class Chat extends Component {
         }
         //判断时间是否相隔一周
         if (moment().diff(time, 'days') < 7) {
-            const weeks = ['日', '一', '二', '三', '四', '五', '六']
+            const weeks = ['一', '二', '三', '四', '五', '六', '日']
             return `星期${weeks[moment(time).weekday()]} ${HHmm}`
         }
         if (small) {
