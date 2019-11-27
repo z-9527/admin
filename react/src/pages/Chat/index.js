@@ -269,7 +269,7 @@ class Chat extends Component {
                         <div className='main'>
                             <div className='chat-list' ref={el => this.chatListDom = el}>
                                 {chatList && chatList.map((item, index) => (
-                                    <div key={index} className='chat-item'>
+                                    <div key={item.id} className='chat-item'>
                                         {/* 两条消息记录间隔超过3分钟就显示时间 */}
                                         {(index === 0 || item.createTime - chatList[index - 1].createTime > 3 * 60 * 1000) && (
                                             <div className='time'>{this.handleTime(item.createTime)}</div>
