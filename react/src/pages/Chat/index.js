@@ -290,6 +290,7 @@ class Chat extends Component {
                                 ref={el => this.chatListDom = el}
                                 width={443}
                                 height={328}
+                                style={{ outline: 'none' }}
                                 rowCount={chatList.length}
                                 deferredMeasurementCache={cache}
                                 rowHeight={cache.rowHeight}
@@ -345,6 +346,7 @@ class Chat extends Component {
                             <List
                                 width={134}
                                 height={296}
+                                style={{ outline: 'none' }}
                                 rowCount={userList.length}
                                 rowHeight={35}
                                 rowRenderer={({ key, index, style, }) => (
