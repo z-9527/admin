@@ -58,7 +58,7 @@ export function initWebSocket(user) {    //初始化websocket对象
                 dispatch(addChat(data.msg))
                 notification.open({
                     message: data.msg.username,
-                    description: <div dangerouslySetInnerHTML={{ __html: replaceImg(data.msg.content) }} />,
+                    description: <div style={{wordBreak:'break-all'}} dangerouslySetInnerHTML={{ __html: replaceImg(data.msg.content) }} />,
                     icon: <Avatar src={data.msg.userAvatar} />
                 })
             }

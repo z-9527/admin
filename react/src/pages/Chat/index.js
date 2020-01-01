@@ -16,6 +16,7 @@ import { replaceImg, throttle } from '../../utils/util'
 import moment from 'moment'
 import { ContentUtils } from 'braft-utils'
 import BraftEditor from 'braft-editor'
+import { List, CellMeasurer, CellMeasurerCache, } from 'react-virtualized'
 import 'braft-editor/dist/index.css'
 import './style.less'
 
@@ -23,6 +24,12 @@ const store = connect(
     (state) => ({ user: state.user, websocket: state.websocket, chatList: state.chatList, onlineList: state.onlineList }),
     (dispatch) => bindActionCreators({ initChatList, initWebSocket }, dispatch)
 )
+
+const cache = new CellMeasurerCache({
+    defaultHeight: 96,
+    fixedWidth: true
+});
+
 
 @store
 class Chat extends Component {
@@ -34,14 +41,14 @@ class Chat extends Component {
         if (this.props.websocket && this.props.websocket.readyState !== 1) {
             this.props.initWebSocket(this.props.user)
         }
-        this.chatListDom.scrollTop = this.chatListDom.scrollHeight
+        this.scrollToRow()
         this.getUserList()
         window.onmouseup = this.onMouseUp
     }
     //首次渲染不会执行此方法
     componentDidUpdate(prevProps) {
         if (this.props.chatList !== prevProps.chatList) {
-            this.chatListDom.scrollTop = this.chatListDom.scrollHeight
+            this.scrollToRow()
         }
         if (this.props.onlineList !== prevProps.onlineList) {
             this.handleUserList()
@@ -53,6 +60,18 @@ class Chat extends Component {
     }
     componentWillUnmount() {
         window.onmouseup = null
+    }
+
+    scrollToRow = () => {
+        // 页面首次进入时并没有滚动到最底部，用下面这种方法进行处理
+        const rowIndex = this.props.chatList.length - 1
+        this.chatListDom.scrollToRow(rowIndex)
+        clearTimeout(this.scrollToRowTimer)
+        this.scrollToRowTimer = setTimeout(() => {
+            if (this.chatListDom) {
+                this.chatListDom.scrollToRow(rowIndex)
+            }
+        }, 10)
     }
     /**
      * 获取所有用户列表
@@ -267,23 +286,38 @@ class Chat extends Component {
                             </div>
                         </div>
                         <div className='main'>
-                            <div className='chat-list' ref={el => this.chatListDom = el}>
-                                {chatList && chatList.map((item, index) => (
-                                    <div key={item.id} className='chat-item'>
-                                        {/* 两条消息记录间隔超过3分钟就显示时间 */}
-                                        {(index === 0 || item.createTime - chatList[index - 1].createTime > 3 * 60 * 1000) && (
-                                            <div className='time'>{this.handleTime(item.createTime)}</div>
-                                        )}
-                                        <div className={`chat-item-info ${user.id === item.userId ? 'chat-right' : ''}`}>
-                                            <div><Avatar src={item.userAvatar} /></div>
-                                            <div className='chat-main'>
-                                                <div className='username'>{item.username}</div>
-                                                <div className='chat-content' dangerouslySetInnerHTML={{ __html: item.content }} />
+                            <List
+                                ref={el => this.chatListDom = el}
+                                width={443}
+                                height={328}
+                                rowCount={chatList.length}
+                                deferredMeasurementCache={cache}
+                                rowHeight={cache.rowHeight}
+                                rowRenderer={({ index, isScrolling, key, parent, style }) => (
+                                    <CellMeasurer
+                                        cache={cache}
+                                        columnIndex={0}
+                                        key={key}
+                                        parent={parent}
+                                        rowIndex={index}
+                                    >
+                                        <div style={style} className='chat-item'>
+                                            {/* 两条消息记录间隔超过3分钟就显示时间 */}
+                                            {(index === 0 || chatList[index].createTime - chatList[index - 1].createTime > 3 * 60 * 1000) && (
+                                                <div className='time'>{this.handleTime(chatList[index].createTime)}</div>
+                                            )}
+                                            <div className={`chat-item-info ${user.id === chatList[index].userId ? 'chat-right' : ''}`}>
+                                                <div><Avatar src={chatList[index].userAvatar} /></div>
+                                                <div className='chat-main'>
+                                                    <div className='username'>{chatList[index].username}</div>
+                                                    <div className='chat-content' dangerouslySetInnerHTML={{ __html: chatList[index].content }} />
+                                                </div>
                                             </div>
+
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    </CellMeasurer>
+                                )}
+                            />
                             <div className='chat-editor-wrapper'>
                                 <BraftEditor
                                     draftProps={{
@@ -308,18 +342,22 @@ class Chat extends Component {
                                 <Divider style={{ margin: '10px 0 0' }} />
                                 <div className='member'>成员 {onlineList.length}/{userList.length}</div>
                             </div>
-                            <div style={{ overflow: 'auto', height: 296 }}>
-                                {userList && userList.map(item => (
-                                    <div key={item.id} className='user-item'>
-                                        <div className={`avatar-box ${item.online ? '' : 'mask'}`}>
-                                            <img style={{ width: '100%', height: '100%' }} src={item.avatar} alt="" />
+                            <List
+                                width={134}
+                                height={296}
+                                rowCount={userList.length}
+                                rowHeight={35}
+                                rowRenderer={({ key, index, style, }) => (
+                                    <div key={key} className='user-item' style={style}>
+                                        <div className={`avatar-box ${userList[index].online ? '' : 'mask'}`}>
+                                            <img style={{ width: '100%', height: '100%' }} src={userList[index].avatar} alt="" />
                                             <div />
                                         </div>
-                                        <div className='ellipsis' style={{ flexGrow: 1, margin: '0 3px 0 5px' }}>{item.username}</div>
-                                        <div style={{ display: item.isAdmin ? 'block' : 'none' }}><img width={18} height={20} src={require('./imgs/administrator.png')} alt="" /></div>
+                                        <div className='ellipsis' style={{ flexGrow: 1, margin: '0 3px 0 5px' }}>{userList[index].username}</div>
+                                        <div style={{ display: userList[index].isAdmin ? 'block' : 'none' }}><img width={18} height={20} src={require('./imgs/administrator.png')} alt="" /></div>
                                     </div>
-                                ))}
-                            </div>
+                                )}
+                            />
                         </div>
                     </div>
                 </div>
