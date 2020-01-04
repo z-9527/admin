@@ -21,7 +21,7 @@ router.post('/create', async function (ctx, next) {
 })
 
 router.get('/list', async function (ctx, next) {
-    const res = await getMessages()
+    const res = await getMessages(ctx.query)
     handleRes(ctx, next, res)
 })
 

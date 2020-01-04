@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, notification, Tag } from 'antd'
+import { Comment, Divider, Button, Card, message, Tooltip, Icon, Input, Modal, notification, Tag, Spin, Pagination } from 'antd'
 import { json } from '../../utils/ajax'
 import moment from 'moment'
 import { isAuthenticated } from '../../utils/session'
@@ -37,6 +37,14 @@ class MessageBoard extends Component {
         replyUser: null, //回复的对象
         expandIds: [],  //展开的id列表
         placeholder: '',  //回复的placeholder
+        loading: false,
+        pagination: {
+            total: 100,
+            current: 1,  //前台分页是从1开始的，后台分页是从0开始的，所以要注意一下
+            pageSize: 10,
+            showQuickJumper: true,
+            showSizeChanger: true
+        },
     }
     componentDidMount() {
         this.getMessages()
@@ -44,7 +52,8 @@ class MessageBoard extends Component {
     componentDidUpdate(prevProps) {
         //修改用户信息时，重新加载
         if (this.props.user !== prevProps.user) {
-            this.getMessages()
+            const { current, pageSize } = this.state.pagination
+            this.getMessages(current, pageSize)
         }
     }
     /**
@@ -83,10 +92,29 @@ class MessageBoard extends Component {
     /**
      * 获取留言列表
      */
-    getMessages = async () => {
-        const res = await json.get('/message/list')
+    getMessages = async (page = 1, pageSize = 10) => {
         this.setState({
-            messages: res.data || []
+            loading: true
+        })
+        const res = await json.get('/message/list', {
+            current: page - 1,
+            pageSize: pageSize
+        })
+        if (res.status !== 0) {
+            this.setState({
+                loading: false,
+            })
+            return
+        }
+        this.setState({
+            messages: res.data.list || [],
+            loading: false,
+            pagination: {
+                ...this.state.pagination,
+                total: res.data.total,
+                current: page,
+                pageSize
+            }
         })
     }
     /**
@@ -106,7 +134,8 @@ class MessageBoard extends Component {
         if (res.status === 0) {
             message.success('留言成功')
             this.clearContent()
-            this.getMessages()
+            const { current, pageSize } = this.state.pagination
+            this.getMessages(current, pageSize)
         }
     }
     /**
@@ -152,7 +181,8 @@ class MessageBoard extends Component {
         if (res.status === 0) {
             message.success('回复成功')
             this.closeReply()
-            this.getMessages()
+            const { current, pageSize } = this.state.pagination
+            this.getMessages(current, pageSize)
             if (!this.state.expandIds.includes(item.id)) {
                 this.setState({
                     expandIds: [...this.state.expandIds, item.id]
@@ -177,7 +207,8 @@ class MessageBoard extends Component {
                         description: res.message,
                         duration: 3
                     });
-                    this.getMessages()
+                    const { current, pageSize } = this.state.pagination
+                    this.getMessages(current, pageSize)
                 }
             },
         });
@@ -267,9 +298,15 @@ class MessageBoard extends Component {
             })
         }
     }
+    pageChange = (page) => {
+        this.getMessages(page)
+    }
+    pageSizeChange = (current, size) => {
+        this.getMessages(1, size)
+    }
 
     render() {
-        const { isShowEditor, messages, editorState, replyPid, replyContent, expandIds, placeholder } = this.state
+        const { isShowEditor, messages, editorState, replyPid, replyContent, expandIds, placeholder, loading, pagination } = this.state
         const controls = ['undo', 'redo', 'clear', 'separator', 'bold', 'text-color', 'blockquote', 'code', 'emoji', 'separator', 'link', 'separator', 'media']
         const hooks = {
             'toggle-link': ({ href, target }) => {
@@ -306,46 +343,49 @@ class MessageBoard extends Component {
                         }
                     </div>
                     <Divider />
-                    <div className='message-list-box'>
-                        {
-                            messages && messages.map((item, index) => (
-                                <Comment
-                                    key={item.id}
-                                    author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
-                                    avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
-                                    content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
-                                    actions={this.renderActions(item, item.id)}
-                                    datetime={`第${messages.length - index}楼`}
-                                >
-                                    {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
-                                        <Comment
-                                            key={i.id}
-                                            author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
-                                            avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
-                                            content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
-                                            actions={this.renderActions(i, item.id)}
-                                        />
-                                    ))}
-                                    <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
-                                        {
-                                            expandIds.includes(item.id) ? (
-                                                <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle' /></span>
-                                            ) : (
-                                                    <span onClick={() => this.expandReply(item)}>展开全部{item.children.length}条回复 <Icon type="down-circle" /></span>
-                                                )
-                                        }
-                                    </div>
-                                    {replyPid === item.id && (
-                                        <div style={{ width: '70%', textAlign: 'right' }}>
-                                            <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} placeholder={placeholder} />
-                                            <Button size='small' onClick={this.closeReply}>取消</Button>&emsp;
-                                        <Button size='small' type='primary' onClick={() => this.confirmReply(item)}>回复</Button>
+                    <Spin spinning={loading}>
+                        <div className='message-list-box'>
+                            {
+                                Array.isArray(messages) && messages.map((item, index) => (
+                                    <Comment
+                                        key={item.id}
+                                        author={<span style={{ fontSize: 16 }}>{item.userName} {item.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
+                                        avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
+                                        content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
+                                        actions={this.renderActions(item, item.id)}
+                                        datetime={`第${messages.length - index}楼`}
+                                    >
+                                        {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
+                                            <Comment
+                                                key={i.id}
+                                                author={<span style={{ fontSize: 15 }}>{i.userName} {i.userIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>} @ {i.targetUserName} {i.targetUserIsAdmin === 1 && <Tag color="#87d068">管理员</Tag>}</span>}
+                                                avatar={<img className='avatar-img-small' src={i.userAvatar} alt='avatar' />}
+                                                content={<div className='info-box' dangerouslySetInnerHTML={createMarkup(i.content)} />}
+                                                actions={this.renderActions(i, item.id)}
+                                            />
+                                        ))}
+                                        <div className='toggle-reply-box' style={{ display: item.children.length > 1 ? 'block' : 'none' }}>
+                                            {
+                                                expandIds.includes(item.id) ? (
+                                                    <span onClick={() => this.foldReply(item)}>收起全部{item.children.length}条回复 <Icon type='up-circle' /></span>
+                                                ) : (
+                                                        <span onClick={() => this.expandReply(item)}>展开全部{item.children.length}条回复 <Icon type="down-circle" /></span>
+                                                    )
+                                            }
                                         </div>
-                                    )}
-                                </Comment>
-                            ))
-                        }
-                    </div>
+                                        {replyPid === item.id && (
+                                            <div style={{ width: '70%', textAlign: 'right' }}>
+                                                <TextArea rows={4} style={{ marginBottom: 10 }} value={replyContent} onChange={this.handleReplyChange} placeholder={placeholder} />
+                                                <Button size='small' onClick={this.closeReply}>取消</Button>&emsp;
+                                        <Button size='small' type='primary' onClick={() => this.confirmReply(item)}>回复</Button>
+                                            </div>
+                                        )}
+                                    </Comment>
+                                ))
+                            }
+                        </div>
+                        <Pagination {...pagination} onChange={this.pageChange} onShowSizeChange={this.pageSizeChange} />
+                    </Spin>
                     <div className='score-box'>
                         <Score />
                     </div>

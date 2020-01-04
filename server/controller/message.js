@@ -53,27 +53,39 @@ const createMessage = async (param, sessionId) => {
 /**
  * 获取留言列表
  */
-const getMessages = async () => {
-    const sql = `select * from messages order by createTime DESC` //按时间降序排列
-    const res = await exec(sql)
-    //这里可以用sql查两次类型的回复，也可以用js来过滤
+const getMessages = async (query) => {
+    const { current = 0, pageSize = 10 } = query
+    // 获取留言信息
+    const sqlMsg = `select SQL_CALC_FOUND_ROWS * from messages where pid=-1 order by createTime DESC limit ${current * pageSize},${pageSize}`
+    const resMsg = await exec(sqlMsg)
 
-    let list = res.reduce((total, current) => {
-        if (current.type === 0) {
-            total.push({
-                ...current,
-                children: []
-            })
+    // 获取总留言数
+    const sqlTotal = 'select found_rows() as total'
+    const resTotal = await exec(sqlTotal)
+
+    // 获取对应页的回复数据
+    const pids = Array.isArray(resMsg) ? resMsg.map(i => i.id) : []
+    let resReply = []
+    if (pids.length) {
+        const sqlReply = `select * from messages where pid in (${pids.join(',')}) order by createTime`
+        resReply = await exec(sqlReply)
+    }
+
+    const list = resMsg.map(item => {
+        const children = resReply.filter(i => i.pid === item.id)
+        return {
+            ...item,
+            children
         }
-        return total
-    }, [])
-    let subList = res.filter(item => item.type === 1)
-    subList.forEach(item => {
-        const index = list.findIndex(i => i.id === item.pid)
-        list[index].children.unshift(item)
     })
+
     return new SuccessModel({
-        data: list
+        data: {
+            list,
+            current: parseInt(current),
+            pageSize: parseInt(pageSize),
+            total: resTotal[0].total,
+        }
     })
 }
 
