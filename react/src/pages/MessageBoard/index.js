@@ -134,8 +134,7 @@ class MessageBoard extends Component {
         if (res.status === 0) {
             message.success('留言成功')
             this.clearContent()
-            const { current, pageSize } = this.state.pagination
-            this.getMessages(current, pageSize)
+            this.getMessages()
         }
     }
     /**
@@ -343,7 +342,7 @@ class MessageBoard extends Component {
                         }
                     </div>
                     <Divider />
-                    <Spin spinning={true} style={{ position: 'fixed', top: '50%', left: '50%' }} />
+                    <Spin spinning={loading} style={{ position: 'fixed', top: '50%', left: '50%' }} />
                     <div className='message-list-box'>
                         {
                             Array.isArray(messages) && messages.map((item, index) => (
@@ -353,7 +352,7 @@ class MessageBoard extends Component {
                                     avatar={<img className='avatar-img' src={item.userAvatar} alt='avatar' />}
                                     content={<div className='info-box braft-output-content' dangerouslySetInnerHTML={createMarkup(item.content)} />}
                                     actions={this.renderActions(item, item.id)}
-                                    datetime={`第${messages.length - index}楼`}
+                                    datetime={`第${pagination.total - (pagination.current - 1) * pagination.pageSize - index}楼`}
                                 >
                                     {item.children.slice(0, expandIds.includes(item.id) ? item.children.length : 1).map(i => (
                                         <Comment
