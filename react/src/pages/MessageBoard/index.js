@@ -298,7 +298,7 @@ class MessageBoard extends Component {
         }
     }
     pageChange = (page) => {
-        this.getMessages(page)
+        this.getMessages(page,this.state.pagination.pageSize)
     }
     pageSizeChange = (current, size) => {
         this.getMessages(1, size)
