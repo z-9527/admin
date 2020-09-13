@@ -9,6 +9,7 @@ const Collection = LoadableComponent(import('./Collection/index'), true);
 const MessageBoard = LoadableComponent(import('./MessageBoard/index'), true);
 const Chat = LoadableComponent(import('./Chat/index'), true);
 const About = LoadableComponent(import('./About/index'), true);
+const MobileUI = LoadableComponent(import('./MobileUI'), true);
 
 
 const menu = [
@@ -40,6 +41,11 @@ const menu = [
         key: 'Users'
     },
     {
+        name: '移动端UI',
+        icon: 'bulb',
+        key: 'MobileUI'
+    },
+    {
         name: '作品集',
         icon: 'bulb',
         key: 'Collection'
@@ -66,6 +72,7 @@ const tabs = {
     IconDemo: <IconDemo />,
     FeedbackDemo: <FeedbackDemo />,
     Users: <Users />,
+    MobileUI: <MobileUI />,
     Collection: <Collection />,
     MessageBoard: <MessageBoard />,
     Chat: <Chat />,
