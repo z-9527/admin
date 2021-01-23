@@ -38,8 +38,9 @@ function Phone(props) {
           <div className="battery"></div>
         </div>
         <iframe
+          id={props.iframeId}
           title={props.title}
-          style={{ height: '100%', width: '100%', border: 'none' }}
+          style={{ height: 458, width: '100%', border: 'none' }}
           src={props.src}
         ></iframe>
       </div>
