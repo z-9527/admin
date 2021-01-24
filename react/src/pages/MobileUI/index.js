@@ -36,7 +36,7 @@ function MobileUI() {
             {nav.slice(0, 2).map(item => <Item item={item} key={item.title} />)}
           </Row>
           <Row style={{ marginTop: 20 }}>
-            {nav.slice(1, 3).map(item => <Item item={item} key={item.title} />)}
+            {nav.slice(2, 4).map(item => <Item item={item} key={item.title} />)}
           </Row>
         </div>
 
