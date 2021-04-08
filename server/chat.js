@@ -67,7 +67,7 @@ const server = ws.createServer(function (connection) {
         broadcast(data, msgType.onlineInfo)
     })
 
-    // 连接错误
+    // 连接错误，一定要有这个错误事件，当前台刷新页面时，后台会报错，并被这里捕获，这样不会导致后台错误
     connection.on('error', function (error) {
         console.log(error)
     })
