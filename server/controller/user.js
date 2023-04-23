@@ -106,7 +106,7 @@ const getIpInfo = async function (ctx) {
     }
 }
 /**
- * 登陆
+ * 登录
  * @param {*} username 
  * @param {*} password 
  * @param {*} ctx 
