@@ -4,7 +4,7 @@
 
 所有权限都在后台做，比如非管理员不能添加和删除作品，如果仅靠前台禁用按钮，用户可以直在浏览器修改dom属性绕过禁用功能，所以前台只是起对不同权限用户展示不同UI的功能，而不是通过前台做权限功能。
 
-想测试多个账号在线，请用不同的浏览器登陆
+想测试多个账号在线，请用不同的浏览器登录
 
 **项目地址**：[github地址](https://github.com/zhangZhiHao1996/admin)  
 **预览地址**：服务器到期，暂时没有预览地址
@@ -28,7 +28,7 @@
 - [x] 网站留言板
 - [x] 聊天室
 
-[jwt实现注册与登陆系统](https://blog.csdn.net/qq_37860930/article/details/96145590)  
+[jwt实现注册与登录系统](https://blog.csdn.net/qq_37860930/article/details/96145590)  
 [react+koa实现留言板功能](https://blog.csdn.net/qq_37860930/article/details/96150575)  
 [webSocket实现聊天室功能](https://blog.csdn.net/qq_37860930/article/details/96302728)  
 [react编写打字组件](https://blog.csdn.net/qq_37860930/article/details/96285201)  
