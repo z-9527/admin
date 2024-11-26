@@ -10,7 +10,7 @@
     "braft-extensions": "^0.0.18",
     "crypto-js": "^3.1.9-1",
     "draft-js-prism": "^1.0.6",
-    "gsap": "^2.1.2",
+    "gsap": "^3.6.0",
     "prismjs": "^1.16.0",
     "react": "^16.8.6",
     "react-app-rewire-less": "^2.1.3",
